@@ -7,48 +7,240 @@
 
 <style>
 
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
 body{
-background:#0A0A0A;
+background:#050505;
 color:#F4F4F4;
 font-family:Arial,sans-serif;
-padding:60px;
-margin:0;
+padding:40px 20px;
 }
 
-h1{
-font-size:52px;
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.hero{
+margin-bottom:60px;
+}
+
+.hero h1{
+font-size:64px;
+font-weight:800;
+letter-spacing:-3px;
 margin-bottom:12px;
-letter-spacing:-2px;
 }
 
-p{
-color:#8A8A8A;
+.hero p{
 font-size:20px;
-max-width:600px;
+color:#8A8A8A;
+max-width:700px;
 line-height:1.6;
 }
 
 .tag{
-margin-top:40px;
+margin-top:20px;
 font-size:12px;
+letter-spacing:5px;
+color:#666;
+}
+
+.section-title{
+font-size:14px;
 letter-spacing:4px;
-color:#555;
+color:#777;
+margin-bottom:20px;
+margin-top:50px;
+}
+
+.feed{
+border:1px solid #1A1A1A;
+background:#0B0B0B;
+border-radius:16px;
+overflow:hidden;
+margin-bottom:60px;
+}
+
+.feed-item{
+display:grid;
+grid-template-columns:1fr 1fr 1fr 1fr;
+padding:18px 20px;
+border-bottom:1px solid #151515;
+font-size:14px;
+}
+
+.feed-item:last-child{
+border-bottom:none;
+}
+
+.locked{
+color:#00D4FF;
+font-weight:700;
+}
+
+.consultants{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:20px;
+}
+
+.card{
+background:#0B0B0B;
+border:1px solid #1A1A1A;
+border-radius:18px;
+padding:28px;
+}
+
+.card h2{
+font-size:28px;
+margin-bottom:18px;
+}
+
+.stat{
+margin-bottom:10px;
+color:#AAA;
+font-size:15px;
+}
+
+.record{
+color:#00D4FF;
+font-weight:700;
+}
+
+.footer{
+margin-top:80px;
+padding-top:30px;
+border-top:1px solid #151515;
+color:#666;
+font-size:13px;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:42px;
+}
+
+.feed-item{
+grid-template-columns:1fr;
+gap:8px;
+}
+
 }
 
 </style>
+
 </head>
 
 <body>
 
+<div class="container">
+
+<div class="hero">
 <h1>VAULT VERIFIED™</h1>
 
 <p>
 Locked before game time.
 Visible after final.
+Public records for sports consultants.
 </p>
 
 <div class="tag">
 PUBLIC RECORD SYSTEM
+</div>
+</div>
+
+<div class="section-title">
+LIVE FEED
+</div>
+
+<div class="feed">
+
+<div class="feed-item">
+<div>7:12 PM CT</div>
+<div>Jordan M.</div>
+<div>Knicks ML +110</div>
+<div class="locked">LOCKED</div>
+</div>
+
+<div class="feed-item">
+<div>8:03 PM CT</div>
+<div>Mason R.</div>
+<div>Oilers ML -125</div>
+<div class="locked">LOCKED</div>
+</div>
+
+<div class="feed-item">
+<div>9:41 PM CT</div>
+<div>Jordan M.</div>
+<div>Celtics 1H -4.5</div>
+<div class="locked">LOCKED</div>
+</div>
+
+</div>
+
+<div class="section-title">
+VERIFIED CONSULTANTS
+</div>
+
+<div class="consultants">
+
+<div class="card">
+<h2>Jordan M.</h2>
+
+<div class="stat">
+Record:
+<span class="record">42W 18L</span>
+</div>
+
+<div class="stat">
+ROI: +18.4%
+</div>
+
+<div class="stat">
+Units: +24.2
+</div>
+
+<div class="stat">
+Verified Since: May 2026
+</div>
+
+</div>
+
+<div class="card">
+<h2>Mason R.</h2>
+
+<div class="stat">
+Record:
+<span class="record">37W 21L</span>
+</div>
+
+<div class="stat">
+ROI: +11.2%
+</div>
+
+<div class="stat">
+Units: +15.8
+</div>
+
+<div class="stat">
+Verified Since: May 2026
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+Entries archived before official start times.
+Records remain publicly visible after grading.
+</div>
+
 </div>
 
 </body>
