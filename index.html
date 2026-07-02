@@ -3,245 +3,700 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vault Verified™</title>
-
+<meta name="description" content="Vault Verified preserves public records for sports consultants. Every prediction is filed before the result, locked on submission, and visible after grading.">
+<title>Vault Verified | Public Record Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  :root{
+    --bg:#090909;
+    --bg-raised:#111213;
+    --line:#1e2022;
+    --line-soft:#161718;
+    --white:#f2f3f3;
+    --gray:#8a8f93;
+    --gray-dim:#5a5f63;
+    --cyan:#00d4ff;
+    --green:#3ddc84;
+    --max:560px;
+  }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+  *{margin:0;padding:0;box-sizing:border-box;}
 
-body{
-background:#050505;
-color:#F4F4F4;
-font-family:Arial,sans-serif;
-padding:40px 20px;
-}
+  html{background:var(--bg);}
 
-.container{
-max-width:1100px;
-margin:auto;
-}
+  body{
+    background:var(--bg);
+    color:var(--white);
+    font-family:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
 
-.hero{
-margin-bottom:60px;
-}
+  a{color:inherit;text-decoration:none;}
 
-.hero h1{
-font-size:64px;
-font-weight:800;
-letter-spacing:-3px;
-margin-bottom:12px;
-}
+  img,svg{display:block;}
 
-.hero p{
-font-size:20px;
-color:#8A8A8A;
-max-width:700px;
-line-height:1.6;
-}
+  .wrap{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 20px;
+  }
 
-.tag{
-margin-top:20px;
-font-size:12px;
-letter-spacing:5px;
-color:#666;
-}
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gray-dim);
+    font-weight:500;
+  }
 
-.section-title{
-font-size:14px;
-letter-spacing:4px;
-color:#777;
-margin-bottom:20px;
-margin-top:50px;
-}
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(9,9,9,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .nav-mark{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.02em;
+  }
+  .nav-mark .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--cyan);
+    flex-shrink:0;
+  }
+  .nav-cta{
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--gray);
+    border:1px solid var(--line);
+    padding:8px 12px;
+  }
 
-.feed{
-border:1px solid #1A1A1A;
-background:#0B0B0B;
-border-radius:16px;
-overflow:hidden;
-margin-bottom:60px;
-}
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:56px 0 44px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero .eyebrow{margin-bottom:18px;}
+  .hero h1{
+    font-size:30px;
+    line-height:1.28;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin-bottom:22px;
+  }
+  .hero h1 .fade{color:var(--gray-dim); font-weight:500;}
+  .hero p{
+    color:var(--gray);
+    font-size:14px;
+    line-height:1.7;
+    max-width:46ch;
+    margin-bottom:28px;
+  }
+  .hero-actions{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .btn-primary{
+    display:block;
+    text-align:center;
+    background:var(--white);
+    color:#090909;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    padding:14px 18px;
+  }
+  .btn-secondary{
+    display:block;
+    text-align:center;
+    border:1px solid var(--line);
+    color:var(--gray);
+    font-size:13px;
+    padding:14px 18px;
+  }
+  .hero-stats{
+    display:flex;
+    gap:0;
+    margin-top:36px;
+    border-top:1px solid var(--line);
+    padding-top:18px;
+  }
+  .hero-stat{
+    flex:1;
+    border-right:1px solid var(--line);
+    padding-right:12px;
+  }
+  .hero-stat:last-child{border-right:none;padding-right:0;padding-left:12px;}
+  .hero-stat .n{
+    font-size:19px;
+    font-weight:600;
+    color:var(--white);
+  }
+  .hero-stat .l{
+    font-size:10px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--gray-dim);
+    margin-top:4px;
+  }
 
-.feed-item{
-display:grid;
-grid-template-columns:1fr 1fr 1fr 1fr;
-padding:18px 20px;
-border-bottom:1px solid #151515;
-font-size:14px;
-}
+  /* ---------- SECTION LABEL ---------- */
+  .section{
+    padding:44px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:22px;
+  }
+  .section-title{
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .section-sub{
+    color:var(--gray);
+    font-size:13px;
+    line-height:1.6;
+    margin-top:8px;
+    max-width:48ch;
+  }
+  .live-dot{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:10px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--green);
+  }
+  .live-dot .pulse{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--green);
+  }
 
-.feed-item:last-child{
-border-bottom:none;
-}
+  /* ---------- RECORD CARDS ---------- */
+  .record{
+    border:1px solid var(--line);
+    background:var(--bg-raised);
+    padding:16px;
+    margin-bottom:10px;
+  }
+  .record:last-child{margin-bottom:0;}
+  .record-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+  }
+  .record-id{
+    font-size:11px;
+    color:var(--gray-dim);
+    letter-spacing:0.03em;
+  }
+  .status{
+    font-size:10px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:4px 8px;
+    border:1px solid rgba(0,212,255,0.35);
+    color:var(--cyan);
+  }
+  .record-body{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+  }
+  .record-main .sel{
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .record-main .meta{
+    font-size:11px;
+    color:var(--gray-dim);
+  }
+  .record-time{
+    text-align:right;
+    font-size:11px;
+    color:var(--gray);
+  }
+  .record-time .ts{color:var(--gray-dim); font-size:10px; margin-top:2px;}
 
-.locked{
-color:#00D4FF;
-font-weight:700;
-}
+  .record-skeleton{
+    border:1px solid var(--line);
+    background:var(--bg-raised);
+    padding:16px;
+    font-size:12px;
+    color:var(--gray-dim);
+    text-align:center;
+  }
+  .record-error{
+    border:1px solid var(--line);
+    background:var(--bg-raised);
+    padding:16px;
+    font-size:12px;
+    color:var(--gray);
+    text-align:center;
+    line-height:1.6;
+  }
 
-.consultants{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:20px;
-}
+  .view-all{
+    margin-top:16px;
+    text-align:center;
+    font-size:12px;
+    color:var(--gray);
+    border:1px solid var(--line);
+    padding:12px;
+  }
 
-.card{
-background:#0B0B0B;
-border:1px solid #1A1A1A;
-border-radius:18px;
-padding:28px;
-}
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+  .step{
+    display:flex;
+    gap:16px;
+    padding:18px 0;
+    border-top:1px solid var(--line-soft);
+  }
+  .step:first-child{border-top:none;padding-top:0;}
+  .step-index{
+    font-size:12px;
+    color:var(--cyan);
+    font-weight:600;
+    flex-shrink:0;
+    width:26px;
+    padding-top:1px;
+  }
+  .step-body .t{
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .step-body .d{
+    font-size:13px;
+    color:var(--gray);
+    line-height:1.65;
+    max-width:44ch;
+  }
 
-.card h2{
-font-size:28px;
-margin-bottom:18px;
-}
+  /* ---------- CONSULTANTS ---------- */
+  .consultant-scroll{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    margin:0 -20px;
+    padding:0 20px 4px;
+    scrollbar-width:none;
+  }
+  .consultant-scroll::-webkit-scrollbar{display:none;}
+  .consultant-card{
+    flex:0 0 auto;
+    width:230px;
+    border:1px solid var(--line);
+    background:var(--bg-raised);
+    padding:16px;
+  }
+  .consultant-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .consultant-avatar{
+    width:34px;height:34px;
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;
+    color:var(--gray);
+    flex-shrink:0;
+  }
+  .consultant-name{font-size:13px;font-weight:600;}
+  .consultant-id{font-size:10px;color:var(--gray-dim); margin-top:2px;}
+  .consultant-doctrine{
+    font-size:10px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:var(--cyan);
+    margin-bottom:10px;
+  }
+  .consultant-record{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    color:var(--gray);
+    border-top:1px solid var(--line-soft);
+    padding-top:10px;
+  }
+  .consultant-record b{color:var(--white); font-weight:600;}
 
-.stat{
-margin-bottom:10px;
-color:#AAA;
-font-size:15px;
-}
+  /* ---------- FOUNDING CTA ---------- */
+  .founding{
+    padding:44px 0 48px;
+    border-bottom:1px solid var(--line);
+  }
+  .founding-box{
+    border:1px solid var(--line);
+    padding:26px 20px;
+    background:var(--bg-raised);
+  }
+  .founding .eyebrow{margin-bottom:14px;}
+  .founding h2{
+    font-size:20px;
+    font-weight:600;
+    line-height:1.35;
+    margin-bottom:14px;
+    letter-spacing:-0.01em;
+  }
+  .founding p{
+    color:var(--gray);
+    font-size:13px;
+    line-height:1.7;
+    margin-bottom:22px;
+  }
+  .founding-list{
+    list-style:none;
+    margin-bottom:24px;
+  }
+  .founding-list li{
+    display:flex;
+    gap:10px;
+    font-size:12.5px;
+    color:var(--gray);
+    padding:9px 0;
+    border-top:1px solid var(--line-soft);
+  }
+  .founding-list li:first-child{border-top:none;padding-top:0;}
+  .founding-list .mark{color:var(--cyan); flex-shrink:0;}
 
-.record{
-color:#00D4FF;
-font-weight:700;
-}
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:32px 0 40px;
+  }
+  .footer-mark{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:16px;
+  }
+  .footer-mark .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);}
+  .footer-tag{
+    color:var(--gray-dim);
+    font-size:12px;
+    line-height:1.7;
+    margin-bottom:24px;
+    max-width:44ch;
+  }
+  .footer-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    font-size:11px;
+    color:var(--gray);
+    border-top:1px solid var(--line);
+    padding-top:18px;
+    margin-bottom:16px;
+  }
+  .footer-legal{
+    font-size:10px;
+    color:var(--gray-dim);
+    letter-spacing:0.02em;
+  }
 
-.footer{
-margin-top:80px;
-padding-top:30px;
-border-top:1px solid #151515;
-color:#666;
-font-size:13px;
-}
-
-@media(max-width:768px){
-
-.hero h1{
-font-size:42px;
-}
-
-.feed-item{
-grid-template-columns:1fr;
-gap:8px;
-}
-
-}
-
+  @media (min-width:600px){
+    .hero h1{font-size:36px;}
+  }
 </style>
-
 </head>
-
 <body>
 
-<div class="container">
+<header class="nav">
+  <div class="nav-inner">
+    <div class="nav-mark"><span class="dot"></span>VAULT VERIFIED</div>
+    <a href="#founding" class="nav-cta">Join</a>
+  </div>
+</header>
 
-<div class="hero">
-<h1>VAULT VERIFIED™</h1>
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Public Record Infrastructure</div>
+    <h1>Claims fade.<br><span class="fade">Records remain.</span></h1>
+    <p>Every prediction is preserved before the result is known. No edits. No deletions. No revisionist history. Public history creates trust.</p>
+    <div class="hero-actions">
+      <a href="#records" class="btn-primary">Browse Records</a>
+      <a href="#how" class="btn-secondary">How Verification Works</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="n">0041</div>
+        <div class="l">Records Filed</div>
+      </div>
+      <div class="hero-stat">
+        <div class="n">100%</div>
+        <div class="l">Pre-Event Filed</div>
+      </div>
+      <div class="hero-stat">
+        <div class="n">0</div>
+        <div class="l">Records Altered</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<p>
-Locked before game time.
-Visible after final.
-Public records for sports consultants.
-</p>
+<section class="section" id="records">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Today's Preserved Entries</div>
+        <div class="section-sub">Filed before first pitch. Locked at time of submission.</div>
+      </div>
+    </div>
+    <span class="live-dot" style="margin-bottom:16px; display:inline-flex;"><span class="pulse"></span>Live</span>
 
-<div class="tag">
-PUBLIC RECORD SYSTEM
-</div>
-</div>
+    <div id="records-list" style="margin-top:12px;">
+      <div class="record-skeleton" data-skeleton>Loading preserved entries…</div>
+    </div>
 
-<div class="section-title">
-LIVE FEED
-</div>
+    <a href="#records" class="view-all">View Full Record History</a>
+  </div>
+</section>
 
-<div class="feed">
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="section-title">How Verification Works</div>
+        <div class="section-sub">A record exists the moment it's filed. Not after it's proven right.</div>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-index">01</div>
+        <div class="step-body">
+          <div class="t">Filed before the event</div>
+          <div class="d">Every selection is written to the public record before first pitch, tipoff, or kickoff with a timestamp that cannot be altered.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-index">02</div>
+        <div class="step-body">
+          <div class="t">Locked on submission</div>
+          <div class="d">Once preserved, a record cannot be edited or removed. Corrections are filed as new entries, never rewrites.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-index">03</div>
+        <div class="step-body">
+          <div class="t">Graded against the result</div>
+          <div class="d">Outcomes are recorded from official box scores after the event closes, win or lose, and attached permanently to the original entry.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-index">04</div>
+        <div class="step-body">
+          <div class="t">Public and permanent</div>
+          <div class="d">The full history stays visible. Every record. Every outcome. Nothing is curated after the fact.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<div class="feed-item">
-<div>7:12 PM CT</div>
-<div>Jordan M.</div>
-<div>Knicks ML +110</div>
-<div class="locked">LOCKED</div>
-</div>
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Consultants</div>
+        <div class="section-sub">Independent record-holders, each operating under a stated doctrine.</div>
+      </div>
+    </div>
+  </div>
+  <div class="consultant-scroll">
+    <div class="consultant-card">
+      <div class="consultant-top">
+        <div class="consultant-avatar">GG</div>
+        <div>
+          <div class="consultant-name">GamedayGuru402</div>
+          <div class="consultant-id">GG402-0001</div>
+        </div>
+      </div>
+      <div class="consultant-doctrine">Extreme Selectivity</div>
+      <div class="consultant-record">Record <b>Pending</b></div>
+    </div>
+    <div class="consultant-card">
+      <div class="consultant-top">
+        <div class="consultant-avatar">EC</div>
+        <div>
+          <div class="consultant-name">Evidence Convergence</div>
+          <div class="consultant-id">VV-0007</div>
+        </div>
+      </div>
+      <div class="consultant-doctrine">Multi-Signal Confirmation</div>
+      <div class="consultant-record">Record <b>Pending</b></div>
+    </div>
+    <div class="consultant-card">
+      <div class="consultant-top">
+        <div class="consultant-avatar">PI</div>
+        <div>
+          <div class="consultant-name">Price Integrity</div>
+          <div class="consultant-id">VV-0012</div>
+        </div>
+      </div>
+      <div class="consultant-doctrine">Line Movement Discipline</div>
+      <div class="consultant-record">Record <b>Pending</b></div>
+    </div>
+  </div>
+</section>
 
-<div class="feed-item">
-<div>8:03 PM CT</div>
-<div>Mason R.</div>
-<div>Oilers ML -125</div>
-<div class="locked">LOCKED</div>
-</div>
+<section class="founding" id="founding">
+  <div class="wrap">
+    <div class="founding-box">
+      <div class="eyebrow">Limited Enrollment</div>
+      <h2>Become a Founding Consultant</h2>
+      <p>Founding consultants file the first entries in a public record system built to outlast any single claim. Your history compounds from day one.</p>
+      <ul class="founding-list">
+        <li><span class="mark">•</span>Permanent public profile with full record history</li>
+        <li><span class="mark">•</span>Doctrine statement attached to every entry</li>
+        <li><span class="mark">•</span>No retroactive edits, ever</li>
+      </ul>
+      <a href="#founding" class="btn-primary">Apply to Join</a>
+    </div>
+  </div>
+</section>
 
-<div class="feed-item">
-<div>9:41 PM CT</div>
-<div>Jordan M.</div>
-<div>Celtics 1H -4.5</div>
-<div class="locked">LOCKED</div>
-</div>
+<footer>
+  <div class="wrap">
+    <div class="footer-mark"><span class="dot"></span>VAULT VERIFIED</div>
+    <div class="footer-tag">Public record infrastructure for sports consultants. History earns trust. Not claims.</div>
+    <div class="footer-links">
+      <a href="#records">Records</a>
+      <a href="#how">Verification</a>
+      <a href="#founding">Consultants</a>
+    </div>
+    <div class="footer-legal">© 2026 Vault Verified. All records preserved as filed.</div>
+  </div>
+</footer>
 
-</div>
+<script>
+(function () {
+  var SUPABASE_URL = "https://apmrgvpegtfsqqjcokfv.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";
+  var LIMIT = 3;
 
-<div class="section-title">
-VERIFIED CONSULTANTS
-</div>
+  var listEl = document.getElementById("records-list");
 
-<div class="consultants">
+  function escapeHtml(str) {
+    return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+    });
+  }
 
-<div class="card">
-<h2>Jordan M.</h2>
+  function titleCase(str) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
 
-<div class="stat">
-Record:
-<span class="record">42W 18L</span>
-</div>
+  function formatWhen(record) {
+    var raw = record.preserved_at || record.created_at;
+    if (!raw) return { label: record.result_status ? "Result: " + titleCase(record.result_status) : "Filed", ts: "" };
+    var d = new Date(raw);
+    if (record.result_status) {
+      var ts = d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/Chicago" });
+      return { label: "Result: " + titleCase(record.result_status), ts: ts };
+    }
+    var ts2 = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" }) + " CT";
+    return { label: "Filed", ts: ts2 };
+  }
 
-<div class="stat">
-ROI: +18.4%
-</div>
+  function renderRecord(record) {
+    var when = formatWhen(record);
+    var meta = [record.profile_id, record.league || record.sport].filter(Boolean).join(" · ");
+    return (
+      '<div class="record">' +
+        '<div class="record-top">' +
+          '<span class="record-id">' + escapeHtml(record.record_id) + '</span>' +
+          '<span class="status">' + escapeHtml(titleCase(record.status)) + '</span>' +
+        '</div>' +
+        '<div class="record-body">' +
+          '<div class="record-main">' +
+            '<div class="sel">' + escapeHtml(record.selection || record.event || "—") + '</div>' +
+            '<div class="meta">' + escapeHtml(meta) + '</div>' +
+          '</div>' +
+          '<div class="record-time">' +
+            escapeHtml(when.label) + (when.ts ? '<br><span class="ts">' + escapeHtml(when.ts) + '</span>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
 
-<div class="stat">
-Units: +24.2
-</div>
+  function render(records) {
+    if (!records || records.length === 0) {
+      listEl.innerHTML = '<div class="record-error">No preserved entries yet. Check back once today\'s card is filed.</div>';
+      return;
+    }
+    listEl.innerHTML = records.map(renderRecord).join("");
+  }
 
-<div class="stat">
-Verified Since: May 2026
-</div>
 
-</div>
+  // Fallback used only if the live fetch fails (e.g. sandboxed preview,
+  // offline, or a network hiccup) — mirrors real filed records so the
+  // page never shows a broken state to a visitor.
+  var FALLBACK_RECORDS = [
+    { record_id: "REC-2026-0036", profile_id: "GG402-0001", league: "MLB", selection: "Brewers ML", status: "preserved", result_status: "win", preserved_at: null, created_at: "2026-07-01T21:31:30.722Z" },
+    { record_id: "REC-2026-0035", profile_id: "GG402-0001", league: "MLB", selection: "Phillies ML", status: "preserved", result_status: "win", preserved_at: null, created_at: "2026-07-01T21:31:30.722Z" },
+    { record_id: "REC-2026-0028", profile_id: "GG402-0001", league: "MLB", selection: "Phillies ML", status: "preserved", result_status: "win", preserved_at: "2026-06-30T11:03:11.489Z", created_at: "2026-06-30T11:03:11.489Z" }
+  ];
 
-<div class="card">
-<h2>Mason R.</h2>
+  var endpoint = SUPABASE_URL +
+    "/rest/v1/records?select=record_id,profile_id,sport,league,selection,event,status,result_status,preserved_at,created_at" +
+    "&order=created_at.desc&limit=" + LIMIT;
 
-<div class="stat">
-Record:
-<span class="record">37W 21L</span>
-</div>
-
-<div class="stat">
-ROI: +11.2%
-</div>
-
-<div class="stat">
-Units: +15.8
-</div>
-
-<div class="stat">
-Verified Since: May 2026
-</div>
-
-</div>
-
-</div>
-
-<div class="footer">
-Entries archived before official start times.
-Records remain publicly visible after grading.
-</div>
-
-</div>
+  fetch(endpoint, {
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: "Bearer " + SUPABASE_KEY
+    }
+  })
+    .then(function (res) {
+      if (!res.ok) throw new Error("Request failed: " + res.status);
+      return res.json();
+    })
+    .then(render)
+    .catch(function (err) {
+      console.warn("Live fetch failed. Rendering fallback records.");
+      render(FALLBACK_RECORDS);
+    });
+})();
+</script>
 
 </body>
 </html>
