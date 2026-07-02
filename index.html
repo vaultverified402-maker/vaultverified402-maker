@@ -636,16 +636,19 @@
     return { label: "Filed", ts: ts2 };
   }
 
-  function renderRecord(record) {
-    var when = formatWhen(record);
-    var meta = [record.profile_id, record.league || record.sport].filter(Boolean).join(" · ");
+  fvar when = formatWhen(record);
+var leagueLabel = record.league || record.sport;
+var consultantLink = record.profile_id
+  ? '<a href="/consultants/' + encodeURIComponent(record.profile_id) + '" class="meta-link">' + escapeHtml(record.profile_id) + '</a>'
+  : "";
+var meta = [consultantLink, leagueLabel ? escapeHtml(leagueLabel) : ""].filter(Boolean).join(" · ");
     return (
       '<div class="record">' +
         '<div class="record-top">' +
           '<span class="record-id">' + escapeHtml(record.record_id) + '</span>' +
           '<span class="status">' + escapeHtml(titleCase(record.status)) + '</span>' +
         '</div>' +
-        '<div class="record-body">' +
+        '<div class="meta">' + meta + '</div>' +
           '<div class="record-main">' +
             '<div class="sel">' + escapeHtml(record.selection || record.event || "—") + '</div>' +
             '<div class="meta">' + escapeHtml(meta) + '</div>' +
