@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/consultants/:id", "destination": "/consultant.html" }
+  ]
+}
