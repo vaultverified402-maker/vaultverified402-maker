@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Consultant | Vault Verified</title>
+<meta id="page-description" name="description" content="Consultant doctrine, record history, and lifetime results on Vault Verified.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#090909;
+    --bg-raised:#111213;
+    --line:#1e2022;
+    --line-soft:#161718;
+    --white:#f2f3f3;
+    --gray:#8a8f93;
+    --gray-dim:#5a5f63;
+    --cyan:#00d4ff;
+    --green:#3ddc84;
+    --max:560px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{background:var(--bg);}
+  body{
+    background:var(--bg);
+    color:var(--white);
+    font-family:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  a{color:inherit; text-decoration:none;}
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
+
+  .eyebrow{
+    font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--gray-dim); font-weight:500;
+  }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(9,9,9,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--max); margin:0 auto; padding:16px 20px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-mark{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; letter-spacing:0.02em;}
+  .nav-mark .dot{width:7px; height:7px; border-radius:50%; background:var(--cyan); flex-shrink:0;}
+  .nav-cta{
+    font-size:11px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--gray); border:1px solid var(--line); padding:8px 12px;
+  }
+
+  /* ---------- STATES ---------- */
+  .state-box{
+    margin:40px 0;
+    border:1px solid var(--line);
+    background:var(--bg-raised);
+    padding:24px 16px;
+    font-size:12px;
+    color:var(--gray-dim);
+    text-align:center;
+    line-height:1.7;
+  }
+  .state-box a{color:var(--cyan);}
+
+  /* ---------- PROFILE HEADER ---------- */
+  .profile-header{padding:40px 0 32px; border-bottom:1px solid var(--line);}
+  .profile-header .eyebrow{margin-bottom:14px;}
+  .profile-header h1{
+    font-size:26px; font-weight:600; letter-spacing:-0.01em; line-height:1.25; margin-bottom:6px;
+  }
+  .profile-handle{font-size:12px; color:var(--gray-dim); margin-bottom:18px;}
+  .profile-bio{color:var(--gray); font-size:14px; line-height:1.7; max-width:48ch;}
+
+  .profile-tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px;}
+  .tag{
+    font-size:10px; letter-spacing:0.05em; text-transform:uppercase;
+    border:1px solid var(--line); color:var(--gray); padding:5px 9px;
+  }
+
+  /* ---------- STATS ---------- */
+  .stats{padding:24px 0; border-bottom:1px solid var(--line);}
+  .stats-grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:14px;}
+  .stat-box{border:1px solid var(--line); background:var(--bg-raised); padding:14px;}
+  .stat-box .n{font-size:20px; font-weight:600; color:var(--white);}
+  .stat-box .l{font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-dim); margin-top:4px;}
+
+  /* ---------- DOCTRINE ---------- */
+  .doctrine{padding:28px 0; border-bottom:1px solid var(--line);}
+  .doctrine .eyebrow{margin-bottom:12px;}
+  .doctrine-statement{
+    font-size:16px; font-weight:600; line-height:1.5; letter-spacing:-0.01em; margin-bottom:14px;
+  }
+  .doctrine-edge{color:var(--gray); font-size:13px; line-height:1.7; max-width:48ch;}
+
+  /* ---------- RECORDS ---------- */
+  .section{padding:28px 0 44px;}
+  .section-head{margin-bottom:18px;}
+  .section-title{font-size:16px; font-weight:600; letter-spacing:-0.01em;}
+  .section-sub{color:var(--gray); font-size:12.5px; margin-top:6px;}
+
+  .record{
+    border:1px solid var(--line); background:var(--bg-raised); padding:16px; margin-bottom:10px;
+  }
+  .record:last-child{margin-bottom:0;}
+  .record-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
+  .record-id{font-size:11px; color:var(--gray-dim); letter-spacing:0.03em;}
+  .status{
+    font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
+    padding:4px 8px; border:1px solid rgba(0,212,255,0.35); color:var(--cyan);
+  }
+  .status--muted{border:1px solid var(--line); color:var(--gray);}
+  .record-body{display:flex; justify-content:space-between; align-items:flex-end;}
+  .record-main .sel{font-size:15px; font-weight:600; margin-bottom:4px;}
+  .record-main .meta{font-size:11px; color:var(--gray-dim);}
+  .record-time{text-align:right; font-size:11px; color:var(--gray);}
+  .record-time .ts{color:var(--gray-dim); font-size:10px; margin-top:2px;}
+
+  .record-skeleton, .record-empty{
+    border:1px solid var(--line); background:var(--bg-raised); padding:18px 16px;
+    font-size:12px; color:var(--gray-dim); text-align:center;
+  }
+
+  .view-all{
+    display:block; margin-top:14px; text-align:center; font-size:12px;
+    color:var(--gray); border:1px solid var(--line); padding:12px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:32px 0 40px; border-top:1px solid var(--line);}
+  .footer-mark{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; margin-bottom:16px;}
+  .footer-mark .dot{width:7px; height:7px; border-radius:50%; background:var(--cyan);}
+  .footer-tag{color:var(--gray-dim); font-size:12px; line-height:1.7; margin-bottom:24px; max-width:44ch;}
+  .footer-links{display:flex; flex-wrap:wrap; gap:16px; font-size:11px; color:var(--gray); border-top:1px solid var(--line); padding-top:18px; margin-bottom:16px;}
+  .footer-legal{font-size:10px; color:var(--gray-dim); letter-spacing:0.02em;}
+
+  @media (min-width:600px){
+    .profile-header h1{font-size:30px;}
+    .stats-grid{grid-template-columns:repeat(4, 1fr);}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="/index.html" class="nav-mark"><span class="dot"></span>VAULT VERIFIED</a>
+    <a href="/index.html#founding" class="nav-cta">Join</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="loading-state" class="state-box">Loading consultant profile…</div>
+</div>
+
+<div id="profile-content" style="display:none;">
+
+  <section class="profile-header">
+    <div class="wrap">
+      <div class="eyebrow" id="profile-eyebrow">Consultant Profile</div>
+      <h1 id="profile-name">—</h1>
+      <div class="profile-handle" id="profile-handle"></div>
+      <p class="profile-bio" id="profile-bio"></p>
+      <div class="profile-tags" id="profile-tags"></div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="wrap">
+      <div class="stats-grid" id="profile-stats"></div>
+    </div>
+  </section>
+
+  <section class="doctrine" id="doctrine-section">
+    <div class="wrap">
+      <div class="eyebrow" id="doctrine-name"></div>
+      <div class="doctrine-statement" id="doctrine-statement"></div>
+      <div class="doctrine-edge" id="doctrine-edge"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-title">Record History</div>
+        <div class="section-sub">Most recent entries filed by this consultant.</div>
+      </div>
+      <div id="records-list">
+        <div class="record-skeleton">Loading records…</div>
+      </div>
+      <a href="/records.html" class="view-all">View Full Record Archive</a>
+    </div>
+  </section>
+
+</div>
+
+<div class="wrap">
+  <div id="notfound-state" class="state-box" style="display:none;">
+    This consultant profile is not publicly available.<br><br>
+    <a href="/records.html">Browse the public record archive →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-mark"><span class="dot"></span>VAULT VERIFIED</div>
+    <div class="footer-tag">Public record infrastructure for sports consultants. History earns trust. Not claims.</div>
+    <div class="footer-links">
+      <a href="/index.html#records">Home</a>
+      <a href="/records.html">Records</a>
+      <a href="/index.html#founding">Consultants</a>
+    </div>
+    <div class="footer-legal">© 2026 Vault Verified. All records preserved as filed.</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var SUPABASE_URL = "https://apmrgvpegtfsqqjcokfv.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";
+  var RECENT_LIMIT = 10;
+
+  function headers() {
+    return { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY };
+  }
+
+  function escapeHtml(str) {
+    return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+    });
+  }
+
+  function titleCase(str) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  // Profile ID comes from the URL path, e.g. /consultants/GG402-0001
+  // Works whether Vercel rewrites preserved the clean path, or the file
+  // is opened directly as /consultant.html?id=... as a fallback.
+  function getProfileId() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get("id")) return decodeURIComponent(params.get("id"));
+    var parts = window.location.pathname.split("/").filter(Boolean);
+    var idx = parts.indexOf("consultants");
+    if (idx !== -1 && parts[idx + 1]) return decodeURIComponent(parts[idx + 1]);
+    return parts.length ? decodeURIComponent(parts[parts.length - 1]).replace(/\.html$/, "") : "";
+  }
+
+  function showNotFound() {
+    document.getElementById("loading-state").style.display = "none";
+    document.getElementById("profile-content").style.display = "none";
+    document.getElementById("notfound-state").style.display = "block";
+  }
+
+  function formatDate(raw) {
+    if (!raw) return null;
+    return new Date(raw).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Chicago" });
+  }
+
+  function renderProfile(profile) {
+    document.getElementById("page-title").textContent = profile.name + " | Vault Verified";
+    document.getElementById("page-description").setAttribute("content",
+      profile.public_description || ("Doctrine, record history, and lifetime results for " + profile.name + " on Vault Verified."));
+
+    document.getElementById("profile-name").textContent = profile.name || profile.profile_id;
+    document.getElementById("profile-handle").textContent = profile.handle ? "@" + profile.handle : profile.profile_id;
+    document.getElementById("profile-bio").textContent = profile.biography || profile.public_description || "";
+
+    var tagsEl = document.getElementById("profile-tags");
+    var tags = [];
+    if (profile.consultant_type) tags.push(profile.consultant_type);
+    if (profile.lifecycle_status) tags.push(profile.lifecycle_status);
+    (profile.preferred_sports || []).forEach(function (s) { tags.push(s); });
+    tagsEl.innerHTML = tags.map(function (t) { return '<span class="tag">' + escapeHtml(t) + '</span>'; }).join("");
+
+    // Stats
+    var wins = profile.wins || 0;
+    var losses = profile.losses || 0;
+    var winPct = profile.win_pct !== null && profile.win_pct !== undefined ? parseFloat(profile.win_pct).toFixed(1) + "%" : "—";
+    var since = formatDate(profile.first_record_at);
+
+    var statBoxes = [
+      { n: wins, l: "Wins" },
+      { n: losses, l: "Losses" },
+      { n: winPct, l: "Win Rate" }
+    ];
+    if (since) statBoxes.push({ n: since, l: "Filing Since" });
+
+    document.getElementById("profile-stats").innerHTML = statBoxes.map(function (s) {
+      return '<div class="stat-box"><div class="n">' + escapeHtml(s.n) + '</div><div class="l">' + escapeHtml(s.l) + '</div></div>';
+    }).join("");
+
+    // Doctrine
+    if (profile.doctrine_name || profile.doctrine_statement) {
+      document.getElementById("doctrine-name").textContent = profile.doctrine_name || "Doctrine";
+      document.getElementById("doctrine-statement").textContent = profile.doctrine_statement || "";
+      document.getElementById("doctrine-edge").textContent = profile.edge_theory || "";
+    } else {
+      document.getElementById("doctrine-section").style.display = "none";
+    }
+
+    document.getElementById("loading-state").style.display = "none";
+    document.getElementById("profile-content").style.display = "block";
+  }
+
+  function renderRecordCard(record) {
+    var label = record.result_status ? "Result: " + titleCase(record.result_status) : titleCase(record.status || "Preserved");
+    var ts = formatDate(record.preserved_at || record.created_at);
+    var statusClass = record.status === "preserved" ? "status" : "status status--muted";
+    return (
+      '<div class="record">' +
+        '<div class="record-top">' +
+          '<span class="record-id">' + escapeHtml(record.record_id) + '</span>' +
+          '<span class="' + statusClass + '">' + escapeHtml(titleCase(record.status)) + '</span>' +
+        '</div>' +
+        '<div class="record-body">' +
+          '<div class="record-main">' +
+            '<div class="sel">' + escapeHtml(record.selection || record.event || "—") + '</div>' +
+            '<div class="meta">' + escapeHtml(record.league || record.sport || "") + '</div>' +
+          '</div>' +
+          '<div class="record-time">' + escapeHtml(label) + (ts ? '<br><span class="ts">' + escapeHtml(ts) + '</span>' : '') + '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function loadRecords(profileId) {
+    var url = SUPABASE_URL + "/rest/v1/records?select=record_id,league,sport,selection,event,status,result_status,preserved_at,created_at" +
+      "&profile_id=eq." + encodeURIComponent(profileId) + "&order=created_at.desc&limit=" + RECENT_LIMIT;
+    fetch(url, { headers: headers() })
+      .then(function (res) { return res.json(); })
+      .then(function (rows) {
+        var listEl = document.getElementById("records-list");
+        if (!rows || rows.length === 0) {
+          listEl.innerHTML = '<div class="record-empty">No records filed yet.</div>';
+          return;
+        }
+        listEl.innerHTML = rows.map(renderRecordCard).join("");
+      })
+      .catch(function (err) {
+        console.warn("Consultant record history fetch failed.", err);
+        document.getElementById("records-list").innerHTML = '<div class="record-empty">Record history is temporarily unavailable.</div>';
+      });
+  }
+
+  var profileId = getProfileId();
+  if (!profileId) { showNotFound(); return; }
+
+  var profileUrl = SUPABASE_URL + "/rest/v1/profiles?select=profile_id,name,handle,doctrine_name,doctrine_statement,edge_theory," +
+    "public_description,biography,wins,losses,pushes,voids,win_pct,first_record_at,last_record_at,consultant_type," +
+    "lifecycle_status,preferred_sports&profile_id=eq." + encodeURIComponent(profileId) + "&limit=1";
+
+  fetch(profileUrl, { headers: headers() })
+    .then(function (res) { return res.json(); })
+    .then(function (rows) {
+      // RLS only returns this row if visibility = 'public'. A private or
+      // nonexistent profile both come back empty — same not-found state,
+      // so the page never confirms whether a private ID exists.
+      if (!rows || rows.length === 0) { showNotFound(); return; }
+      renderProfile(rows[0]);
+      loadRecords(profileId);
+    })
+    .catch(function (err) {
+      console.warn("Consultant profile fetch failed.", err);
+      showNotFound();
+    });
+})();
+</script>
+
+</body>
+</html>
