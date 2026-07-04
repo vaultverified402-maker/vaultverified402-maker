@@ -33,6 +33,7 @@
   }
   a{color:inherit;text-decoration:none;}
   select{font-family:inherit;}
+  input{font-family:inherit;}
 
   .wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
 
@@ -80,6 +81,7 @@
     grid-template-columns:1fr 1fr;
     gap:10px;
   }
+  .filter-field--search{grid-column:1 / -1;}
   .filter-field label{
     display:block;
     font-size:10px;
@@ -88,6 +90,16 @@
     color:var(--gray-dim);
     margin-bottom:6px;
   }
+  .filter-field input[type="text"]{
+    width:100%;
+    background:var(--bg-raised);
+    border:1px solid var(--line);
+    color:var(--white);
+    font-size:12px;
+    padding:10px 10px;
+  }
+  .filter-field input[type="text"]::placeholder{color:var(--gray-dim);}
+  .filter-field input[type="text"]:focus{outline:1px solid var(--cyan);}
   .filter-field select{
     width:100%;
     background:var(--bg-raised);
@@ -209,6 +221,10 @@
 <section class="filters">
   <div class="wrap">
     <div class="filter-grid">
+      <div class="filter-field filter-field--search">
+        <label for="filter-search">Search</label>
+        <input type="text" id="filter-search" placeholder="Consultant, selection, event, or record ID" autocomplete="off">
+      </div>
       <div class="filter-field">
         <label for="filter-consultant">Consultant</label>
         <select id="filter-consultant"><option value="">All</option></select>
@@ -265,6 +281,7 @@
   var loadMoreBtn = document.getElementById("load-more");
   var resultCountEl = document.getElementById("result-count");
   var clearBtn = document.getElementById("clear-filters");
+  var searchEl = document.getElementById("filter-search");
 
   var selects = {
     profile_id: document.getElementById("filter-consultant"),
@@ -277,6 +294,13 @@
   var offset = 0;
   var totalCount = null;
   var loading = false;
+  var searchDebounce = null;
+
+  // Read ?search= from the URL on load and prefill the search field.
+  try {
+    var initialSearch = new URLSearchParams(window.location.search).get("search");
+    if (initialSearch) searchEl.value = initialSearch;
+  } catch (e) { /* URLSearchParams unsupported: page still works without prefill */ }
 
   function headers() {
     return {
@@ -296,6 +320,13 @@
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
+  // Strip characters that would break the PostgREST or() clause or the
+  // ilike pattern. The remaining term is matched as a case-insensitive
+  // substring across record fields.
+  function currentSearch() {
+    return (searchEl.value || "").replace(/[(),*%]/g, " ").replace(/\s+/g, " ").trim();
+  }
+
   function currentFilters() {
     return {
       profile_id: selects.profile_id.value,
@@ -307,11 +338,23 @@
 
   function anyFilterActive() {
     var f = currentFilters();
-    return !!(f.profile_id || f.league || f.status || f.result_status);
+    return !!(f.profile_id || f.league || f.status || f.result_status || currentSearch());
   }
 
   function updateClearVisibility() {
     clearBtn.classList.toggle("visible", anyFilterActive());
+  }
+
+  // Keep ?search= in the address bar in sync so filtered views stay shareable.
+  function syncUrl() {
+    if (!window.history || !window.history.replaceState) return;
+    try {
+      var term = currentSearch();
+      var url = new URL(window.location.href);
+      if (term) { url.searchParams.set("search", term); }
+      else { url.searchParams.delete("search"); }
+      window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+    } catch (e) { /* non-critical */ }
   }
 
   // ---------- Facets: populate filter dropdowns from live data ----------
@@ -396,6 +439,29 @@
     );
   }
 
+  // Build the PostgREST or() clause for a free-text search term:
+  // substring match on record_id, profile_id, selection, event, league,
+  // and sport, plus any profile_ids whose public display name matches.
+  function buildSearchClause(term) {
+    var pat = "*" + term + "*";
+    var clauses = [
+      "record_id.ilike." + pat,
+      "profile_id.ilike." + pat,
+      "selection.ilike." + pat,
+      "event.ilike." + pat,
+      "league.ilike." + pat,
+      "sport.ilike." + pat
+    ];
+    var lower = term.toLowerCase();
+    var nameMatchIds = Object.keys(profileNames).filter(function (id) {
+      return String(profileNames[id] || "").toLowerCase().indexOf(lower) !== -1;
+    });
+    if (nameMatchIds.length) {
+      clauses.push("profile_id.in.(" + nameMatchIds.join(",") + ")");
+    }
+    return "or=" + encodeURIComponent("(" + clauses.join(",") + ")");
+  }
+
   function buildRecordsUrl(currentOffset) {
     var f = currentFilters();
     var params = ["select=record_id,profile_id,sport,league,selection,event,status,result_status,preserved_at,created_at"];
@@ -403,6 +469,8 @@
     if (f.league) params.push("league=eq." + encodeURIComponent(f.league));
     if (f.status) params.push("status=eq." + encodeURIComponent(f.status));
     if (f.result_status) params.push("result_status=eq." + encodeURIComponent(f.result_status));
+    var term = currentSearch();
+    if (term) params.push(buildSearchClause(term));
     params.push("order=created_at.desc");
     params.push("limit=" + PAGE_SIZE);
     params.push("offset=" + currentOffset);
@@ -484,13 +552,35 @@
     });
   });
 
+  searchEl.addEventListener("input", function () {
+    if (searchDebounce) clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(function () {
+      updateClearVisibility();
+      syncUrl();
+      loadRecords(true);
+    }, 350);
+  });
+
+  searchEl.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      if (searchDebounce) clearTimeout(searchDebounce);
+      updateClearVisibility();
+      syncUrl();
+      loadRecords(true);
+    }
+  });
+
   clearBtn.addEventListener("click", function () {
     Object.keys(selects).forEach(function (key) { selects[key].value = ""; });
+    searchEl.value = "";
     updateClearVisibility();
+    syncUrl();
     loadRecords(true);
   });
 
   loadMoreBtn.addEventListener("click", function () { loadRecords(false); });
+
+  updateClearVisibility();
 
   loadFacets()
     .then(function (facets) {
