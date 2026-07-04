@@ -487,7 +487,7 @@
 
   function loadFirstRecordDate() {
     var el = document.getElementById("metric-since");
-    fetch(SUPABASE_URL + "/rest/v1/records?select=created_at&order=created_at.asc&limit=1", {
+    fetch(SUPABASE_URL + "/rest/v1/records?select=created_at&source_type=eq.pre_event_filing&order=created_at.asc&limit=1", {
       headers: headers()
     })
       .then(function (res) {
@@ -503,8 +503,8 @@
       .catch(function () { el.textContent = "2026"; });
   }
 
-  loadCount("records?select=*", "metric-records");
-  loadCount("profiles?select=*&visibility=eq.public", "metric-consultants");
+  loadCount("records?select=*&source_type=eq.pre_event_filing", "metric-records");
+  loadCount("profiles?select=*&visibility=eq.public&consultant_type=neq.archive", "metric-consultants");
   loadFirstRecordDate();
 
   /* ---------- 3. Archive search ---------- */
@@ -560,7 +560,7 @@
     var listEl = document.getElementById("feed-list");
     var url = SUPABASE_URL + "/rest/v1/records" +
       "?select=record_id,profile_id,sport,league,selection,event,status,result_status,preserved_at,created_at" +
-      "&order=preserved_at.desc.nullslast,created_at.desc&limit=" + FEED_LIMIT;
+      "&source_type=eq.pre_event_filing&order=preserved_at.desc.nullslast,created_at.desc&limit=" + FEED_LIMIT;
     fetch(url, { headers: headers() })
       .then(function (res) {
         if (!res.ok) throw new Error("Request failed: " + res.status);
@@ -623,7 +623,7 @@
       })
       .then(function (rows) {
         if (rows && rows.length) { renderFeatured(rows[0]); return null; }
-        return fetch(SUPABASE_URL + "/rest/v1/profiles?" + PROFILE_SELECT + "&order=profile_id.asc&limit=1", { headers: headers() })
+        return fetch(SUPABASE_URL + "/rest/v1/profiles?" + PROFILE_SELECT + "&consultant_type=neq.archive&order=profile_id.asc&limit=1", { headers: headers() })
           .then(function (res) {
             if (!res.ok) throw new Error("Request failed: " + res.status);
             return res.json();
@@ -655,7 +655,7 @@
   function loadConsultants() {
     var listEl = document.getElementById("consultant-list");
     var url = SUPABASE_URL + "/rest/v1/profiles?select=profile_id,name,handle,doctrine_name" +
-      "&order=profile_id.asc&limit=" + FOUNDING_LIMIT;
+      "&consultant_type=neq.archive&order=profile_id.asc&limit=" + FOUNDING_LIMIT;
     fetch(url, { headers: headers() })
       .then(function (res) {
         if (!res.ok) throw new Error("Request failed: " + res.status);

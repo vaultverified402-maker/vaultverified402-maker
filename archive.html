@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Public Archive | Vault Verified</title>
+<meta name="description" content="A free public archive of sports records, preserved on Vault Verified.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#090909;--bg-raised:#111213;--line:#1e2022;--line-soft:#161718;--white:#f2f3f3;--gray:#8a8f93;--gray-dim:#5a5f63;--cyan:#00d4ff;--green:#3ddc84;--max:560px;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{background:var(--bg);}
+  body{background:var(--bg);color:var(--white);font-family:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;-webkit-font-smoothing:antialiased;line-height:1.5;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px;}
+  .eyebrow{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray-dim);font-weight:500;}
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(9,9,9,0.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:var(--max);margin:0 auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+  .nav-mark{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:0.02em;}
+  .nav-mark .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);flex-shrink:0;}
+  .nav-cta{font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--gray);border:1px solid var(--line);padding:8px 12px;}
+  .state-box{margin:40px 0;border:1px solid var(--line);background:var(--bg-raised);padding:24px 16px;font-size:12px;color:var(--gray-dim);text-align:center;line-height:1.7;}
+  .state-box a{color:var(--cyan);}
+  .archive-header{padding:40px 0 24px;border-bottom:1px solid var(--line);}
+  .archive-header .eyebrow{margin-bottom:14px;}
+  .archive-header h1{font-size:26px;font-weight:600;letter-spacing:-0.01em;line-height:1.25;margin-bottom:4px;}
+  .archive-handle{font-size:12px;color:var(--gray-dim);margin-bottom:18px;}
+  .provenance{border:1px solid var(--line);background:var(--bg-raised);padding:12px 14px;font-size:11px;color:var(--gray);line-height:1.7;}
+  .stats{border-bottom:1px solid var(--line);}
+  .stats-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);}
+  .stat{padding:18px 20px;border-bottom:1px solid var(--line-soft);border-right:1px solid var(--line-soft);}
+  .stat:nth-child(3n){border-right:none;}
+  .stat .n{font-size:18px;font-weight:600;}
+  .stat .l{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-dim);margin-top:4px;}
+  .section{padding:28px 0 44px;}
+  .section-title{font-size:16px;font-weight:600;margin-bottom:18px;}
+  .feed{border-top:1px solid var(--line);}
+  .feed-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--line-soft);}
+  .feed-main{min-width:0;}
+  .feed-main .sel{font-size:14px;font-weight:600;margin-bottom:3px;overflow-wrap:anywhere;}
+  .feed-main .meta{font-size:11px;color:var(--gray-dim);}
+  .feed-side{text-align:right;flex-shrink:0;}
+  .res{font-size:11px;letter-spacing:0.06em;text-transform:uppercase;}
+  .res--win{color:var(--green);}
+  .res--loss{color:var(--gray);}
+  .res--open{color:var(--cyan);}
+  .res--other{color:var(--gray-dim);}
+  .feed-side .ts{font-size:10px;color:var(--gray-dim);margin-top:3px;}
+  .feed-note{padding:18px 0;font-size:12px;color:var(--gray-dim);text-align:center;border-bottom:1px solid var(--line-soft);}
+  .upgrade{padding:44px 0;border-top:1px solid var(--line);}
+  .upgrade .eyebrow{margin-bottom:14px;}
+  .upgrade h2{font-size:18px;font-weight:600;margin-bottom:12px;}
+  .upgrade p{font-size:12.5px;color:var(--gray);line-height:1.7;margin-bottom:18px;max-width:46ch;}
+  .upgrade-cta{display:block;text-align:center;background:var(--white);color:#090909;font-size:13px;font-weight:600;padding:15px 18px;}
+  footer{padding:32px 0 40px;border-top:1px solid var(--line);}
+  .footer-legal{font-size:10px;color:var(--gray-dim);}
+  @media(min-width:600px){.stats-grid{grid-template-columns:repeat(6,1fr);}.stat{border-bottom:none;}.stat:nth-child(3n){border-right:1px solid var(--line-soft);}.stat:last-child{border-right:none;}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="/index.html" class="nav-mark"><span class="dot"></span>VAULT VERIFIED</a>
+    <a href="/create-archive.html" class="nav-cta">Create Archive</a>
+  </div>
+</header>
+
+<div class="wrap"><div id="loading" class="state-box">Loading public archive…</div></div>
+
+<div id="content" style="display:none;">
+  <section class="archive-header">
+    <div class="wrap">
+      <div class="eyebrow">Public Archive</div>
+      <h1 id="a-name"></h1>
+      <div class="archive-handle" id="a-handle"></div>
+      <div class="provenance" id="a-provenance">Self-reported historical record — not preserved before outcome. Entries below were imported by the archive owner. Records preserved before outcomes carry a Preserved label.</div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stats-grid" id="a-stats"></div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-title">Records Preserved</div>
+      <div class="feed" id="a-feed"><div class="feed-note">Loading records…</div></div>
+    </div>
+  </section>
+
+  <section class="upgrade">
+    <div class="wrap">
+      <div class="eyebrow">Want more than an archive?</div>
+      <h2>Upgrade to Vault Verified</h2>
+      <p>Historical Audit. Integrity Review. Public Verification. Consultant Profile. Records filed through Vault Verified are locked before the outcome and carry a public audit trail.</p>
+      <a href="/index.html#founding" class="upgrade-cta">Upgrade to Vault Verified</a>
+    </div>
+  </section>
+</div>
+
+<div class="wrap"><div id="notfound" class="state-box" style="display:none;">This archive does not exist.<br><br><a href="/create-archive.html">Create a free public archive →</a></div></div>
+
+<footer>
+  <div class="wrap"><div class="footer-legal">© 2026 Vault Verified. All records preserved as filed.</div></div>
+</footer>
+
+<script>
+(function () {
+  var SUPABASE_URL = "https://apmrgvpegtfsqqjcokfv.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";
+
+  function headers(){ return { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }; }
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]; }); }
+  function fdate(raw){ if(!raw) return null; try { return new Date(raw).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); } catch(e){ return null; } }
+
+  function getHandle(){
+    var parts = window.location.pathname.split("/").filter(Boolean);
+    var idx = parts.indexOf("archive");
+    if (idx !== -1 && parts[idx+1]) return decodeURIComponent(parts[idx+1]);
+    var q = new URLSearchParams(window.location.search).get("handle");
+    return q ? q : "";
+  }
+
+  function notFound(){
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("content").style.display = "none";
+    document.getElementById("notfound").style.display = "block";
+  }
+
+  function resFor(r){
+    if (r.result === "win") return { cls:"res--win", label:"Win" };
+    if (r.result === "loss") return { cls:"res--loss", label:"Loss" };
+    if (!r.result || r.result === "pending") return { cls:"res--open", label:"Open" };
+    return { cls:"res--other", label: r.result.charAt(0).toUpperCase() + r.result.slice(1) };
+  }
+
+  function statCell(n, l){ return '<div class="stat"><div class="n">' + esc(n) + '</div><div class="l">' + esc(l) + '</div></div>'; }
+
+  var handle = getHandle();
+  if (!handle) { notFound(); }
+  else {
+    fetch(SUPABASE_URL + "/rest/v1/v_public_archive_summary?handle=eq." + encodeURIComponent(handle) + "&limit=1", { headers: headers() })
+      .then(function(res){ if(!res.ok) throw new Error(res.status); return res.json(); })
+      .then(function(rows){
+        if (!rows || !rows.length) { notFound(); return; }
+        var s = rows[0];
+        document.getElementById("page-title").textContent = s.display_name + " | Public Archive";
+        document.getElementById("a-name").textContent = s.display_name || s.handle;
+        document.getElementById("a-handle").textContent = "@" + s.handle + " · Archive since " + (fdate(s.first_record_at) || fdate(s.last_updated_at) || "");
+        document.getElementById("a-stats").innerHTML =
+          statCell(s.total_records, "Records Preserved") +
+          statCell(s.wins, "Wins") +
+          statCell(s.losses, "Losses") +
+          statCell(s.pushes, "Pushes") +
+          statCell(s.voids, "Voids") +
+          statCell(s.open_records, "Open");
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("content").style.display = "block";
+        return fetch(SUPABASE_URL + "/rest/v1/v_public_archive_records?profile_id=eq." + encodeURIComponent(s.profile_id) + "&order=created_at.desc&limit=200", { headers: headers() });
+      })
+      .then(function(res){
+        if (!res) return null;
+        if (!res.ok) throw new Error(res.status);
+        return res.json();
+      })
+      .then(function(rows){
+        if (!rows) return;
+        var feed = document.getElementById("a-feed");
+        if (!rows.length) { feed.innerHTML = '<div class="feed-note">No records in this archive yet.</div>'; return; }
+        feed.innerHTML = rows.map(function(r){
+          var st = resFor(r);
+          var meta = [r.sport, r.event].filter(Boolean).map(esc).join(" · ");
+          var src = r.source_type === "pre_event_filing" ? "Preserved" : "Self reported";
+          var ts = fdate(r.estimated_game_start || r.submitted_at);
+          return '<div class="feed-row">' +
+            '<div class="feed-main"><div class="sel">' + esc(r.selection || r.event || "Entry") + (r.odds ? ' <span style="color:var(--gray-dim);font-weight:400;">' + esc(r.odds) + '</span>' : '') + '</div>' +
+            '<div class="meta">' + meta + (meta ? ' · ' : '') + src + '</div></div>' +
+            '<div class="feed-side"><div class="res ' + st.cls + '">' + esc(st.label) + '</div>' +
+            (ts ? '<div class="ts">' + esc(ts) + '</div>' : '') + '</div></div>';
+        }).join("");
+      })
+      .catch(function(){
+        var feed = document.getElementById("a-feed");
+        if (document.getElementById("content").style.display === "none") { notFound(); }
+        else { feed.innerHTML = '<div class="feed-note">Records are temporarily unavailable.</div>'; }
+      });
+  }
+})();
+</script>
+
+</body>
+</html>

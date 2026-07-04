@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create a Free Public Archive | Vault Verified</title>
+<meta name="description" content="Your picks disappear. Your record shouldn't. Create a free public archive of your sports records in minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#090909;--bg-raised:#111213;--line:#1e2022;--line-soft:#161718;--white:#f2f3f3;--gray:#8a8f93;--gray-dim:#5a5f63;--cyan:#00d4ff;--green:#3ddc84;--red:#e05555;--max:560px;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{background:var(--bg);scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--white);font-family:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;-webkit-font-smoothing:antialiased;line-height:1.5;}
+  a{color:inherit;text-decoration:none;}
+  button,input,textarea,select{font-family:inherit;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px;}
+  .eyebrow{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray-dim);font-weight:500;}
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(9,9,9,0.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:var(--max);margin:0 auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+  .nav-mark{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;}
+  .nav-mark .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);flex-shrink:0;}
+  .nav-cta{font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--gray);border:1px solid var(--line);padding:8px 12px;}
+  .hero{padding:64px 0 48px;border-bottom:1px solid var(--line);}
+  .hero .eyebrow{margin-bottom:20px;}
+  .hero h1{font-size:27px;line-height:1.35;font-weight:700;text-transform:uppercase;margin-bottom:20px;}
+  .hero h1 .quiet{color:var(--gray-dim);}
+  .hero p{color:var(--gray);font-size:14px;line-height:1.75;max-width:46ch;margin-bottom:30px;}
+  .btn{display:block;text-align:center;background:var(--white);color:#090909;font-size:13px;font-weight:600;padding:15px 18px;border:1px solid var(--white);cursor:pointer;width:100%;}
+  .btn:disabled{opacity:0.5;cursor:default;}
+  .how{padding:40px 0;border-bottom:1px solid var(--line);}
+  .how-step{display:flex;gap:14px;padding:12px 0;font-size:13px;color:var(--gray);}
+  .how-step .num{color:var(--cyan);font-weight:600;flex-shrink:0;}
+  .section{padding:40px 0;border-bottom:1px solid var(--line);}
+  .section-title{font-size:16px;font-weight:600;margin-bottom:6px;}
+  .section-sub{color:var(--gray);font-size:12.5px;line-height:1.65;margin-bottom:20px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-dim);margin-bottom:6px;}
+  .field input[type=text], .field input[type=email], .field select, .field textarea{width:100%;background:var(--bg-raised);border:1px solid var(--line);color:var(--white);font-size:13px;padding:12px;}
+  .field input:focus, .field textarea:focus, .field select:focus{outline:1px solid var(--cyan);}
+  .field ::placeholder{color:var(--gray-dim);}
+  textarea{min-height:110px;resize:vertical;}
+  .row-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .btn-quiet{display:block;text-align:center;border:1px solid var(--line);background:var(--bg-raised);color:var(--gray);font-size:12px;padding:12px;cursor:pointer;width:100%;}
+  .preview{border-top:1px solid var(--line);margin-top:20px;}
+  .p-row{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line-soft);font-size:12px;}
+  .p-row .main{min-width:0;overflow-wrap:anywhere;}
+  .p-row .meta{color:var(--gray-dim);font-size:10px;margin-top:2px;}
+  .p-row .rm{color:var(--gray-dim);cursor:pointer;background:none;border:none;font-size:12px;flex-shrink:0;}
+  .p-row .rm:hover{color:var(--red);}
+  .p-count{font-size:11px;color:var(--gray-dim);padding:12px 0;}
+  .err{color:var(--red);font-size:12px;line-height:1.6;margin-top:12px;display:none;}
+  .success{display:none;padding:40px 0;}
+  .success-box{border:1px solid var(--line);background:var(--bg-raised);padding:22px 18px;margin-bottom:24px;}
+  .success-box .t{font-size:15px;font-weight:600;margin-bottom:10px;color:var(--green);}
+  .success-box .url{font-size:13px;color:var(--cyan);overflow-wrap:anywhere;}
+  .upgrade{border:1px solid var(--line);background:var(--bg-raised);padding:22px 18px;}
+  .upgrade .eyebrow{margin-bottom:10px;}
+  .upgrade ul{list-style:none;font-size:12.5px;color:var(--gray);line-height:2;}
+  .upgrade .btn{margin-top:16px;}
+  footer{padding:32px 0 40px;}
+  .footer-legal{font-size:10px;color:var(--gray-dim);}
+  @media(min-width:600px){.hero h1{font-size:32px;}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="/index.html" class="nav-mark"><span class="dot"></span>VAULT VERIFIED</a>
+    <a href="/records.html" class="nav-cta">Records</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Free Public Archive</div>
+    <h1>Your picks disappear.<br><span class="quiet">Your record shouldn't.</span></h1>
+    <p>Create a free public archive of your sports records in minutes. Get a shareable URL that preserves your history in one place.</p>
+    <a href="#create"><button class="btn" type="button">Create Free Archive</button></a>
+  </div>
+</section>
+
+<section class="how">
+  <div class="wrap">
+    <div class="how-step"><span class="num">01</span><span>Create your archive</span></div>
+    <div class="how-step"><span class="num">02</span><span>Add your history</span></div>
+    <div class="how-step"><span class="num">03</span><span>Share your public record</span></div>
+  </div>
+</section>
+
+<div id="builder">
+<section class="section" id="create">
+  <div class="wrap">
+    <div class="section-title">Create Your Archive</div>
+    <div class="section-sub">Handle becomes your public URL. Imported history is labeled self reported.</div>
+    <div class="field"><label for="f-handle">Handle</label><input type="text" id="f-handle" placeholder="YourHandle402" maxlength="30" autocomplete="off"></div>
+    <div class="field"><label for="f-name">Display name</label><input type="text" id="f-name" placeholder="Your Name" maxlength="80"></div>
+    <div class="field"><label for="f-email">Email</label><input type="email" id="f-email" placeholder="you@example.com" maxlength="200"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-title">Add Your History</div>
+    <div class="section-sub">Paste rows or add records one at a time. Paste format, one record per line: sport, event, selection, odds, result, final score. Result is one of win, loss, push, void, or open.</div>
+
+    <div class="field"><label for="f-paste">Paste import (comma or tab separated)</label>
+    <textarea id="f-paste" placeholder="MLB, Dodgers @ Padres, Dodgers ML, -130, win, 5 to 2&#10;NFL, Chiefs @ Bills, Bills +2.5, -110, loss, 24 to 20"></textarea></div>
+    <button class="btn-quiet" type="button" id="btn-parse">Parse Pasted Rows</button>
+
+    <div style="height:22px"></div>
+
+    <div class="field"><label>Manual entry</label>
+      <div class="row-grid">
+        <input type="text" id="m-sport" placeholder="Sport / league" maxlength="60">
+        <input type="text" id="m-event" placeholder="Event" maxlength="200">
+        <input type="text" id="m-selection" placeholder="Selection" maxlength="200">
+        <input type="text" id="m-odds" placeholder="Odds (optional)" maxlength="30">
+        <select id="m-result">
+          <option value="pending">Open</option>
+          <option value="win">Win</option>
+          <option value="loss">Loss</option>
+          <option value="push">Push</option>
+          <option value="void">Void</option>
+        </select>
+        <input type="text" id="m-score" placeholder="Final score (optional)" maxlength="120">
+      </div>
+    </div>
+    <button class="btn-quiet" type="button" id="btn-add">Add Record</button>
+
+    <div class="preview" id="preview" style="display:none;"></div>
+    <div class="p-count" id="p-count"></div>
+  </div>
+</section>
+
+<section class="section" style="border-bottom:none;">
+  <div class="wrap">
+    <button class="btn" type="button" id="btn-publish">Publish Public Archive</button>
+    <div class="err" id="err"></div>
+  </div>
+</section>
+</div>
+
+<section class="success" id="success">
+  <div class="wrap">
+    <div class="success-box">
+      <div class="t">Archive published.</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:10px;">Your public record lives at:</div>
+      <a class="url" id="s-url" href="#"></a>
+    </div>
+    <div class="upgrade">
+      <div class="eyebrow">Want more than an archive?</div>
+      <ul>
+        <li>Historical Audit</li>
+        <li>Integrity Review</li>
+        <li>Public Verification</li>
+        <li>Consultant Profile</li>
+      </ul>
+      <a href="/index.html#founding"><button class="btn" type="button">Upgrade to Vault Verified</button></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap"><div class="footer-legal">© 2026 Vault Verified. All records preserved as filed.</div></div>
+</footer>
+
+<script>
+(function () {
+  var SUPABASE_URL = "https://apmrgvpegtfsqqjcokfv.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";
+  var FN_URL = SUPABASE_URL + "/functions/v1/create-archive";
+  var MAX = 200;
+  var RESULTS = { win:1, loss:1, push:1, void:1, pending:1, open:1 };
+
+  var records = [];
+  var errEl = document.getElementById("err");
+  var publishing = false;
+
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]; }); }
+  function showErr(msg){ errEl.textContent = msg; errEl.style.display = msg ? "block" : "none"; }
+
+  function normResult(v){
+    v = (v || "").trim().toLowerCase();
+    if (v === "open" || v === "") return "pending";
+    return RESULTS[v] ? v : "pending";
+  }
+
+  function renderPreview(){
+    var pv = document.getElementById("preview");
+    var pc = document.getElementById("p-count");
+    if (!records.length){ pv.style.display = "none"; pc.textContent = ""; return; }
+    pv.style.display = "block";
+    pv.innerHTML = records.map(function(r, i){
+      var meta = [r.sport, r.event, r.odds, r.result === "pending" ? "open" : r.result].filter(Boolean).map(esc).join(" · ");
+      return '<div class="p-row"><div class="main">' + esc(r.selection) + '<div class="meta">' + meta + '</div></div>' +
+        '<button class="rm" type="button" data-i="' + i + '">Remove</button></div>';
+    }).join("");
+    pc.textContent = records.length + " of " + MAX + " records staged";
+    Array.prototype.forEach.call(pv.querySelectorAll(".rm"), function(btn){
+      btn.addEventListener("click", function(){ records.splice(parseInt(btn.getAttribute("data-i"), 10), 1); renderPreview(); });
+    });
+  }
+
+  function pushRecord(r){
+    if (records.length >= MAX){ showErr("Import limit is " + MAX + " records."); return false; }
+    if (!r.selection){ return false; }
+    records.push(r); return true;
+  }
+
+  document.getElementById("btn-parse").addEventListener("click", function(){
+    showErr("");
+    var raw = document.getElementById("f-paste").value || "";
+    var lines = raw.split(/\r?\n/).map(function(l){ return l.trim(); }).filter(Boolean);
+    if (!lines.length){ showErr("Nothing to parse."); return; }
+    var added = 0, skipped = 0;
+    lines.forEach(function(line){
+      var parts = line.indexOf("\t") !== -1 ? line.split("\t") : line.split(",");
+      parts = parts.map(function(p){ return p.trim(); });
+      var r = {
+        sport: parts[0] || null,
+        event: parts[1] || null,
+        selection: parts[2] || null,
+        odds: parts[3] || null,
+        result: normResult(parts[4]),
+        final_score: parts[5] || null
+      };
+      if (r.selection && pushRecord(r)) added++; else skipped++;
+    });
+    document.getElementById("f-paste").value = "";
+    renderPreview();
+    if (skipped) showErr(added + " added, " + skipped + " skipped (selection missing in column 3 or limit reached).");
+  });
+
+  document.getElementById("btn-add").addEventListener("click", function(){
+    showErr("");
+    var r = {
+      sport: document.getElementById("m-sport").value.trim() || null,
+      event: document.getElementById("m-event").value.trim() || null,
+      selection: document.getElementById("m-selection").value.trim() || null,
+      odds: document.getElementById("m-odds").value.trim() || null,
+      result: normResult(document.getElementById("m-result").value),
+      final_score: document.getElementById("m-score").value.trim() || null
+    };
+    if (!r.selection){ showErr("Selection is required."); return; }
+    if (pushRecord(r)){
+      ["m-event","m-selection","m-odds","m-score"].forEach(function(id){ document.getElementById(id).value = ""; });
+      renderPreview();
+    }
+  });
+
+  document.getElementById("btn-publish").addEventListener("click", function(){
+    if (publishing) return;
+    showErr("");
+    var handle = document.getElementById("f-handle").value.trim();
+    var name = document.getElementById("f-name").value.trim();
+    var email = document.getElementById("f-email").value.trim();
+    if (!/^[A-Za-z0-9_]{3,30}$/.test(handle)){ showErr("Handle must be 3 to 30 characters: letters, numbers, underscore."); return; }
+    if (!name){ showErr("Display name is required."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ showErr("A valid email is required."); return; }
+    if (!records.length){ showErr("Add at least one record before publishing."); return; }
+
+    publishing = true;
+    var btn = document.getElementById("btn-publish");
+    btn.disabled = true; btn.textContent = "Publishing…";
+
+    fetch(FN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY },
+      body: JSON.stringify({ handle: handle, display_name: name, email: email, records: records })
+    })
+      .then(function(res){ return res.json().then(function(data){ return { ok: res.ok, data: data }; }); })
+      .then(function(out){
+        if (!out.ok){ throw new Error(out.data && out.data.error ? out.data.error : "Publish failed. Try again."); }
+        var url = window.location.origin + out.data.archive_url;
+        var link = document.getElementById("s-url");
+        link.textContent = url; link.href = out.data.archive_url;
+        document.getElementById("builder").style.display = "none";
+        document.getElementById("success").style.display = "block";
+        window.scrollTo(0, 0);
+      })
+      .catch(function(e){
+        showErr(e && e.message ? e.message : "Publish failed. Try again.");
+        publishing = false;
+        btn.disabled = false; btn.textContent = "Publish Public Archive";
+      });
+  });
+})();
+</script>
+
+</body>
+</html>

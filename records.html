@@ -359,7 +359,7 @@
 
   // ---------- Facets: populate filter dropdowns from live data ----------
   function loadFacets() {
-    var url = SUPABASE_URL + "/rest/v1/records?select=profile_id,league,status,result_status&limit=1000";
+    var url = SUPABASE_URL + "/rest/v1/records?select=profile_id,league,status,result_status&source_type=eq.pre_event_filing&limit=1000";
     return fetch(url, { headers: headers() })
       .then(function (res) { return res.json(); })
       .then(function (rows) {
@@ -464,7 +464,7 @@
 
   function buildRecordsUrl(currentOffset) {
     var f = currentFilters();
-    var params = ["select=record_id,profile_id,sport,league,selection,event,status,result_status,preserved_at,created_at"];
+    var params = ["select=record_id,profile_id,sport,league,selection,event,status,result_status,preserved_at,created_at", "source_type=eq.pre_event_filing"];
     if (f.profile_id) params.push("profile_id=eq." + encodeURIComponent(f.profile_id));
     if (f.league) params.push("league=eq." + encodeURIComponent(f.league));
     if (f.status) params.push("status=eq." + encodeURIComponent(f.status));

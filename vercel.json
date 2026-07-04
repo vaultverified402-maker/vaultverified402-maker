@@ -1,5 +1,12 @@
 {
   "rewrites": [
-    { "source": "/consultants/:id", "destination": "/consultant.html" }
+    {
+      "source": "/consultants/:id",
+      "destination": "/consultant.html"
+    },
+    {
+      "source": "/archive/:handle",
+      "destination": "/archive.html"
+    }
   ]
 }
