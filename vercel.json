@@ -8,11 +8,5 @@
       "source": "/archive/:handle",
       "destination": "/archive.html"
     }
-  ],
-  "crons": [
-    {
-      "path": "/api/agents/seed-scout",
-      "schedule": "15 11 * * *"
-    }
   ]
 }
