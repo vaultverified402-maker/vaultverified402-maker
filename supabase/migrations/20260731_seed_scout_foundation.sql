@@ -75,7 +75,7 @@ create table if not exists public.seed_actions (
 create index if not exists seed_actions_queue_idx
   on public.seed_actions (action_state, priority desc, scheduled_for nulls first);
 
-create table if not exists public.agent_runs (
+create table if not exists public.scout_runs (
   id uuid primary key default gen_random_uuid(),
   agent_name text not null,
   run_key text not null unique,
@@ -95,9 +95,9 @@ create table if not exists public.agent_runs (
 alter table public.seed_consultants enable row level security;
 alter table public.seed_observations enable row level security;
 alter table public.seed_actions enable row level security;
-alter table public.agent_runs enable row level security;
+alter table public.scout_runs enable row level security;
 
-revoke all on public.seed_consultants, public.seed_observations, public.seed_actions, public.agent_runs
+revoke all on public.seed_consultants, public.seed_observations, public.seed_actions, public.scout_runs
   from public, anon, authenticated, service_role, seed_scout_runtime;
 
 -- Immutable evidence trigger: observations can only be inserted.
@@ -218,9 +218,9 @@ language plpgsql
 security definer
 set search_path = ''
 as $$
-declare v_run public.agent_runs;
+declare v_run public.scout_runs;
 begin
-  insert into public.agent_runs(agent_name,run_key,owner_token,lease_expires_at)
+  insert into public.scout_runs(agent_name,run_key,owner_token,lease_expires_at)
   values('seed-scout',p_run_key,p_owner_token,now()+make_interval(secs=>greatest(60,p_lease_seconds)))
   on conflict(run_key) do update set
     owner_token = excluded.owner_token,
@@ -228,12 +228,12 @@ begin
     started_at = now(),
     lease_expires_at = excluded.lease_expires_at,
     finished_at = null
-  where public.agent_runs.status <> 'completed'
-    and public.agent_runs.lease_expires_at < now()
+  where public.scout_runs.status <> 'completed'
+    and public.scout_runs.lease_expires_at < now()
   returning * into v_run;
 
   if v_run.id is null then
-    select * into v_run from public.agent_runs where run_key=p_run_key;
+    select * into v_run from public.scout_runs where run_key=p_run_key;
   end if;
   return jsonb_build_object('id',v_run.id,'status',v_run.status,'owner_token',v_run.owner_token,'acquired',v_run.owner_token=p_owner_token);
 end;
@@ -248,10 +248,10 @@ language plpgsql
 security definer
 set search_path = ''
 as $$
-declare v_run public.agent_runs;
+declare v_run public.scout_runs;
 begin
   if p_status not in ('completed','partial','failed') then raise exception 'invalid final status'; end if;
-  update public.agent_runs set
+  update public.scout_runs set
     status=p_status, finished_at=now(), input_count=p_input_count,
     output_count=p_output_count, error_count=p_error_count,
     summary=coalesce(p_summary,'{}'::jsonb)
@@ -280,4 +280,4 @@ grant execute on function private.scout_finish_run(text,uuid,text,integer,intege
 comment on table public.seed_consultants is 'Persistent consultant intelligence. No direct Vault profile link; enrollment requires a separately governed bridge.';
 comment on table public.seed_observations is 'Database-enforced append-only public observations.';
 comment on table public.seed_actions is 'Human-governed, idempotent action queue.';
-comment on table public.agent_runs is 'Leased, idempotent execution ledger for autonomous workers.';
+comment on table public.scout_runs is 'Leased, idempotent execution ledger for Scout.';
