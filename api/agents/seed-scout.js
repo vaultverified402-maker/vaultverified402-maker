@@ -166,6 +166,11 @@ async function ingestFeeds() {
 module.exports = async function handler(req, res) {
   let sql;
   try {
+    if (!['GET', 'POST'].includes(req.method)) {
+      res.setHeader('allow', 'GET, POST');
+      return json(res, 405, { error: 'method_not_allowed' });
+    }
+
     if (req.method === 'GET' && req.query && req.query.health === '1') {
       return json(res, 200, { agent: 'seed-scout', status: 'ready' });
     }
