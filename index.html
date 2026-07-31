@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vault Verified | Public Record Infrastructure</title>
-<meta name="description" content="Vault Verified preserves sports consultant decisions before outcomes are known, creating a public record that can be searched, audited, and judged over time.">
+<title>Vault Verified | Independent Third-Party Verification</title>
+<meta name="description" content="Independent third-party verification for sports consultants. Vault Verified preserves decisions before outcomes are known and grades the complete public record after results are final.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -51,7 +51,6 @@
     .fade-in{opacity:1; transform:none; transition:none;}
   }
 
-  /* ---------- NAV ---------- */
   header.nav{
     position:sticky; top:0; z-index:50;
     background:rgba(9,9,9,0.88);
@@ -74,7 +73,6 @@
     color:var(--gray); border:1px solid var(--line); padding:8px 12px;
   }
 
-  /* ---------- HERO ---------- */
   .hero{padding:72px 0 52px; border-bottom:1px solid var(--line);}
   .hero .eyebrow{margin-bottom:22px;}
   .hero h1{
@@ -106,7 +104,6 @@
     font-size:13px; padding:15px 18px;
   }
 
-  /* ---------- TRUST METRICS ---------- */
   .metrics{border-bottom:1px solid var(--line);}
   .metrics-grid{
     max-width:var(--max); margin:0 auto;
@@ -124,13 +121,39 @@
     color:var(--gray-dim); margin-top:6px;
   }
 
-  /* ---------- SECTIONS ---------- */
   .section{padding:48px 0; border-bottom:1px solid var(--line);}
   .section-head{margin-bottom:24px;}
   .section-title{font-size:16px; font-weight:600; letter-spacing:-0.01em;}
   .section-sub{color:var(--gray); font-size:13px; line-height:1.65; margin-top:8px; max-width:48ch;}
 
-  /* ---------- ARCHIVE SEARCH ---------- */
+  .verification{padding:52px 0; border-bottom:1px solid var(--line);}
+  .verification-card{border:1px solid var(--line); background:var(--bg-raised); padding:24px 20px;}
+  .verification-kicker{display:flex; align-items:center; gap:9px; color:var(--cyan); font-size:10px; letter-spacing:0.11em; text-transform:uppercase; margin-bottom:18px;}
+  .verification-kicker .seal{width:8px; height:8px; border:1px solid var(--cyan); border-radius:50%; box-shadow:inset 0 0 0 2px var(--bg-raised); background:var(--cyan);}
+  .verification h2{font-size:21px; line-height:1.45; letter-spacing:-0.02em; margin-bottom:14px;}
+  .verification-copy{font-size:13px; line-height:1.75; color:var(--gray); max-width:48ch;}
+  .verification-copy strong{color:var(--white); font-weight:500;}
+  .verification-steps{display:grid; grid-template-columns:1fr; margin-top:24px; border-top:1px solid var(--line);}
+  .verification-step{padding:16px 0; border-bottom:1px solid var(--line-soft);}
+  .verification-step:last-child{border-bottom:none; padding-bottom:0;}
+  .verification-step .num{font-size:10px; color:var(--cyan); letter-spacing:0.08em; margin-bottom:6px;}
+  .verification-step .label{font-size:12px; font-weight:600; margin-bottom:4px;}
+  .verification-step .detail{font-size:11px; color:var(--gray-dim); line-height:1.55;}
+
+  .compare{margin-top:28px; border-top:1px solid var(--line);}
+  .compare-head{display:grid; grid-template-columns:1fr 1fr; padding:16px 0 10px;}
+  .compare-head .compare-col{font-size:10px; letter-spacing:0.09em; text-transform:uppercase; color:var(--gray-dim);}
+  .compare-head .compare-col--them{padding-right:12px;}
+  .compare-head .compare-col--us{padding-left:12px; border-left:1px solid var(--line-soft); color:var(--cyan);}
+  .compare-row{display:grid; grid-template-columns:1fr 1fr; padding:12px 0; border-top:1px solid var(--line-soft);}
+  .compare-row .compare-col{font-size:12px; line-height:1.5;}
+  .compare-row .compare-col--them{padding-right:12px; color:var(--gray-dim);}
+  .compare-row .compare-col--us{padding-left:12px; border-left:1px solid var(--line-soft); color:var(--white); font-weight:500;}
+  .verification-closing{
+    margin-top:24px; padding-top:20px; border-top:1px solid var(--line);
+    font-size:13px; color:var(--white); font-weight:500; line-height:1.6;
+  }
+
   .search-row{display:flex; border:1px solid var(--line); background:var(--bg-raised);}
   .search-row input{
     flex:1; min-width:0;
@@ -152,7 +175,6 @@
   }
   .search-hint a{color:var(--gray); text-decoration:underline; text-underline-offset:2px;}
 
-  /* ---------- LIVE FEED ---------- */
   .live-dot{
     display:inline-flex; align-items:center; gap:6px;
     font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
@@ -173,12 +195,13 @@
   .feed-main .meta{font-size:11px; color:var(--gray-dim);}
   .feed-main .meta a{color:var(--gray-dim); text-decoration:underline; text-underline-offset:2px;}
   .feed-main .meta a:hover{color:var(--cyan);}
-  .feed-side{text-align:right; flex-shrink:0;}
-  .feed-side .state{font-size:11px; letter-spacing:0.06em; text-transform:uppercase;}
+  .feed-side{text-align:right; flex-shrink:0; max-width:46%;}
+  .feed-side .state{font-size:11px; letter-spacing:0.06em; text-transform:uppercase; overflow-wrap:anywhere; line-height:1.45;}
   .state--preserved{color:var(--cyan);}
   .state--win{color:var(--green);}
   .state--loss{color:var(--gray);}
   .state--other{color:var(--gray);}
+  .state--pending{color:var(--gray-dim); font-style:italic;}
   .feed-side .ts{font-size:10px; color:var(--gray-dim); margin-top:4px;}
 
   .feed-note, .feed-empty{
@@ -194,7 +217,6 @@
     border:1px solid var(--line); padding:13px;
   }
 
-  /* ---------- FEATURED CONSULTANT ---------- */
   .featured-box{
     border:1px solid var(--line);
     background:var(--bg-raised);
@@ -229,7 +251,6 @@
     text-align:center; line-height:1.7;
   }
 
-  /* ---------- DOCTRINE STRIP ---------- */
   .doctrine-strip{padding:64px 0; border-bottom:1px solid var(--line);}
   .doctrine-strip .eyebrow{margin-bottom:20px;}
   .doctrine-strip blockquote{
@@ -238,7 +259,6 @@
   }
   .doctrine-strip blockquote .quiet{color:var(--gray-dim);}
 
-  /* ---------- FOUNDING ---------- */
   .founding{padding:48px 0; border-bottom:1px solid var(--line);}
   .consultant-list{border-top:1px solid var(--line); margin-top:24px;}
   .consultant-row{
@@ -265,7 +285,6 @@
     margin-top:14px; text-align:center;
   }
 
-  /* ---------- FOOTER ---------- */
   footer{padding:36px 0 44px;}
   .footer-mark{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; margin-bottom:14px;}
   .footer-mark .dot{width:7px; height:7px; border-radius:50%; background:var(--cyan);}
@@ -285,6 +304,10 @@
     .metric{border-bottom:none; border-right:1px solid var(--line-soft);}
     .metric:last-child{border-right:none;}
     .doctrine-strip blockquote{font-size:24px;}
+    .verification-steps{grid-template-columns:repeat(3,1fr);}
+    .verification-step{padding:16px 16px 0; border-bottom:none; border-right:1px solid var(--line-soft);}
+    .verification-step:first-child{padding-left:0;}
+    .verification-step:last-child{border-right:none; padding-right:0;}
   }
 </style>
 </head>
@@ -300,388 +323,121 @@
   </div>
 </header>
 
-<!-- 1. HERO -->
 <section class="hero">
   <div class="wrap">
-    <div class="eyebrow">Public Record Infrastructure</div>
+    <div class="eyebrow">Independent Third-Party Verification</div>
     <h1>The record is the proof.<br><span class="quiet">Not the pick.</span></h1>
-    <p>Vault Verified preserves sports consultant decisions before outcomes are known, creating a public record that can be searched, audited, and judged over time.</p>
+    <p>Vault Verified independently preserves sports consultant decisions before outcomes are known, then grades the complete public record after results are final.</p>
     <div class="search-row">
       <input type="text" id="archive-search" placeholder="Search consultant, selection, event, or record ID" aria-label="Search the record archive" autocomplete="off">
       <button type="button" id="archive-search-btn" aria-label="Search records">Search</button>
     </div>
     <div class="search-hint">Every preserved entry remains part of the public record. Browse the <a href="/records.html">full record history</a>.</div>
     <div class="hero-actions">
-      <a href="#founding" class="btn-secondary">View Founding Consultants</a>
+      <a href="/records.html" class="btn-secondary">View Public Records</a>
+      <a href="/apply.html" class="btn-primary">Become a Consultant</a>
     </div>
   </div>
 </section>
 
-<!-- 2. TRUST METRICS -->
 <section class="metrics" aria-label="Archive metrics">
   <div class="metrics-grid">
-    <div class="metric">
-      <div class="n" id="metric-records">&middot;&middot;&middot;</div>
-      <div class="l">Records Preserved</div>
-    </div>
-    <div class="metric">
-      <div class="n" id="metric-consultants">&middot;&middot;&middot;</div>
-      <div class="l">Public Consultants</div>
-    </div>
-    <div class="metric">
-      <div class="n" id="metric-since">&middot;&middot;&middot;</div>
-      <div class="l">Preserving Since</div>
-    </div>
-    <div class="metric">
-      <div class="n">Public</div>
-      <div class="l">Transparency System</div>
+    <div class="metric"><div class="n" id="metric-records">&middot;&middot;&middot;</div><div class="l">Records Preserved</div></div>
+    <div class="metric"><div class="n" id="metric-consultants">&middot;&middot;&middot;</div><div class="l">Public Consultants</div></div>
+    <div class="metric"><div class="n" id="metric-since">&middot;&middot;&middot;</div><div class="l">Preserving Since</div></div>
+    <div class="metric"><div class="n">Public</div><div class="l">Transparency System</div></div>
+  </div>
+</section>
+
+<section class="verification" id="verification">
+  <div class="wrap">
+    <div class="verification-card">
+      <div class="verification-kicker"><span class="seal"></span>Independent Verification Standard</div>
+      <h2>Anyone can claim a record.<br>Very few can have it independently verified.</h2>
+      <div class="verification-copy">Most consultant records are published by the same person selling the selections. <strong>Vault Verified separates the consultant making the claim from the system preserving and grading the record.</strong> Every record is preserved before the event begins, graded after the final result, and advanced through a standardized verification process. No edits. No resets. No rewritten history.</div>
+      <div class="compare" aria-label="Self-reported claims compared with Vault Verified records">
+        <div class="compare-head"><div class="compare-col compare-col--them">Self-Reported</div><div class="compare-col compare-col--us">Vault Verified</div></div>
+        <div class="compare-row"><div class="compare-col compare-col--them">Screenshots</div><div class="compare-col compare-col--us">Independent verification</div></div>
+        <div class="compare-row"><div class="compare-col compare-col--them">Selective history</div><div class="compare-col compare-col--us">Complete history</div></div>
+        <div class="compare-row"><div class="compare-col compare-col--them">Editable</div><div class="compare-col compare-col--us">Preserved</div></div>
+        <div class="compare-row"><div class="compare-col compare-col--them">Claims</div><div class="compare-col compare-col--us">Verifiable evidence</div></div>
+      </div>
+      <div class="verification-steps" aria-label="Verification process">
+        <div class="verification-step"><div class="num">01 / PRESERVE</div><div class="label">Filed before start</div><div class="detail">The selection and timestamp are locked before the outcome is known.</div></div>
+        <div class="verification-step"><div class="num">02 / GRADE</div><div class="label">Checked after final</div><div class="detail">The outcome is graded against documented event results and advanced through the verification standard.</div></div>
+        <div class="verification-step"><div class="num">03 / PUBLISH</div><div class="label">History stays visible</div><div class="detail">Wins and losses remain attached to the same public record. No resets.</div></div>
+      </div>
+      <div class="verification-closing">Vault Verified is the independent third-party verification layer for sports consultants.</div>
     </div>
   </div>
 </section>
 
-<!-- 3. LIVE RECORD FEED -->
 <section class="section" id="records">
   <div class="wrap">
-    <div class="section-head">
-      <div class="section-title">Latest Preserved Entries</div>
-      <div class="section-sub">Preserved as filed. Graded against the result.</div>
-    </div>
+    <div class="section-head"><div class="section-title">Latest Preserved Entries</div><div class="section-sub">Preserved as filed. Graded against the result.</div></div>
     <span class="live-dot" style="margin-bottom:14px; display:inline-flex;"><span class="pulse"></span>Live</span>
-    <div class="feed" id="feed-list">
-      <div class="feed-note" data-skeleton>Loading preserved entries&hellip;</div>
-    </div>
+    <div class="feed" id="feed-list"><div class="feed-note" data-skeleton>Loading preserved entries&hellip;</div></div>
     <a href="/records.html" class="view-all">View Full Record History</a>
   </div>
 </section>
 
-<!-- 5. FEATURED CONSULTANT -->
 <section class="section" id="featured">
   <div class="wrap">
-    <div class="section-head">
-      <div class="section-title">Featured Consultant</div>
-      <div class="section-sub">Independent record holders, each operating under a stated doctrine.</div>
-    </div>
-    <div id="featured-slot">
-      <div class="featured-fallback" data-skeleton>Loading consultant profile&hellip;</div>
-    </div>
+    <div class="section-head"><div class="section-title">Featured Consultant</div><div class="section-sub">Public record holders, each operating under a stated doctrine.</div></div>
+    <div id="featured-slot"><div class="featured-fallback" data-skeleton>Loading consultant profile&hellip;</div></div>
   </div>
 </section>
 
-<!-- 6. DOCTRINE STRIP -->
-<section class="doctrine-strip">
-  <div class="wrap">
-    <div class="eyebrow">Doctrine</div>
-    <blockquote>Trust is not created by claims.<br><span class="quiet">Trust is created by preserved history.</span></blockquote>
-  </div>
-</section>
+<section class="doctrine-strip"><div class="wrap"><div class="eyebrow">Doctrine</div><blockquote>Trust is not created by claims.<br><span class="quiet">Trust is created by preserved history.</span></blockquote></div></section>
 
-<!-- 7. FOUNDING CONSULTANTS + 8. CTA -->
 <section class="founding" id="founding">
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow" style="margin-bottom:14px;">Limited Enrollment</div>
-      <div class="section-title">Founding Consultants</div>
-      <div class="section-sub">Founding consultants file the first entries in a public record system built to outlast any single claim. History compounds from day one.</div>
-    </div>
-    <div class="consultant-list" id="consultant-list">
-      <div class="consultant-note" data-skeleton>Loading consultants&hellip;</div>
-    </div>
-    <!-- APPLY CTA SLOT: when an application page or intake form exists, restore:
-         <a href="APPLY_URL" class="founding-cta">Request Founding Consultant Access</a> -->
+    <div class="section-head"><div class="eyebrow" style="margin-bottom:14px;">Limited Enrollment</div><div class="section-title">Founding Consultants</div><div class="section-sub">Founding consultants file the first entries in a public record system built to outlast any single claim. History compounds from day one.</div></div>
+    <div class="consultant-list" id="consultant-list"><div class="consultant-note" data-skeleton>Loading consultants&hellip;</div></div>
+    <a href="/apply.html" class="founding-cta">Become a Founding Consultant</a>
     <div class="founding-fineprint">Permanent public profile. Doctrine attached to every entry. No retroactive edits, ever.</div>
   </div>
 </section>
 
-<footer>
-  <div class="wrap">
-    <div class="footer-mark"><span class="dot"></span>VAULT VERIFIED</div>
-    <div class="footer-tag">Public record infrastructure for sports consultants. History earns trust. Not claims.</div>
-    <div class="footer-links">
-      <a href="/records.html">Records</a>
-      <a href="#records">Latest Entries</a>
-      <a href="#founding">Consultants</a>
-    </div>
-    <div class="footer-legal">&copy; 2026 Vault Verified. All records preserved as filed.</div>
-  </div>
-</footer>
+<footer><div class="wrap"><div class="footer-mark"><span class="dot"></span>VAULT VERIFIED</div><div class="footer-tag">Independent third-party verification for sports consultants. Preserve the truth before it can be rewritten.</div><div class="footer-links"><a href="/records.html">Records</a><a href="#records">Latest Entries</a><a href="#founding">Consultants</a></div><div class="footer-legal">&copy; 2026 Vault Verified. All records preserved as filed.</div></div></footer>
 
 <script>
 (function () {
   "use strict";
-
   var SUPABASE_URL = "https://apmrgvpegtfsqqjcokfv.supabase.co";
   var SUPABASE_KEY = "sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";
   var FEED_LIMIT = 5;
   var FOUNDING_LIMIT = 6;
   var FEATURED_ID = "GG402-0001";
-
-  function headers(extra) {
-    var h = { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY };
-    if (extra) { Object.keys(extra).forEach(function (k) { h[k] = extra[k]; }); }
-    return h;
-  }
-
-  function escapeHtml(str) {
-    return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) {
-      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
-    });
-  }
-
-  function titleCase(str) {
-    if (!str) return "";
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  }
-
-  function formatDate(raw, opts) {
-    if (!raw) return null;
-    try {
-      return new Date(raw).toLocaleDateString("en-US", Object.assign(
-        { month: "short", day: "numeric", timeZone: "America/Chicago" }, opts || {}
-      ));
-    } catch (e) { return null; }
-  }
-
-  /* ---------- Fade in sections ---------- */
-  try {
-    var sections = document.querySelectorAll("section");
-    sections.forEach(function (s) { s.classList.add("fade-in"); });
-    if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            io.unobserve(entry.target);
-          }
-        });
-      }, { rootMargin: "0px 0px -8% 0px" });
-      sections.forEach(function (s) { io.observe(s); });
-    } else {
-      sections.forEach(function (s) { s.classList.add("visible"); });
-    }
-  } catch (e) {
-    document.querySelectorAll("section").forEach(function (s) { s.classList.add("visible"); });
-  }
-
-  /* ---------- 2. Trust metrics ---------- */
-  function parseTotal(contentRange) {
-    if (!contentRange) return null;
-    var total = contentRange.split("/")[1];
-    if (total === "*" || total === undefined) return null;
-    var n = parseInt(total, 10);
-    return isNaN(n) ? null : n;
-  }
-
-  function loadCount(queryPath, elId) {
-    var el = document.getElementById(elId);
-    fetch(SUPABASE_URL + "/rest/v1/" + queryPath, {
-      method: "HEAD",
-      headers: headers({ Prefer: "count=exact", Range: "0-0" })
-    })
-      .then(function (res) {
-        var total = parseTotal(res.headers.get("content-range"));
-        if (total === null) throw new Error("no count");
-        el.textContent = String(total);
-      })
-      .catch(function () { el.textContent = "Live"; });
-  }
-
-  function loadFirstRecordDate() {
-    var el = document.getElementById("metric-since");
-    fetch(SUPABASE_URL + "/rest/v1/records?select=created_at&source_type=eq.pre_event_filing&order=created_at.asc&limit=1", {
-      headers: headers()
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error("Request failed: " + res.status);
-        return res.json();
-      })
-      .then(function (rows) {
-        if (!rows || !rows.length || !rows[0].created_at) throw new Error("empty");
-        var label = formatDate(rows[0].created_at, { day: undefined, year: "numeric" });
-        if (!label) throw new Error("bad date");
-        el.textContent = label;
-      })
-      .catch(function () { el.textContent = "2026"; });
-  }
-
+  function headers(extra) { var h = { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }; if (extra) Object.keys(extra).forEach(function (k) { h[k] = extra[k]; }); return h; }
+  function escapeHtml(str) { return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) { return ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[c]; }); }
+  function titleCase(str) { if (!str) return ""; return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase(); }
+  function formatDate(raw, opts) { if (!raw) return null; try { return new Date(raw).toLocaleDateString("en-US", Object.assign({ month:"short", day:"numeric", timeZone:"America/Chicago" }, opts || {})); } catch (e) { return null; } }
+  try { var sections = document.querySelectorAll("section"); sections.forEach(function (s) { s.classList.add("fade-in"); }); if ("IntersectionObserver" in window) { var io = new IntersectionObserver(function (entries) { entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add("visible"); io.unobserve(entry.target); } }); }, { rootMargin:"0px 0px -8% 0px" }); sections.forEach(function (s) { io.observe(s); }); } else sections.forEach(function (s) { s.classList.add("visible"); }); } catch (e) { document.querySelectorAll("section").forEach(function (s) { s.classList.add("visible"); }); }
+  function parseTotal(contentRange) { if (!contentRange) return null; var total = contentRange.split("/")[1]; if (total === "*" || total === undefined) return null; var n = parseInt(total, 10); return isNaN(n) ? null : n; }
+  function loadCount(queryPath, elId) { var el = document.getElementById(elId); fetch(SUPABASE_URL + "/rest/v1/" + queryPath, { method:"HEAD", headers:headers({ Prefer:"count=exact", Range:"0-0" }) }).then(function (res) { var total = parseTotal(res.headers.get("content-range")); if (total === null) throw new Error("no count"); el.textContent = String(total); }).catch(function () { el.textContent = "Live"; }); }
+  function loadFirstRecordDate() { var el = document.getElementById("metric-since"); fetch(SUPABASE_URL + "/rest/v1/records?select=created_at&source_type=eq.pre_event_filing&order=created_at.asc&limit=1", { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { if (!rows || !rows.length || !rows[0].created_at) throw new Error("empty"); var label = formatDate(rows[0].created_at, { day:undefined, year:"numeric" }); if (!label) throw new Error("bad date"); el.textContent = label; }).catch(function () { el.textContent = "2026"; }); }
   loadCount("records?select=*&source_type=eq.pre_event_filing", "metric-records");
   loadCount("profiles?select=*&visibility=eq.public&consultant_type=neq.archive", "metric-consultants");
   loadFirstRecordDate();
-
-  /* ---------- 3. Archive search ---------- */
-  var searchInput = document.getElementById("archive-search");
-  var searchBtn = document.getElementById("archive-search-btn");
-
-  function goSearch() {
-    var term = (searchInput.value || "").trim();
-    if (term) {
-      window.location.href = "/records.html?search=" + encodeURIComponent(term);
-    } else {
-      window.location.href = "/records.html";
-    }
-  }
-
-  searchBtn.addEventListener("click", goSearch);
-  searchInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") goSearch();
-  });
-
-  /* ---------- 4. Live record feed ---------- */
-  function stateFor(record) {
-    if (record.result_status === "win") return { cls: "state--win", label: "Result: Win" };
-    if (record.result_status === "loss") return { cls: "state--loss", label: "Result: Loss" };
-    if (record.result_status) return { cls: "state--other", label: "Result: " + titleCase(record.result_status) };
-    return { cls: "state--preserved", label: titleCase(record.status || "Preserved") };
-  }
-
-  function renderFeedRow(record) {
-    var state = stateFor(record);
-    var ts = formatDate(record.preserved_at || record.created_at);
-    var leagueLabel = record.league || record.sport || "";
-    var consultantLink = record.profile_id
-      ? '<a href="/consultants/' + encodeURIComponent(record.profile_id) + '">' + escapeHtml(record.profile_id) + '</a>'
-      : "";
-    var meta = [consultantLink, escapeHtml(leagueLabel)].filter(Boolean).join(" &middot; ");
-    return (
-      '<div class="feed-row">' +
-        '<div class="feed-main">' +
-          '<div class="rid">' + escapeHtml(record.record_id) + '</div>' +
-          '<div class="sel">' + escapeHtml(record.selection || record.event || "Entry") + '</div>' +
-          '<div class="meta">' + meta + '</div>' +
-        '</div>' +
-        '<div class="feed-side">' +
-          '<div class="state ' + state.cls + '">' + escapeHtml(state.label) + '</div>' +
-          (ts ? '<div class="ts">' + escapeHtml(ts) + '</div>' : '') +
-        '</div>' +
-      '</div>'
-    );
-  }
-
-  function loadFeed() {
-    var listEl = document.getElementById("feed-list");
-    var url = SUPABASE_URL + "/rest/v1/records" +
-      "?select=record_id,profile_id,sport,league,selection,event,status,result_status,preserved_at,created_at" +
-      "&source_type=eq.pre_event_filing&order=preserved_at.desc.nullslast,created_at.desc&limit=" + FEED_LIMIT;
-    fetch(url, { headers: headers() })
-      .then(function (res) {
-        if (!res.ok) throw new Error("Request failed: " + res.status);
-        return res.json();
-      })
-      .then(function (rows) {
-        if (!rows || rows.length === 0) {
-          listEl.innerHTML = '<div class="feed-empty">No preserved entries yet. The archive begins with the first filing.</div>';
-          return;
-        }
-        listEl.innerHTML = rows.map(renderFeedRow).join("");
-      })
-      .catch(function () {
-        listEl.innerHTML = '<div class="feed-note">Live entries are temporarily unavailable. The full archive remains at <a href="/records.html" style="color:var(--gray); text-decoration:underline;">records.html</a>.</div>';
-      });
-  }
-
+  var searchInput = document.getElementById("archive-search"), searchBtn = document.getElementById("archive-search-btn");
+  function goSearch() { var term = (searchInput.value || "").trim(); window.location.href = term ? "/records.html?search=" + encodeURIComponent(term) : "/records.html"; }
+  searchBtn.addEventListener("click", goSearch); searchInput.addEventListener("keydown", function (e) { if (e.key === "Enter") goSearch(); });
+  var FINAL_GRADING_STATES = { VERIFIED:true };
+  var GRADING_QUALIFIER = { GRADED:"Graded", GRADED_PENDING_SOURCE_VALIDATION:"Pending Source Validation", GRADED_PENDING_CONFIRMATION:"Pending Confirmation", SOURCE_CONFLICT:"Source Conflict", MANUAL_REVIEW:"Manual Review" };
+  function stateFor(record) { var isWinLoss = record.result_status === "win" || record.result_status === "loss"; if (isWinLoss) { var resultLabel = record.result_status === "win" ? "Win" : "Loss"; var qualifier = GRADING_QUALIFIER[record.grading_state]; if (record.grading_state && !FINAL_GRADING_STATES[record.grading_state]) return { cls:"state--pending", label:resultLabel + (qualifier ? " · " + qualifier : " · Grading In Progress") }; return record.result_status === "win" ? { cls:"state--win", label:"Result: Win" } : { cls:"state--loss", label:"Result: Loss" }; } if (record.result_status) return { cls:"state--other", label:"Result: " + titleCase(record.result_status) }; return { cls:"state--preserved", label:titleCase(record.status || "Preserved") }; }
+  function renderFeedRow(record) { var state = stateFor(record); var ts = formatDate(record.preserved_at || record.created_at); var leagueLabel = record.league || record.sport || ""; var consultantLink = record.profile_id ? '<a href="/consultants/' + encodeURIComponent(record.profile_id) + '">' + escapeHtml(record.profile_id) + '</a>' : ""; var meta = [consultantLink, escapeHtml(leagueLabel)].filter(Boolean).join(" &middot; "); return '<div class="feed-row"><div class="feed-main"><div class="rid">' + escapeHtml(record.record_id) + '</div><div class="sel">' + escapeHtml(record.selection || record.event || "Entry") + '</div><div class="meta">' + meta + '</div></div><div class="feed-side"><div class="state ' + state.cls + '">' + escapeHtml(state.label) + '</div>' + (ts ? '<div class="ts">' + escapeHtml(ts) + '</div>' : '') + '</div></div>'; }
+  function loadFeed() { var listEl = document.getElementById("feed-list"); var url = SUPABASE_URL + "/rest/v1/records?select=record_id,profile_id,sport,league,selection,event,status,result_status,grading_state,preserved_at,created_at&source_type=eq.pre_event_filing&order=preserved_at.desc.nullslast,created_at.desc&limit=" + FEED_LIMIT; fetch(url, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { listEl.innerHTML = !rows || rows.length === 0 ? '<div class="feed-empty">No preserved entries yet. The archive begins with the first filing.</div>' : rows.map(renderFeedRow).join(""); }).catch(function () { listEl.innerHTML = '<div class="feed-note">Live entries are temporarily unavailable. The full archive remains at <a href="/records.html" style="color:var(--gray); text-decoration:underline;">records.html</a>.</div>'; }); }
   loadFeed();
-
-  /* ---------- 5. Featured consultant ---------- */
   var PROFILE_SELECT = "select=profile_id,name,handle,doctrine_name,wins,losses,win_pct";
-
-  function renderFeatured(profile) {
-    var slot = document.getElementById("featured-slot");
-    var wins = profile.wins == null ? 0 : profile.wins;
-    var losses = profile.losses == null ? 0 : profile.losses;
-    var winPct = (profile.win_pct === null || profile.win_pct === undefined)
-      ? "Pending"
-      : parseFloat(profile.win_pct).toFixed(1) + "%";
-    var handle = profile.handle ? "@" + profile.handle : profile.profile_id;
-    slot.innerHTML =
-      '<div class="featured-box">' +
-        '<div class="featured-top">' +
-          '<div class="featured-name">' + escapeHtml(profile.name || profile.profile_id) + '</div>' +
-          '<div class="featured-handle">' + escapeHtml(handle) + '</div>' +
-        '</div>' +
-        (profile.doctrine_name ? '<div class="featured-doctrine">' + escapeHtml(profile.doctrine_name) + '</div>' : '') +
-        '<div class="featured-stats">' +
-          '<div class="fstat"><div class="n">' + escapeHtml(wins) + '</div><div class="l">Wins</div></div>' +
-          '<div class="fstat"><div class="n">' + escapeHtml(losses) + '</div><div class="l">Losses</div></div>' +
-          '<div class="fstat"><div class="n">' + escapeHtml(winPct) + '</div><div class="l">Win Rate</div></div>' +
-        '</div>' +
-        '<a href="/consultants/' + encodeURIComponent(profile.profile_id) + '" class="featured-link">View Full Record History</a>' +
-      '</div>';
-  }
-
-  function featuredFallback() {
-    document.getElementById("featured-slot").innerHTML =
-      '<div class="featured-fallback">Consultant profiles are temporarily unavailable.<br>' +
-      '<a href="/records.html" style="color:var(--gray); text-decoration:underline;">Browse the public record archive</a></div>';
-  }
-
-  function loadFeatured() {
-    var preferred = SUPABASE_URL + "/rest/v1/profiles?" + PROFILE_SELECT +
-      "&profile_id=eq." + encodeURIComponent(FEATURED_ID) + "&limit=1";
-    fetch(preferred, { headers: headers() })
-      .then(function (res) {
-        if (!res.ok) throw new Error("Request failed: " + res.status);
-        return res.json();
-      })
-      .then(function (rows) {
-        if (rows && rows.length) { renderFeatured(rows[0]); return null; }
-        return fetch(SUPABASE_URL + "/rest/v1/profiles?" + PROFILE_SELECT + "&consultant_type=neq.archive&order=profile_id.asc&limit=1", { headers: headers() })
-          .then(function (res) {
-            if (!res.ok) throw new Error("Request failed: " + res.status);
-            return res.json();
-          })
-          .then(function (fallbackRows) {
-            if (fallbackRows && fallbackRows.length) { renderFeatured(fallbackRows[0]); }
-            else { featuredFallback(); }
-          });
-      })
-      .catch(featuredFallback);
-  }
-
+  function renderFeatured(profile) { var slot = document.getElementById("featured-slot"); var wins = profile.wins == null ? 0 : profile.wins, losses = profile.losses == null ? 0 : profile.losses, parsedWinPct = parseFloat(profile.win_pct), winPct = Number.isFinite(parsedWinPct) ? parsedWinPct.toFixed(1) + "%" : "Pending", handle = profile.handle ? "@" + profile.handle : profile.profile_id; slot.innerHTML = '<div class="featured-box"><div class="featured-top"><div class="featured-name">' + escapeHtml(profile.name || profile.profile_id) + '</div><div class="featured-handle">' + escapeHtml(handle) + '</div></div>' + (profile.doctrine_name ? '<div class="featured-doctrine">' + escapeHtml(profile.doctrine_name) + '</div>' : '') + '<div class="featured-stats"><div class="fstat"><div class="n">' + escapeHtml(wins) + '</div><div class="l">Wins</div></div><div class="fstat"><div class="n">' + escapeHtml(losses) + '</div><div class="l">Losses</div></div><div class="fstat"><div class="n">' + escapeHtml(winPct) + '</div><div class="l">Win Rate</div></div></div><a href="/consultants/' + encodeURIComponent(profile.profile_id) + '" class="featured-link">View Full Record History</a></div>'; }
+  function featuredFallback() { document.getElementById("featured-slot").innerHTML = '<div class="featured-fallback">Consultant profiles are temporarily unavailable.<br><a href="/records.html" style="color:var(--gray); text-decoration:underline;">Browse the public record archive</a></div>'; }
+  function loadFeatured() { var preferred = SUPABASE_URL + "/rest/v1/profiles?" + PROFILE_SELECT + "&profile_id=eq." + encodeURIComponent(FEATURED_ID) + "&visibility=eq.public&limit=1"; fetch(preferred, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { if (rows && rows.length) { renderFeatured(rows[0]); return null; } return fetch(SUPABASE_URL + "/rest/v1/profiles?" + PROFILE_SELECT + "&visibility=eq.public&consultant_type=neq.archive&order=profile_id.asc&limit=1", { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (fallbackRows) { if (fallbackRows && fallbackRows.length) renderFeatured(fallbackRows[0]); else featuredFallback(); }); }).catch(featuredFallback); }
   loadFeatured();
-
-  /* ---------- 7. Founding consultant list ---------- */
-  function renderConsultantRow(profile) {
-    var sub = [profile.profile_id, profile.doctrine_name].filter(Boolean).join(" &middot; ");
-    return (
-      '<a class="consultant-row" href="/consultants/' + encodeURIComponent(profile.profile_id) + '">' +
-        '<div class="who">' +
-          '<div class="name">' + escapeHtml(profile.name || profile.profile_id) + '</div>' +
-          '<div class="sub">' + sub + '</div>' +
-        '</div>' +
-        '<div class="arrow">&rarr;</div>' +
-      '</a>'
-    );
-  }
-
-  function loadConsultants() {
-    var listEl = document.getElementById("consultant-list");
-    var url = SUPABASE_URL + "/rest/v1/profiles?select=profile_id,name,handle,doctrine_name" +
-      "&consultant_type=neq.archive&order=profile_id.asc&limit=" + FOUNDING_LIMIT;
-    fetch(url, { headers: headers() })
-      .then(function (res) {
-        if (!res.ok) throw new Error("Request failed: " + res.status);
-        return res.json();
-      })
-      .then(function (rows) {
-        if (!rows || rows.length === 0) {
-          listEl.innerHTML = '<div class="consultant-note">Founding seats are open. The first public profiles will appear here.</div>';
-          return;
-        }
-        listEl.innerHTML = rows.map(function (p) {
-          return renderConsultantRow({
-            profile_id: p.profile_id,
-            name: p.name,
-            doctrine_name: p.doctrine_name
-          });
-        }).join("");
-      })
-      .catch(function () {
-        listEl.innerHTML = '<div class="consultant-note">Consultant profiles are temporarily unavailable.</div>';
-      });
-  }
-
+  function renderConsultantRow(profile) { var sub = [profile.profile_id, profile.doctrine_name].filter(Boolean).join(" &middot; "); return '<a class="consultant-row" href="/consultants/' + encodeURIComponent(profile.profile_id) + '"><div class="who"><div class="name">' + escapeHtml(profile.name || profile.profile_id) + '</div><div class="sub">' + sub + '</div></div><div class="arrow">&rarr;</div></a>'; }
+  function loadConsultants() { var listEl = document.getElementById("consultant-list"); var url = SUPABASE_URL + "/rest/v1/profiles?select=profile_id,name,handle,doctrine_name&visibility=eq.public&consultant_type=neq.archive&order=profile_id.asc&limit=" + FOUNDING_LIMIT; fetch(url, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { listEl.innerHTML = !rows || rows.length === 0 ? '<div class="consultant-note">Founding seats are open. The first public profiles will appear here.</div>' : rows.map(function (p) { return renderConsultantRow({ profile_id:p.profile_id, name:p.name, doctrine_name:p.doctrine_name }); }).join(""); }).catch(function () { listEl.innerHTML = '<div class="consultant-note">Consultant profiles are temporarily unavailable.</div>'; }); }
   loadConsultants();
 })();
 </script>
-
 </body>
 </html>
