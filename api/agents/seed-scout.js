@@ -1,7 +1,7 @@
 const crypto = require('node:crypto');
+const postgres = require('postgres');
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SCOUT_DATABASE_URL = process.env.SCOUT_DATABASE_URL;
 const AGENT_SECRET = process.env.AGENT_SECRET;
 
 function json(res, status, body) {
@@ -14,12 +14,36 @@ function normalize(value) {
   return String(value || '').trim();
 }
 
-function seedKey(platform, handle) {
-  return `${normalize(platform).toLowerCase()}:${normalize(handle).toLowerCase().replace(/^@/, '')}`;
+function canonicalUrl(value) {
+  const raw = normalize(value);
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    url.hash = '';
+    for (const key of [...url.searchParams.keys()]) {
+      if (key.toLowerCase().startsWith('utm_')) url.searchParams.delete(key);
+    }
+    url.hostname = url.hostname.toLowerCase();
+    url.pathname = url.pathname.replace(/\/$/, '') || '/';
+    return url.toString();
+  } catch {
+    return raw;
+  }
 }
 
-function fingerprint(input) {
-  return crypto.createHash('sha256').update(JSON.stringify(input)).digest('hex');
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') {
+    return Object.keys(value).sort().reduce((out, key) => {
+      out[key] = stable(value[key]);
+      return out;
+    }, {});
+  }
+  return value;
+}
+
+function digest(value) {
+  return crypto.createHash('sha256').update(JSON.stringify(stable(value))).digest('hex');
 }
 
 function scoreCandidate(candidate) {
@@ -27,120 +51,93 @@ function scoreCandidate(candidate) {
   const reasons = [];
   const followers = Number(candidate.follower_count || 0);
 
-  if (candidate.public_picks_detected) {
-    score += 35;
-    reasons.push('public_picks_detected');
-  }
-  if (candidate.profile_url) {
-    score += 10;
-    reasons.push('public_profile_available');
-  }
-  if (followers >= 1000) {
-    score += 10;
-    reasons.push('audience_1k_plus');
-  }
-  if (followers >= 10000) {
-    score += 10;
-    reasons.push('audience_10k_plus');
-  }
-  if (candidate.contact_available) {
-    score += 10;
-    reasons.push('contact_available');
-  }
-  if (candidate.recent_activity) {
-    score += 15;
-    reasons.push('recent_activity');
-  }
+  if (candidate.public_picks_detected) { score += 35; reasons.push('public_picks_detected'); }
+  if (candidate.profile_url) { score += 10; reasons.push('public_profile_available'); }
+  if (followers >= 1000) { score += 10; reasons.push('audience_1k_plus'); }
+  if (followers >= 10000) { score += 10; reasons.push('audience_10k_plus'); }
+  if (candidate.contact_available) { score += 10; reasons.push('contact_available'); }
+  if (candidate.recent_activity) { score += 15; reasons.push('recent_activity'); }
 
   return { score: Math.min(score, 100), reasons };
 }
 
-async function supabase(path, options = {}) {
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
-  }
-
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    ...options,
-    headers: {
-      apikey: SUPABASE_SERVICE_ROLE_KEY,
-      authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-      'content-type': 'application/json',
-      prefer: 'return=representation,resolution=merge-duplicates',
-      ...(options.headers || {})
-    }
+function buildObservationFingerprint(seedKey, candidate) {
+  return digest({
+    seed_key: seedKey,
+    observation_type: candidate.observation_type || 'candidate_discovered',
+    source_url: canonicalUrl(candidate.source_url || candidate.profile_url),
+    source_post_id: normalize(candidate.source_post_id || candidate.publication_id) || null,
+    published_at: candidate.published_at || candidate.last_public_activity_at || null,
+    evidence_key: normalize(candidate.evidence_key || candidate.selection_key) || null
   });
-
-  const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
-  if (!response.ok) {
-    throw new Error(`Supabase ${response.status}: ${text}`);
-  }
-  return data;
 }
 
-async function upsertCandidate(candidate, sourceType = 'manual') {
-  const platform = normalize(candidate.primary_platform || candidate.platform);
-  const handle = normalize(candidate.primary_handle || candidate.handle).replace(/^@/, '');
+function buildActionKey(seedId, actionType, triggerFingerprint) {
+  return `${seedId}:${actionType}:${triggerFingerprint}`;
+}
+
+function getSql() {
+  if (!SCOUT_DATABASE_URL) throw new Error('Missing SCOUT_DATABASE_URL');
+  return postgres(SCOUT_DATABASE_URL, {
+    max: 1,
+    idle_timeout: 5,
+    connect_timeout: 10,
+    ssl: 'require',
+    prepare: false
+  });
+}
+
+async function upsertCandidate(sql, candidate, sourceType = 'manual') {
+  const platform = normalize(candidate.primary_platform || candidate.platform).toLowerCase();
+  const handle = normalize(candidate.primary_handle || candidate.handle).replace(/^@/, '').toLowerCase();
   if (!platform || !handle) throw new Error('Candidate requires platform and handle');
 
   const scoring = scoreCandidate(candidate);
-  const key = seedKey(platform, handle);
-  const lifecycle = scoring.score >= 70 ? 'outreach_ready' : scoring.score >= 45 ? 'qualified' : 'discovered';
+  const seedKey = `${platform}:${handle}`;
+  const sourceUrl = canonicalUrl(candidate.source_url || candidate.profile_url);
+  const observationFingerprint = buildObservationFingerprint(seedKey, candidate);
 
-  const row = {
-    seed_key: key,
-    display_name: normalize(candidate.display_name) || null,
-    primary_handle: handle,
-    primary_platform: platform.toLowerCase(),
-    profile_url: normalize(candidate.profile_url) || null,
-    follower_count: Number.isFinite(Number(candidate.follower_count)) ? Number(candidate.follower_count) : null,
-    public_picks_detected: Boolean(candidate.public_picks_detected),
-    lifecycle_state: lifecycle,
+  const candidatePayload = {
+    ...candidate,
+    platform,
+    handle,
+    profile_url: canonicalUrl(candidate.profile_url),
     opportunity_score: scoring.score,
     score_reasons: scoring.reasons,
     source_type: sourceType,
-    source_ref: normalize(candidate.source_ref) || null,
-    last_seen_at: new Date().toISOString(),
-    last_public_activity_at: candidate.last_public_activity_at || null,
-    next_action_at: lifecycle === 'outreach_ready' ? new Date().toISOString() : null,
-    metadata: candidate.metadata || {}
+    source_ref: normalize(candidate.source_ref) || null
   };
 
-  const seeds = await supabase('seed_consultants?on_conflict=seed_key', {
-    method: 'POST',
-    body: JSON.stringify([row])
-  });
-  const seed = seeds[0];
+  const [seedRow] = await sql`select private.scout_upsert_candidate(${sql.json(candidatePayload)}::jsonb) as value`;
+  const seed = seedRow.value;
 
-  const observation = {
-    seed_id: seed.id,
-    observation_type: candidate.observation_type || 'candidate_discovered',
-    observed_at: candidate.observed_at || new Date().toISOString(),
-    source_url: normalize(candidate.source_url || candidate.profile_url) || null,
-    source_fingerprint: fingerprint({ key, candidate }),
-    payload: candidate
-  };
+  await sql`select private.scout_append_observation(
+    ${seed.id}::uuid,
+    ${candidate.observation_type || 'candidate_discovered'}::text,
+    ${candidate.observed_at || new Date().toISOString()}::timestamptz,
+    ${sourceUrl}::text,
+    ${observationFingerprint}::text,
+    ${sql.json(candidate)}::jsonb
+  )`;
 
-  await supabase('seed_observations?on_conflict=seed_id,source_fingerprint', {
-    method: 'POST',
-    body: JSON.stringify([observation])
-  });
-
-  if (lifecycle === 'outreach_ready') {
-    await supabase('seed_actions', {
-      method: 'POST',
-      headers: { prefer: 'return=minimal' },
-      body: JSON.stringify([{
-        seed_id: seed.id,
-        action_type: 'draft_personalized_outreach',
-        priority: scoring.score,
-        payload: { channel: platform.toLowerCase(), reason_codes: scoring.reasons }
-      }])
-    });
+  if (seed.lifecycle_state === 'outreach_ready') {
+    const actionType = 'draft_personalized_outreach';
+    const idempotencyKey = buildActionKey(seed.id, actionType, observationFingerprint);
+    await sql`select private.scout_queue_action(
+      ${seed.id}::uuid,
+      ${idempotencyKey}::text,
+      ${actionType}::text,
+      ${scoring.score}::integer,
+      ${sql.json({ channel: platform, reason_codes: scoring.reasons, trigger_fingerprint: observationFingerprint })}::jsonb
+    )`;
   }
 
-  return { seed_key: key, lifecycle_state: lifecycle, opportunity_score: scoring.score };
+  return {
+    seed_key: seedKey,
+    lifecycle_state: seed.lifecycle_state,
+    opportunity_score: seed.opportunity_score,
+    observation_fingerprint: observationFingerprint
+  };
 }
 
 async function ingestFeeds() {
@@ -150,7 +147,8 @@ async function ingestFeeds() {
   const feeds = JSON.parse(raw);
   const candidates = [];
   for (const feed of feeds) {
-    const response = await fetch(feed.url, { headers: feed.headers || {} });
+    if (!feed.url || !/^https:\/\//i.test(feed.url)) throw new Error('Discovery feeds must use HTTPS');
+    const response = await fetch(feed.url, { headers: feed.headers || {}, signal: AbortSignal.timeout(10000) });
     if (!response.ok) throw new Error(`Feed failed ${feed.url}: ${response.status}`);
     const body = await response.json();
     const items = Array.isArray(body) ? body : body.items || body.candidates || [];
@@ -160,58 +158,64 @@ async function ingestFeeds() {
 }
 
 module.exports = async function handler(req, res) {
+  let sql;
   try {
     if (req.method === 'GET' && req.query && req.query.health === '1') {
       return json(res, 200, { agent: 'seed-scout', status: 'ready' });
     }
 
     const auth = req.headers.authorization || '';
-    if (!AGENT_SECRET || auth !== `Bearer ${AGENT_SECRET}`) {
+    if (!AGENT_SECRET || !crypto.timingSafeEqual(
+      Buffer.from(auth),
+      Buffer.from(`Bearer ${AGENT_SECRET}`)
+    )) {
       return json(res, 401, { error: 'unauthorized' });
     }
 
-    const runKey = req.headers['x-run-key'] || `seed-scout:${new Date().toISOString().slice(0, 10)}`;
-    const existing = await supabase(`agent_runs?run_key=eq.${encodeURIComponent(runKey)}&select=*`, { method: 'GET' });
-    if (existing.length && existing[0].status === 'completed') {
-      return json(res, 200, { idempotent_replay: true, run: existing[0] });
-    }
-
-    await supabase('agent_runs?on_conflict=run_key', {
-      method: 'POST',
-      body: JSON.stringify([{ agent_name: 'seed-scout', run_key: runKey, status: 'running' }])
-    });
-
+    sql = getSql();
     const body = req.body || {};
     const supplied = Array.isArray(body.candidates) ? body.candidates : [];
     const discovered = req.method === 'GET' ? await ingestFeeds() : [];
-    const candidates = [...supplied, ...discovered];
+    const candidates = [...supplied.map(item => ({ item, source: 'api' })), ...discovered.map(item => ({ item, source: 'feed' }))];
+
+    const ownerToken = crypto.randomUUID();
+    const runKey = req.headers['x-run-key'] || `seed-scout:${new Date().toISOString()}`;
+    const [beginRow] = await sql`select private.scout_begin_run(${runKey}::text, ${ownerToken}::uuid, 900) as value`;
+    const run = beginRow.value;
+
+    if (!run.acquired) {
+      return json(res, run.status === 'completed' ? 200 : 409, {
+        run_key: runKey,
+        status: run.status,
+        acquired: false
+      });
+    }
+
     const results = [];
     const errors = [];
-
-    for (const candidate of candidates) {
+    for (const entry of candidates) {
       try {
-        results.push(await upsertCandidate(candidate, supplied.includes(candidate) ? 'api' : 'feed'));
+        results.push(await upsertCandidate(sql, entry.item, entry.source));
       } catch (error) {
-        errors.push({ candidate: candidate.handle || candidate.primary_handle, error: error.message });
+        errors.push({ candidate: entry.item.handle || entry.item.primary_handle, error: error.message });
       }
     }
 
     const status = errors.length ? (results.length ? 'partial' : 'failed') : 'completed';
-    await supabase(`agent_runs?run_key=eq.${encodeURIComponent(runKey)}`, {
-      method: 'PATCH',
-      headers: { prefer: 'return=minimal' },
-      body: JSON.stringify({
-        status,
-        finished_at: new Date().toISOString(),
-        input_count: candidates.length,
-        output_count: results.length,
-        error_count: errors.length,
-        summary: { results, errors }
-      })
-    });
+    await sql`select private.scout_finish_run(
+      ${runKey}::text,
+      ${ownerToken}::uuid,
+      ${status}::text,
+      ${candidates.length}::integer,
+      ${results.length}::integer,
+      ${errors.length}::integer,
+      ${sql.json({ results, errors })}::jsonb
+    )`;
 
     return json(res, errors.length ? 207 : 200, { run_key: runKey, status, results, errors });
   } catch (error) {
     return json(res, 500, { error: error.message });
+  } finally {
+    if (sql) await sql.end({ timeout: 1 }).catch(() => {});
   }
 };
