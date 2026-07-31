@@ -112,8 +112,6 @@ begin
 end;
 $$;
 
-revoke execute on function private.reject_seed_observation_mutation() from public;
-
 drop trigger if exists seed_observations_append_only on public.seed_observations;
 create trigger seed_observations_append_only
 before update or delete on public.seed_observations
@@ -264,7 +262,14 @@ begin
 end;
 $$;
 
-revoke all on all functions in schema private from public, anon, authenticated, service_role;
+-- Scope revocations to Scout-owned functions only. Never alter unrelated private functions.
+revoke all on function private.reject_seed_observation_mutation() from public, anon, authenticated, service_role;
+revoke all on function private.scout_upsert_candidate(jsonb) from public, anon, authenticated, service_role;
+revoke all on function private.scout_append_observation(uuid,text,timestamptz,text,text,jsonb) from public, anon, authenticated, service_role;
+revoke all on function private.scout_queue_action(uuid,text,text,integer,jsonb) from public, anon, authenticated, service_role;
+revoke all on function private.scout_begin_run(text,uuid,integer) from public, anon, authenticated, service_role;
+revoke all on function private.scout_finish_run(text,uuid,text,integer,integer,integer,jsonb) from public, anon, authenticated, service_role;
+
 grant usage on schema private to seed_scout_runtime;
 grant execute on function private.scout_upsert_candidate(jsonb) to seed_scout_runtime;
 grant execute on function private.scout_append_observation(uuid,text,timestamptz,text,text,jsonb) to seed_scout_runtime;
