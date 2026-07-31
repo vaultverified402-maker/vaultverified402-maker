@@ -14,6 +14,12 @@ function normalize(value) {
   return String(value || '').trim();
 }
 
+function secretMatches(actual, expected) {
+  const actualHash = crypto.createHash('sha256').update(String(actual || '')).digest();
+  const expectedHash = crypto.createHash('sha256').update(String(expected || '')).digest();
+  return crypto.timingSafeEqual(actualHash, expectedHash);
+}
+
 function canonicalUrl(value) {
   const raw = normalize(value);
   if (!raw) return null;
@@ -165,10 +171,7 @@ module.exports = async function handler(req, res) {
     }
 
     const auth = req.headers.authorization || '';
-    if (!AGENT_SECRET || !crypto.timingSafeEqual(
-      Buffer.from(auth),
-      Buffer.from(`Bearer ${AGENT_SECRET}`)
-    )) {
+    if (!AGENT_SECRET || !secretMatches(auth, `Bearer ${AGENT_SECRET}`)) {
       return json(res, 401, { error: 'unauthorized' });
     }
 
