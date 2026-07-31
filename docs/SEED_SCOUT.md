@@ -7,7 +7,7 @@ SEED is the persistent consultant intelligence layer for Vault Verified. It disc
 - **LEAD** → `seed_consultants`
 - **DATA** → append-only `seed_observations`
 - **OUTREACH** → idempotent `seed_actions`
-- **SYSTEM / MARCO OS** → leased `agent_runs`
+- **SYSTEM / MARCO OS** → leased `scout_runs`
 - **VAULT** → unchanged; enrollment and record filing require separate governed workflows
 
 The boundary is enforced in Postgres:
@@ -116,7 +116,7 @@ Run the identical request twice with the same run key. The second request must n
 4. Execute each granted private function as `seed_scout_login`; only valid scoped operations must succeed.
 5. Confirm `service_role` is not configured in the Vercel function.
 6. Run the same observation under two run keys; observation and action counts must remain one.
-7. Test concurrent acquisition of one run key; only one owner token may acquire the lease.
+7. Test concurrent acquisition of one run key; only one owner token may acquire the lease in `scout_runs`.
 8. Run Supabase database security and performance advisors.
 
 ## Activation sequence
