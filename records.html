@@ -359,7 +359,7 @@
 
   // ---------- Facets: populate filter dropdowns from live data ----------
   function loadFacets() {
-    var url = SUPABASE_URL + "/rest/v1/records?select=profile_id,league,status,result_status&source_type=eq.pre_event_filing&limit=1000";
+    var url = SUPABASE_URL + "/rest/v1/v_public_records?select=profile_id,league,status,result_status&source_type=eq.pre_event_filing&limit=1000";
     return fetch(url, { headers: headers() })
       .then(function (res) { return res.json(); })
       .then(function (rows) {
@@ -382,7 +382,7 @@
   function loadProfileNames(profileIds) {
     if (!profileIds.length) return Promise.resolve();
     var filter = "profile_id=in.(" + profileIds.map(encodeURIComponent).join(",") + ")";
-    var url = SUPABASE_URL + "/rest/v1/profiles?select=profile_id,name&" + filter;
+    var url = SUPABASE_URL + "/rest/v1/v_public_consultants?select=profile_id,name&" + filter;
     return fetch(url, { headers: headers() })
       .then(function (res) { return res.json(); })
       .then(function (rows) {
@@ -474,7 +474,7 @@
     params.push("order=created_at.desc");
     params.push("limit=" + PAGE_SIZE);
     params.push("offset=" + currentOffset);
-    return SUPABASE_URL + "/rest/v1/records?" + params.join("&");
+    return SUPABASE_URL + "/rest/v1/v_public_records?" + params.join("&");
   }
 
   function parseTotal(contentRange) {
