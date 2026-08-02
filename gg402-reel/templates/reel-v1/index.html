@@ -1,33 +1,124 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>GG402 Reel</title>
+<meta charset="UTF-8">
+<title>GG402 Reel — reel-v1</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}html,body{width:1080px;height:1920px;overflow:hidden;background:#090909;font-family:"IBM Plex Mono",monospace}#stage{position:relative;width:1080px;height:1920px}.bar{height:7px;background:#00d4ff}.block{position:absolute;left:80px;right:80px;opacity:0;transform:translateY(28px);animation:show .55s ease-out forwards}@keyframes show{to{opacity:1;transform:none}}.header{top:135px;animation-delay:.2s}.brand{font-weight:700;font-size:46px;letter-spacing:8px;color:#00d4ff}.sub,.label,.record,.note{color:#8a8a8a}.sub{font-size:24px;margin-top:16px}.event{top:500px;animation-delay:1.5s}.selection{top:850px;animation-delay:4s}.status{top:1220px;animation-delay:6.5s}.footer{top:1500px;animation-delay:8.5s}.label{font-size:26px;letter-spacing:4px}.value{margin-top:20px;color:#f5f5f3;font-size:48px;font-weight:700;line-height:1.25}.selection .value{font-size:68px}.odds{margin-top:18px;color:#00d4ff;font-size:36px}.badge{display:inline-block;border:3px solid #00d4ff;border-radius:6px;padding:18px 32px;color:#00d4ff;font-size:34px;font-weight:700;letter-spacing:5px}.record{font-size:30px}.cta{margin-top:26px;color:#f5f5f3;font-size:38px;font-weight:700}.url{margin-top:12px;color:#00d4ff;font-size:28px}.note{margin-top:32px;font-size:21px;line-height:1.55}html.cover-mode .block{opacity:1!important;transform:none!important;animation:none!important}html.cover-mode .header{top:120px}html.cover-mode .event{top:450px}html.cover-mode .selection{top:780px}html.cover-mode .status{top:1160px}html.cover-mode .footer{top:1450px}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    background: #090909;
+    overflow: hidden;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  #stage { position: relative; width: 1080px; height: 1920px; }
+  .top-bar { position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: #00D4FF; }
+
+  .block {
+    position: absolute;
+    left: 80px;
+    right: 80px;
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes revealAndHide {
+    0% { opacity: 0; transform: translateY(24px); }
+    15% { opacity: 1; transform: translateY(0); }
+    85% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-16px); }
+  }
+
+  .hook { top: 640px; animation: revealAndHide 2s ease-in-out .2s forwards; }
+  .hook .line { font-size: 58px; font-weight: 700; color: #F5F5F3; letter-spacing: 2px; line-height: 1.2; }
+
+  .header { top: 140px; animation: reveal .6s ease-out 1s forwards; }
+  .header .brand { font-size: 40px; font-weight: 700; color: #00D4FF; letter-spacing: 8px; }
+  .header .sub { margin-top: 14px; font-size: 22px; color: #8A8A8A; }
+
+  .event { top: 520px; animation: reveal .6s ease-out 2.3s forwards; }
+  .event .label, .selection .label { font-size: 26px; color: #8A8A8A; letter-spacing: 4px; }
+  .event .value { margin-top: 20px; font-size: 42px; font-weight: 700; color: #F5F5F3; line-height: 1.25; }
+
+  .selection { top: 860px; animation: reveal .6s ease-out 4.5s forwards; }
+  .selection .value { margin-top: 20px; font-size: 62px; font-weight: 700; color: #F5F5F3; line-height: 1.2; }
+  .selection .odds { margin-top: 16px; font-size: 34px; color: #00D4FF; }
+
+  .status { top: 1220px; animation: reveal .6s ease-out 7s forwards; }
+  .status .badge {
+    display: inline-block;
+    border: 3px solid #00D4FF;
+    border-radius: 6px;
+    padding: 18px 32px;
+    font-size: 32px;
+    font-weight: 700;
+    color: #00D4FF;
+    letter-spacing: 5px;
+  }
+
+  .footer { top: 1500px; animation: reveal .6s ease-out 8.7s forwards; }
+  .footer .record-id { font-size: 30px; color: #8A8A8A; }
+  .footer .cta { margin-top: 26px; font-size: 36px; font-weight: 700; color: #F5F5F3; }
+  .footer .url { margin-top: 10px; font-size: 26px; color: #00D4FF; }
+  .footer .disclaimer { position: absolute; bottom: 60px; font-size: 20px; color: #8A8A8A; line-height: 1.6; }
+
+  .cover-mode .block { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .cover-mode .hook { display: none; }
 </style>
 </head>
 <body>
-<div id="stage"><div class="bar"></div>
-<div class="block header"><div class="brand">VAULT VERIFIED</div><div class="sub">PUBLIC RECORD · IMMUTABLE</div></div>
-<div class="block event"><div class="label">EVENT</div><div class="value" id="event-value">—</div></div>
-<div class="block selection"><div class="label">SELECTION</div><div class="value" id="selection-value">—</div><div class="odds" id="odds-value"></div></div>
-<div class="block status"><div class="badge" id="status-value">PRESERVED</div></div>
-<div class="block footer"><div class="record" id="record-value">—</div><div class="cta">VIEW THE PRESERVED RECORD</div><div class="url">VAULTVERIFIED.APP</div><div class="note">THIS RECORD CANNOT BE EDITED AFTER FILING.<br>NO OUTCOME IS GUARANTEED.</div></div>
-</div>
-<script>
-const d = window.RECORD_DATA || {};
-const setText = (id, value) => {
-  const el = document.getElementById(id);
-  if (!el) throw new Error(`Missing element: ${id}`);
-  el.textContent = value;
-};
-setText('event-value', d.event || 'EVENT');
-setText('selection-value', d.selection || 'SELECTION FILED');
-setText('odds-value', d.odds ? `ODDS ${d.odds}` : '');
-setText('status-value', String(d.status || 'PRESERVED').toUpperCase());
-setText('record-value', d.record_id || '');
-window.REEL_READY = true;
-</script>
+  <div id="stage">
+    <div class="top-bar"></div>
+
+    <div class="block hook"><div class="line">FILED BEFORE<br>THE RESULT</div></div>
+
+    <div class="block header">
+      <div class="brand">VAULT VERIFIED</div>
+      <div class="sub">Public record · immutable</div>
+    </div>
+
+    <div class="block event">
+      <div class="label">EVENT</div>
+      <div class="value" id="event-value">—</div>
+    </div>
+
+    <div class="block selection">
+      <div class="label">SELECTION</div>
+      <div class="value" id="selection-value">—</div>
+      <div class="odds" id="odds-value"></div>
+    </div>
+
+    <div class="block status"><div class="badge" id="status-value">—</div></div>
+
+    <div class="block footer">
+      <div class="record-id" id="record-id-value">—</div>
+      <div class="cta">View the preserved record</div>
+      <div class="url">vaultverified.app</div>
+      <div class="disclaimer">This record cannot be edited after filing.<br>No outcome is guaranteed.</div>
+    </div>
+  </div>
+
+  <script>
+    const d = window.RECORD_DATA || {};
+    document.getElementById('event-value').textContent = d.event || 'Event';
+    document.getElementById('selection-value').textContent = d.selection || 'Selection filed';
+    document.getElementById('odds-value').textContent = d.odds ? `ODDS ${d.odds}` : '';
+    document.getElementById('status-value').textContent = String(d.status || 'PRESERVED').toUpperCase();
+    document.getElementById('record-id-value').textContent = d.record_id || '';
+
+    if (new URLSearchParams(window.location.search).get('cover') === '1') {
+      document.getElementById('stage').classList.add('cover-mode');
+    }
+
+    window.REEL_READY = true;
+  </script>
 </body>
 </html>
