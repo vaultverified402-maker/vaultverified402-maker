@@ -1,0 +1,57 @@
+--- vv-rollback/index.html
++++ vv-updated/index.html
+@@ -414,12 +414,23 @@
+   function titleCase(str) { if (!str) return ""; return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase(); }
+   function formatDate(raw, opts) { if (!raw) return null; try { return new Date(raw).toLocaleDateString("en-US", Object.assign({ month:"short", day:"numeric", timeZone:"America/Chicago" }, opts || {})); } catch (e) { return null; } }
+   try { var sections = document.querySelectorAll("section"); sections.forEach(function (s) { s.classList.add("fade-in"); }); if ("IntersectionObserver" in window) { var io = new IntersectionObserver(function (entries) { entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add("visible"); io.unobserve(entry.target); } }); }, { rootMargin:"0px 0px -8% 0px" }); sections.forEach(function (s) { io.observe(s); }); } else sections.forEach(function (s) { s.classList.add("visible"); }); } catch (e) { document.querySelectorAll("section").forEach(function (s) { s.classList.add("visible"); }); }
+-  function parseTotal(contentRange) { if (!contentRange) return null; var total = contentRange.split("/")[1]; if (total === "*" || total === undefined) return null; var n = parseInt(total, 10); return isNaN(n) ? null : n; }
+-  function loadCount(queryPath, elId) { var el = document.getElementById(elId); fetch(SUPABASE_URL + "/rest/v1/" + queryPath, { method:"HEAD", headers:headers({ Prefer:"count=exact", Range:"0-0" }) }).then(function (res) { var total = parseTotal(res.headers.get("content-range")); if (total === null) throw new Error("no count"); el.textContent = String(total); }).catch(function () { el.textContent = "Live"; }); }
+-  function loadFirstRecordDate() { var el = document.getElementById("metric-since"); fetch(SUPABASE_URL + "/rest/v1/records?select=created_at&source_type=eq.pre_event_filing&order=created_at.asc&limit=1", { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { if (!rows || !rows.length || !rows[0].created_at) throw new Error("empty"); var label = formatDate(rows[0].created_at, { day:undefined, year:"numeric" }); if (!label) throw new Error("bad date"); el.textContent = label; }).catch(function () { el.textContent = "2026"; }); }
+-  loadCount("records?select=*&source_type=eq.pre_event_filing", "metric-records");
+-  loadCount("profiles?select=*&visibility=eq.public&consultant_type=neq.archive", "metric-consultants");
+-  loadFirstRecordDate();
++  function loadMetrics() {
++    var recordsEl = document.getElementById("metric-records");
++    var consultantsEl = document.getElementById("metric-consultants");
++    var sinceEl = document.getElementById("metric-since");
++    fetch(SUPABASE_URL + "/rest/v1/v_public_platform_stats?select=total_records_preserved,total_public_consultants,earliest_public_record_at", { headers:headers() })
++      .then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); })
++      .then(function (rows) {
++        var stats = rows && rows[0];
++        if (!stats) throw new Error("empty");
++        recordsEl.textContent = stats.total_records_preserved != null ? String(stats.total_records_preserved) : "Live";
++        consultantsEl.textContent = stats.total_public_consultants != null ? String(stats.total_public_consultants) : "Live";
++        var label = formatDate(stats.earliest_public_record_at, { day:undefined, year:"numeric" });
++        sinceEl.textContent = label || "2026";
++      })
++      .catch(function () { recordsEl.textContent = "Live"; consultantsEl.textContent = "Live"; sinceEl.textContent = "2026"; });
++  }
++  loadMetrics();
+@@ -427,15 +438,15 @@
+-  function loadFeed() { var listEl = document.getElementById("feed-list"); var url = SUPABASE_URL + "/rest/v1/records?select=record_id,profile_id,sport,league,selection,event,status,result_status,grading_state,preserved_at,created_at&source_type=eq.pre_event_filing&order=preserved_at.desc.nullslast,created_at.desc&limit=" + FEED_LIMIT; fetch(url, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { listEl.innerHTML = !rows || rows.length === 0 ? '<div class="feed-empty">No preserved entries yet. The archive begins with the first filing.</div>' : rows.map(renderFeedRow).join(""); }).catch(function () { listEl.innerHTML = '<div class="feed-note">Live entries are temporarily unavailable. The full archive remains at <a href="/records.html" style="color:var(--gray); text-decoration:underline;">records.html</a>.</div>'; }); }
++  function loadFeed() { var listEl = document.getElementById("feed-list"); var url = SUPABASE_URL + "/rest/v1/v_public_records?select=record_id,profile_id,sport,league,selection,event,status,result_status,grading_state,preserved_at,created_at&source_type=eq.pre_event_filing&order=preserved_at.desc.nullslast,created_at.desc&limit=" + FEED_LIMIT; fetch(url, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { listEl.innerHTML = !rows || rows.length === 0 ? '<div class="feed-empty">No preserved entries yet. The archive begins with the first filing.</div>' : rows.map(renderFeedRow).join(""); }).catch(function () { listEl.innerHTML = '<div class="feed-note">Live entries are temporarily unavailable. The full archive remains at <a href="/records.html" style="color:var(--gray); text-decoration:underline;">records.html</a>.</div>'; }); }
+@@
+-  function loadFeatured() { var preferred = SUPABASE_URL + "/rest/v1/profiles?" + PROFILE_SELECT + "&profile_id=eq." + encodeURIComponent(FEATURED_ID) + "&visibility=eq.public&limit=1"; fetch(preferred, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { if (rows && rows.length) { renderFeatured(rows[0]); return null; } return fetch(SUPABASE_URL + "/rest/v1/profiles?" + PROFILE_SELECT + "&visibility=eq.public&consultant_type=neq.archive&order=profile_id.asc&limit=1", { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (fallbackRows) { if (fallbackRows && fallbackRows.length) renderFeatured(fallbackRows[0]); else featuredFallback(); }); }).catch(featuredFallback); }
++  function loadFeatured() { var preferred = SUPABASE_URL + "/rest/v1/v_public_consultants?" + PROFILE_SELECT + "&profile_id=eq." + encodeURIComponent(FEATURED_ID) + "&limit=1"; fetch(preferred, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { if (rows && rows.length) { renderFeatured(rows[0]); return null; } return fetch(SUPABASE_URL + "/rest/v1/v_public_consultants?" + PROFILE_SELECT + "&consultant_type=neq.archive&order=profile_id.asc&limit=1", { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (fallbackRows) { if (fallbackRows && fallbackRows.length) renderFeatured(fallbackRows[0]); else featuredFallback(); }); }).catch(featuredFallback); }
+@@
+-  function loadConsultants() { var listEl = document.getElementById("consultant-list"); var url = SUPABASE_URL + "/rest/v1/profiles?select=profile_id,name,handle,doctrine_name&visibility=eq.public&consultant_type=neq.archive&order=profile_id.asc&limit=" + FOUNDING_LIMIT; fetch(url, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { listEl.innerHTML = !rows || rows.length === 0 ? '<div class="consultant-note">Founding seats are open. The first public profiles will appear here.</div>' : rows.map(function (p) { return renderConsultantRow({ profile_id:p.profile_id, name:p.name, doctrine_name:p.doctrine_name }); }).join(""); }).catch(function () { listEl.innerHTML = '<div class="consultant-note">Consultant profiles are temporarily unavailable.</div>'; }); }
++  function loadConsultants() { var listEl = document.getElementById("consultant-list"); var url = SUPABASE_URL + "/rest/v1/v_public_consultants?select=profile_id,name,handle,doctrine_name&consultant_type=neq.archive&order=profile_id.asc&limit=" + FOUNDING_LIMIT; fetch(url, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { listEl.innerHTML = !rows || rows.length === 0 ? '<div class="consultant-note">Founding seats are open. The first public profiles will appear here.</div>' : rows.map(function (p) { return renderConsultantRow({ profile_id:p.profile_id, name:p.name, doctrine_name:p.doctrine_name }); }).join(""); }).catch(function () { listEl.innerHTML = '<div class="consultant-note">Consultant profiles are temporarily unavailable.</div>'; }); }
+--- vv-rollback/records.html
++++ vv-updated/records.html
+@@ -348,7 +348,7 @@
+-    var url = SUPABASE_URL + "/rest/v1/records?select=profile_id,league,status,result_status&source_type=eq.pre_event_filing&limit=1000";
++    var url = SUPABASE_URL + "/rest/v1/v_public_records?select=profile_id,league,status,result_status&source_type=eq.pre_event_filing&limit=1000";
+@@ -371,7 +371,7 @@
+-    var url = SUPABASE_URL + "/rest/v1/profiles?select=profile_id,name&" + filter;
++    var url = SUPABASE_URL + "/rest/v1/v_public_consultants?select=profile_id,name&" + filter;
+@@ -459,7 +459,7 @@
+-    return SUPABASE_URL + "/rest/v1/records?" + params.join("&");
++    return SUPABASE_URL + "/rest/v1/v_public_records?" + params.join("&");
+--- vv-rollback/consultant.html
++++ vv-updated/consultant.html
+@@ -322,7 +322,7 @@
+-    var url = SUPABASE_URL + "/rest/v1/records?select=record_id,league,sport,selection,event,status,result_status,preserved_at,created_at" +
++    var url = SUPABASE_URL + "/rest/v1/v_public_records?select=record_id,league,sport,selection,event,status,result_status,preserved_at,created_at" +
+@@ -343,7 +343,7 @@
+-  var profileUrl = SUPABASE_URL + "/rest/v1/profiles?select=profile_id,name,handle,doctrine_name,doctrine_statement,edge_theory," +
++  var profileUrl = SUPABASE_URL + "/rest/v1/v_public_consultants?select=profile_id,name,handle,doctrine_name,doctrine_statement,edge_theory," +
