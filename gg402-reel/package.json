@@ -1,0 +1,12 @@
+{
+  "name": "gg402-reel",
+  "version": "0.1.0",
+  "description": "GG402 reel content-package generator — HTML template + browser capture + FFmpeg postprocess. Phase 1: content generation only, no social publishing.",
+  "type": "module",
+  "scripts": {
+    "render": "node render/render.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}
