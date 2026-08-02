@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GG402 Reel</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html,body{width:1080px;height:1920px;overflow:hidden;background:#090909;font-family:"IBM Plex Mono",monospace}#stage{position:relative;width:1080px;height:1920px}.bar{height:7px;background:#00d4ff}.block{position:absolute;left:80px;right:80px;opacity:0;transform:translateY(28px);animation:show .55s ease-out forwards}@keyframes show{to{opacity:1;transform:none}}.header{top:135px;animation-delay:.2s}.brand{font-weight:700;font-size:46px;letter-spacing:8px;color:#00d4ff}.sub,.label,.record,.note{color:#8a8a8a}.sub{font-size:24px;margin-top:16px}.event{top:500px;animation-delay:1.5s}.selection{top:850px;animation-delay:4s}.status{top:1220px;animation-delay:6.5s}.footer{top:1500px;animation-delay:8.5s}.label{font-size:26px;letter-spacing:4px}.value{margin-top:20px;color:#f5f5f3;font-size:48px;font-weight:700;line-height:1.25}.selection .value{font-size:68px}.odds{margin-top:18px;color:#00d4ff;font-size:36px}.badge{display:inline-block;border:3px solid #00d4ff;border-radius:6px;padding:18px 32px;color:#00d4ff;font-size:34px;font-weight:700;letter-spacing:5px}.record{font-size:30px}.cta{margin-top:26px;color:#f5f5f3;font-size:38px;font-weight:700}.url{margin-top:12px;color:#00d4ff;font-size:28px}.note{margin-top:32px;font-size:21px;line-height:1.55}html.cover-mode .block{opacity:1!important;transform:none!important;animation:none!important}html.cover-mode .header{top:120px}html.cover-mode .event{top:450px}html.cover-mode .selection{top:780px}html.cover-mode .status{top:1160px}html.cover-mode .footer{top:1450px}
+</style>
+</head>
+<body>
+<div id="stage"><div class="bar"></div>
+<div class="block header"><div class="brand">VAULT VERIFIED</div><div class="sub">PUBLIC RECORD · IMMUTABLE</div></div>
+<div class="block event"><div class="label">EVENT</div><div class="value" id="event">—</div></div>
+<div class="block selection"><div class="label">SELECTION</div><div class="value" id="selection">—</div><div class="odds" id="odds"></div></div>
+<div class="block status"><div class="badge" id="status">PRESERVED</div></div>
+<div class="block footer"><div class="record" id="record">—</div><div class="cta">VIEW THE PRESERVED RECORD</div><div class="url">VAULTVERIFIED.APP</div><div class="note">THIS RECORD CANNOT BE EDITED AFTER FILING.<br>NO OUTCOME IS GUARANTEED.</div></div>
+</div>
+<script>
+const d=window.RECORD_DATA||{};event.textContent=d.event||'EVENT';selection.textContent=d.selection||'SELECTION FILED';odds.textContent=d.odds?`ODDS ${d.odds}`:'';status.textContent=(d.status||'PRESERVED').toUpperCase();record.textContent=d.record_id||'';
+</script>
+</body>
+</html>
