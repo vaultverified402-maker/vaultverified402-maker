@@ -89,9 +89,22 @@ jobs:
             record_url: `https://vaultverified.app/record/${encodeURIComponent(process.env.RECORD_ID)}`
           };
           fs.writeFileSync('record-data.json', JSON.stringify(d, null, 2));
+          console.log(JSON.stringify({ workflow_input: d }));
           NODE
 
-      - name: Render HTML reel
+      - name: Negative test — validator must reject mismatched content
+        run: |
+          set +e
+          node render/render.mjs record-data.json output-negative --tamper-selection-for-test > negative-test.log 2>&1
+          EXIT_CODE=$?
+          set -e
+          cat negative-test.log
+          test "$EXIT_CODE" -ne 0
+          grep -q 'Rendered data mismatch' negative-test.log
+          grep -q 'INTENTIONAL VALIDATION MISMATCH' negative-test.log
+          echo 'Negative validation test passed: incorrect rendered content was rejected.'
+
+      - name: Positive test — render verified data
         run: node render/render.mjs record-data.json output
 
       - name: Convert to social master MP4
