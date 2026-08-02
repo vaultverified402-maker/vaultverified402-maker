@@ -1,5 +1,12 @@
 name: Render GG402 Reel
 
+# Manual dispatch only — deliberately no push trigger. A push trigger
+# was tried and caused a real problem tonight: multiple runs existed
+# with no obvious way to tell which commit produced which artifact,
+# leading to an old run's stale video being mistaken for a fix that
+# hadn't actually been tested yet. For a proof-of-concept stage where
+# every run needs to be individually inspected, explicit dispatch with
+# no ambiguity beats automatic triggering.
 on:
   workflow_dispatch:
     inputs:
@@ -31,10 +38,6 @@ on:
         description: 'Record status'
         required: false
         default: 'preserved'
-  push:
-    branches: [main]
-    paths:
-      - '.github/run-gg402-once'
 
 permissions:
   contents: read
@@ -43,14 +46,6 @@ jobs:
   render:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      RECORD_ID: ${{ inputs.record_id || 'REC-2026-0161' }}
-      CONSULTANT_ID: ${{ inputs.consultant_id || 'GG402-0001' }}
-      HANDLE: ${{ inputs.handle || 'gamedayguru402' }}
-      EVENT_TEXT: ${{ inputs.event || 'Texas Rangers @ Tampa Bay Rays' }}
-      SELECTION_TEXT: ${{ inputs.selection || 'Tampa Bay Rays' }}
-      ODDS_TEXT: ${{ inputs.odds || '-136' }}
-      STATUS_TEXT: ${{ inputs.status || 'preserved' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -77,6 +72,14 @@ jobs:
 
       - name: Build record data file (safe — env vars, never shell-interpolated)
         working-directory: gg402-reel
+        env:
+          RECORD_ID: ${{ inputs.record_id }}
+          CONSULTANT_ID: ${{ inputs.consultant_id }}
+          HANDLE: ${{ inputs.handle }}
+          EVENT_TEXT: ${{ inputs.event }}
+          SELECTION_TEXT: ${{ inputs.selection }}
+          ODDS_TEXT: ${{ inputs.odds }}
+          STATUS_TEXT: ${{ inputs.status }}
         run: node render/build-record-data.mjs > record-data.json
 
       - name: Negative test — validator must reject tampered content
@@ -130,7 +133,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: gg402-reel-${{ env.RECORD_ID }}-${{ github.run_id }}
+          name: gg402-reel-${{ inputs.record_id }}-${{ github.run_id }}
           retention-days: 1
           if-no-files-found: error
           path: |
