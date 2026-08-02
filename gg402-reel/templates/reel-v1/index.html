@@ -10,13 +10,24 @@
 <body>
 <div id="stage"><div class="bar"></div>
 <div class="block header"><div class="brand">VAULT VERIFIED</div><div class="sub">PUBLIC RECORD · IMMUTABLE</div></div>
-<div class="block event"><div class="label">EVENT</div><div class="value" id="event">—</div></div>
-<div class="block selection"><div class="label">SELECTION</div><div class="value" id="selection">—</div><div class="odds" id="odds"></div></div>
-<div class="block status"><div class="badge" id="status">PRESERVED</div></div>
-<div class="block footer"><div class="record" id="record">—</div><div class="cta">VIEW THE PRESERVED RECORD</div><div class="url">VAULTVERIFIED.APP</div><div class="note">THIS RECORD CANNOT BE EDITED AFTER FILING.<br>NO OUTCOME IS GUARANTEED.</div></div>
+<div class="block event"><div class="label">EVENT</div><div class="value" id="event-value">—</div></div>
+<div class="block selection"><div class="label">SELECTION</div><div class="value" id="selection-value">—</div><div class="odds" id="odds-value"></div></div>
+<div class="block status"><div class="badge" id="status-value">PRESERVED</div></div>
+<div class="block footer"><div class="record" id="record-value">—</div><div class="cta">VIEW THE PRESERVED RECORD</div><div class="url">VAULTVERIFIED.APP</div><div class="note">THIS RECORD CANNOT BE EDITED AFTER FILING.<br>NO OUTCOME IS GUARANTEED.</div></div>
 </div>
 <script>
-const d=window.RECORD_DATA||{};event.textContent=d.event||'EVENT';selection.textContent=d.selection||'SELECTION FILED';odds.textContent=d.odds?`ODDS ${d.odds}`:'';status.textContent=(d.status||'PRESERVED').toUpperCase();record.textContent=d.record_id||'';
+const d = window.RECORD_DATA || {};
+const setText = (id, value) => {
+  const el = document.getElementById(id);
+  if (!el) throw new Error(`Missing element: ${id}`);
+  el.textContent = value;
+};
+setText('event-value', d.event || 'EVENT');
+setText('selection-value', d.selection || 'SELECTION FILED');
+setText('odds-value', d.odds ? `ODDS ${d.odds}` : '');
+setText('status-value', String(d.status || 'PRESERVED').toUpperCase());
+setText('record-value', d.record_id || '');
+window.REEL_READY = true;
 </script>
 </body>
 </html>
