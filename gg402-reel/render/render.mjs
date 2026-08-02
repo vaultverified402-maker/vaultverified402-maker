@@ -25,10 +25,31 @@ async function main() {
     viewport: { width: WIDTH, height: HEIGHT },
     recordVideo: { dir: outputDir, size: { width: WIDTH, height: HEIGHT } },
   });
+
   const page = await context.newPage();
+  const pageErrors = [];
+  page.on('pageerror', (error) => pageErrors.push(String(error)));
+
   await page.addInitScript((data) => { window.RECORD_DATA = data; }, recordData);
   await page.goto(`file://${join(TEMPLATE_DIR, 'index.html')}`, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
+  await page.waitForFunction(() => window.REEL_READY === true);
+
+  const rendered = await page.evaluate(() => ({
+    event: document.getElementById('event-value')?.textContent?.trim(),
+    selection: document.getElementById('selection-value')?.textContent?.trim(),
+    status: document.getElementById('status-value')?.textContent?.trim(),
+    record_id: document.getElementById('record-value')?.textContent?.trim(),
+  }));
+
+  if (pageErrors.length) {
+    throw new Error(`Template error: ${pageErrors.join(' | ')}`);
+  }
+  if (rendered.event !== recordData.event || rendered.selection !== recordData.selection) {
+    throw new Error(`Rendered data mismatch: ${JSON.stringify({ expected: recordData, rendered })}`);
+  }
+
+  console.log(JSON.stringify({ record_data: recordData, rendered }));
 
   const video = page.video();
   await page.waitForTimeout(DURATION_MS);
