@@ -1,0 +1,144 @@
+name: Render GG402 Reel
+
+# Manual dispatch only — deliberately no push trigger. A push trigger
+# was tried and caused a real problem tonight: multiple runs existed
+# with no obvious way to tell which commit produced which artifact,
+# leading to an old run's stale video being mistaken for a fix that
+# hadn't actually been tested yet. For a proof-of-concept stage where
+# every run needs to be individually inspected, explicit dispatch with
+# no ambiguity beats automatic triggering.
+on:
+  workflow_dispatch:
+    inputs:
+      record_id:
+        description: 'Record ID to render (e.g. REC-2026-0161)'
+        required: true
+        default: 'REC-2026-0161'
+      consultant_id:
+        description: 'Consultant ID'
+        required: true
+        default: 'GG402-0001'
+      handle:
+        description: 'Consultant handle'
+        required: true
+        default: 'gamedayguru402'
+      event:
+        description: 'Event text'
+        required: true
+        default: 'Texas Rangers @ Tampa Bay Rays'
+      selection:
+        description: 'Selection text'
+        required: true
+        default: 'Tampa Bay Rays'
+      odds:
+        description: 'Odds (optional)'
+        required: false
+        default: '-136'
+      status:
+        description: 'Record status'
+        required: false
+        default: 'preserved'
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Print run identity (which commit produced this artifact)
+        run: |
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "Triggered by: ${{ github.actor }}"
+          echo "Run ID: ${{ github.run_id }}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        working-directory: gg402-reel
+        run: npm install
+
+      - name: Install Chromium, FFmpeg, and IBM Plex Mono
+        working-directory: gg402-reel
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-ibm-plex
+          npx playwright install --with-deps chromium
+
+      - name: Build record data file (safe — env vars, never shell-interpolated)
+        working-directory: gg402-reel
+        env:
+          RECORD_ID: ${{ inputs.record_id }}
+          CONSULTANT_ID: ${{ inputs.consultant_id }}
+          HANDLE: ${{ inputs.handle }}
+          EVENT_TEXT: ${{ inputs.event }}
+          SELECTION_TEXT: ${{ inputs.selection }}
+          ODDS_TEXT: ${{ inputs.odds }}
+          STATUS_TEXT: ${{ inputs.status }}
+        run: node render/build-record-data.mjs > record-data.json
+
+      - name: Negative test — validator must reject tampered content
+        working-directory: gg402-reel
+        run: |
+          set +e
+          node render/render.mjs record-data.json output-negative/ --tamper-selection-for-test > negative-test.log 2>&1
+          NEGATIVE_EXIT=$?
+          set -e
+          cat negative-test.log
+          if [ $NEGATIVE_EXIT -eq 0 ]; then
+            echo "FATAL: negative test should have failed but exited 0 — validator is not working"
+            exit 1
+          fi
+          if ! grep -q "Rendered data mismatch" negative-test.log; then
+            echo "FATAL: negative test failed for the wrong reason — expected 'Rendered data mismatch'"
+            exit 1
+          fi
+          if ! grep -q "INTENTIONAL VALIDATION MISMATCH" negative-test.log; then
+            echo "FATAL: tampered value never appeared in the comparison output"
+            exit 1
+          fi
+          echo "Negative test passed: validator correctly rejected tampered content"
+
+      - name: Render (browser capture — real record data)
+        working-directory: gg402-reel
+        run: node render/render.mjs record-data.json output/
+
+      - name: Postprocess to H.264 MP4
+        working-directory: gg402-reel
+        run: |
+          chmod +x render/postprocess.sh
+          ./render/postprocess.sh output/reel.raw.webm output/reel.mp4
+
+      - name: Compute content hash and generate manifest/captions
+        working-directory: gg402-reel
+        run: |
+          HASH=$(sha256sum output/reel.mp4 | cut -d' ' -f1)
+          node render/generate-manifest.mjs record-data.json "$HASH" output/
+
+      - name: Validate output spec
+        working-directory: gg402-reel
+        run: |
+          ffprobe -v error -show_entries stream=codec_name,codec_type,width,height \
+            -show_entries format=duration -of json output/reel.mp4
+          test "$(file -b --mime-type output/reel.mp4)" = "video/mp4"
+          test -s output/cover.png
+          test -s output/manifest.json
+          test -s output/caption.json
+          test -s output/validation.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gg402-reel-${{ inputs.record_id }}-${{ github.run_id }}
+          retention-days: 1
+          if-no-files-found: error
+          path: |
+            gg402-reel/output/reel.mp4
+            gg402-reel/output/cover.png
+            gg402-reel/output/manifest.json
+            gg402-reel/output/caption.json
+            gg402-reel/output/validation.json
