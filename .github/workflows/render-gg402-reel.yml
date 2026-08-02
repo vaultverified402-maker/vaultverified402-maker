@@ -31,13 +31,31 @@ on:
         description: Record status
         required: true
         default: preserved
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/render-gg402-reel.yml'
+      - 'gg402-reel/**'
+
+permissions:
+  contents: read
 
 jobs:
   render:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: gg402-reel
+    env:
+      RECORD_ID: ${{ inputs.record_id || 'REC-2026-0161' }}
+      CONSULTANT_ID: ${{ inputs.consultant_id || 'GG402-0001' }}
+      HANDLE: ${{ inputs.handle || 'gamedayguru402' }}
+      EVENT_TEXT: ${{ inputs.event || 'Texas Rangers @ Tampa Bay Rays' }}
+      SELECTION_TEXT: ${{ inputs.selection || 'Tampa Bay Rays' }}
+      ODDS: ${{ inputs.odds || '-136' }}
+      STATUS: ${{ inputs.status || 'preserved' }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -50,21 +68,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chromium, FFmpeg, and IBM Plex Mono
+      - name: Install Chromium and FFmpeg
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-ibm-plex
           npx playwright install --with-deps chromium
 
       - name: Build record data safely
-        env:
-          RECORD_ID: ${{ inputs.record_id }}
-          CONSULTANT_ID: ${{ inputs.consultant_id }}
-          HANDLE: ${{ inputs.handle }}
-          EVENT_TEXT: ${{ inputs.event }}
-          SELECTION_TEXT: ${{ inputs.selection }}
-          ODDS: ${{ inputs.odds }}
-          STATUS: ${{ inputs.status }}
         run: |
           node - <<'NODE'
           const fs = require('fs');
@@ -96,15 +106,22 @@ jobs:
 
       - name: Validate output
         run: |
-          ffprobe -v error -show_entries stream=codec_name,codec_type,width,height,pix_fmt -show_entries format=duration -of json output/reel.mp4
+          ffprobe -v error \
+            -show_entries stream=codec_name,codec_type,width,height,pix_fmt \
+            -show_entries format=duration \
+            -of json output/reel.mp4
           test "$(file -b --mime-type output/reel.mp4)" = "video/mp4"
+          test -s output/cover.png
+          test -s output/manifest.json
+          test -s output/caption.json
 
       - uses: actions/upload-artifact@v4
         with:
-          name: gg402-reel-${{ inputs.record_id }}
+          name: gg402-reel-${{ env.RECORD_ID }}
           path: |
             gg402-reel/output/reel.mp4
             gg402-reel/output/cover.png
             gg402-reel/output/manifest.json
             gg402-reel/output/caption.json
           retention-days: 1
+          if-no-files-found: error
