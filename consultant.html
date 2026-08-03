@@ -334,7 +334,7 @@
   }
 
   function loadRecords(profileId) {
-    var url = SUPABASE_URL + "/rest/v1/records?select=record_id,league,sport,selection,event,status,result_status,preserved_at,created_at" +
+    var url = SUPABASE_URL + "/rest/v1/v_public_records?select=record_id,league,sport,selection,event,status,result_status,preserved_at,created_at" +
       "&profile_id=eq." + encodeURIComponent(profileId) + "&order=created_at.desc&limit=" + RECENT_LIMIT;
     fetch(url, { headers: headers() })
       .then(function (res) { return res.json(); })
@@ -355,7 +355,7 @@
   var profileId = getProfileId();
   if (!profileId) { showNotFound(); return; }
 
-  var profileUrl = SUPABASE_URL + "/rest/v1/profiles?select=profile_id,name,handle,doctrine_name,doctrine_statement,edge_theory," +
+  var profileUrl = SUPABASE_URL + "/rest/v1/v_public_consultants?select=profile_id,name,handle,doctrine_name,doctrine_statement,edge_theory," +
     "public_description,biography,wins,losses,pushes,voids,win_pct,first_record_at,last_record_at,consultant_type," +
     "lifecycle_status,preferred_sports&profile_id=eq." + encodeURIComponent(profileId) + "&limit=1";
 
