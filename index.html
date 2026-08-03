@@ -3,344 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vault Verified | The Public Record for Sports Consultants</title>
-<meta name="description" content="Vault Verified independently preserves sports consultant records before events begin, creating a public history that cannot be rewritten afterward. Apply for a Founding Position.">
+<title>Vault Verified | Build a Record People Can Inspect</title>
+<meta name="description" content="Build your sports intelligence business on independently preserved public records. Apply for a Founding Position at Vault Verified.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#090909;
-    --bg-raised:#111213;
-    --line:#1e2022;
-    --line-soft:#161718;
-    --white:#f2f3f3;
-    --gray:#8a8f93;
-    --gray-dim:#5a5f63;
-    --cyan:#00d4ff;
-    --green:#3ddc84;
-    --max:560px;
-  }
-
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{background:var(--bg); scroll-behavior:smooth;}
-  body{
-    background:var(--bg);
-    color:var(--white);
-    font-family:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-    -webkit-font-smoothing:antialiased;
-    line-height:1.5;
-  }
-  a{color:inherit; text-decoration:none;}
-  button, input{font-family:inherit;}
-
-  .wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
-
-  .eyebrow{
-    font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
-    color:var(--gray-dim); font-weight:500;
-  }
-
-  .fade-in{opacity:0; transform:translateY(6px); transition:opacity 0.5s ease, transform 0.5s ease;}
-  .fade-in.visible{opacity:1; transform:none;}
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    .fade-in{opacity:1; transform:none; transition:none;}
-  }
-
-  header.nav{
-    position:sticky; top:0; z-index:50;
-    background:rgba(9,9,9,0.88);
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);
-  }
-  .nav-inner{
-    max-width:var(--max); margin:0 auto; padding:16px 20px;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .nav-mark{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; letter-spacing:0.02em;}
-  .nav-mark .dot{width:7px; height:7px; border-radius:50%; background:var(--cyan); flex-shrink:0;}
-  .nav-links{display:flex; align-items:center; gap:16px;}
-  .nav-link{font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--gray);}
-  .nav-cta{
-    font-size:11px; letter-spacing:0.06em; text-transform:uppercase;
-    color:var(--bg); background:var(--white); padding:8px 12px;
-  }
-
-  .hero{padding:76px 0 40px; border-bottom:1px solid var(--line);}
-  .hero .eyebrow{margin-bottom:22px;}
-  .hero h1{
-    font-size:30px; line-height:1.28; font-weight:700; letter-spacing:0.005em;
-    text-transform:uppercase; margin-bottom:22px;
-  }
-  .hero p{color:var(--gray); font-size:14px; line-height:1.75; max-width:47ch; margin-bottom:32px;}
-  .btn-primary{
-    display:block; text-align:center;
-    background:var(--white); color:#090909;
-    font-size:13px; font-weight:600; letter-spacing:0.02em;
-    padding:16px 18px; border:1px solid var(--white);
-  }
-  .hero-support{
-    display:block; text-align:center; margin-top:14px;
-    font-size:12px; color:var(--gray-dim); text-decoration:underline; text-underline-offset:3px;
-  }
-  .hero-support:hover{color:var(--gray);}
-
-  .section{padding:48px 0; border-bottom:1px solid var(--line);}
-  .section-head{margin-bottom:20px;}
-  .section-title{font-size:16px; font-weight:600; letter-spacing:-0.01em;}
-  .why-now p{color:var(--gray); font-size:13.5px; line-height:1.8; max-width:48ch; margin-bottom:14px;}
-  .why-now p:last-child{margin-bottom:0;}
-  .why-now .closing{color:var(--white); font-weight:500; margin-top:20px;}
-
-  .compare-head{display:grid; grid-template-columns:1fr 1fr; padding-bottom:10px; border-bottom:1px solid var(--line);}
-  .compare-head .compare-col{font-size:10px; letter-spacing:0.09em; text-transform:uppercase; color:var(--gray-dim);}
-  .compare-head .compare-col--them{padding-right:12px;}
-  .compare-head .compare-col--us{padding-left:12px; border-left:1px solid var(--line-soft); color:var(--cyan);}
-  .compare-row{display:grid; grid-template-columns:1fr 1fr; padding:13px 0; border-bottom:1px solid var(--line-soft);}
-  .compare-row .compare-col{font-size:12.5px; line-height:1.5;}
-  .compare-row .compare-col--them{padding-right:12px; color:var(--gray-dim);}
-  .compare-row .compare-col--us{padding-left:12px; border-left:1px solid var(--line-soft); color:var(--white); font-weight:500;}
-
-  .metrics-grid{display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line);}
-  .metric{padding:22px 18px; border-right:1px solid var(--line-soft);}
-  .metric:nth-child(2){border-right:none;}
-  .metric .n{font-size:24px; font-weight:600; color:var(--white); min-height:33px;}
-  .metric .l{font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gray-dim); margin-top:6px;}
-
-  .steps{border-top:1px solid var(--line);}
-  .step{padding:18px 0; border-bottom:1px solid var(--line-soft); display:grid; grid-template-columns:28px 1fr; gap:12px;}
-  .step .num{font-size:11px; color:var(--cyan); letter-spacing:0.05em; padding-top:2px;}
-  .step .label{font-size:13.5px; font-weight:600; margin-bottom:4px;}
-  .step .detail{font-size:12px; color:var(--gray-dim); line-height:1.55;}
-
-  .founder-box{border:1px solid var(--line); background:var(--bg-raised); padding:24px 20px;}
-  .founder-label{
-    display:inline-flex; align-items:center; gap:7px;
-    font-size:10px; letter-spacing:0.09em; text-transform:uppercase; color:var(--gray-dim);
-    border:1px solid var(--line); padding:5px 10px; margin-bottom:18px;
-  }
-  .founder-label .dot{width:6px; height:6px; border-radius:50%; background:var(--gray-dim);}
-  .founder-box h3{font-size:18px; font-weight:600; line-height:1.4; margin-bottom:12px;}
-  .founder-box .copy{color:var(--gray); font-size:13px; line-height:1.75; margin-bottom:22px; max-width:48ch;}
-  .founder-stats{display:flex; border-top:1px solid var(--line-soft); padding-top:16px; margin-bottom:20px;}
-  .fstat{flex:1; border-right:1px solid var(--line-soft); padding-right:10px;}
-  .fstat:last-child{border-right:none; padding-right:0; padding-left:10px;}
-  .fstat + .fstat{padding-left:10px;}
-  .fstat .n{font-size:17px; font-weight:600;}
-  .fstat .l{font-size:9px; letter-spacing:0.07em; text-transform:uppercase; color:var(--gray-dim); margin-top:3px;}
-  .founder-link{
-    display:block; text-align:center; border:1px solid var(--line); color:var(--gray);
-    font-size:12px; padding:13px;
-  }
-  .founder-link:hover{border-color:var(--gray-dim); color:var(--white);}
-
-  .offer-card{border:1px solid var(--cyan); background:var(--bg-raised); padding:26px 20px;}
-  .offer-kicker{
-    display:flex; align-items:center; gap:8px; color:var(--cyan);
-    font-size:10px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:16px;
-  }
-  .offer-kicker .seal{width:7px; height:7px; border:1px solid var(--cyan); border-radius:50%;}
-  .offer-card h3{font-size:19px; font-weight:600; margin-bottom:14px;}
-  .offer-list{list-style:none; margin-bottom:20px;}
-  .offer-list li{
-    font-size:13px; color:var(--gray); padding:9px 0 9px 20px; position:relative;
-    border-bottom:1px solid var(--line-soft);
-  }
-  .offer-list li:last-child{border-bottom:none;}
-  .offer-list li::before{content:"—"; position:absolute; left:0; color:var(--gray-dim);}
-  .offer-terms{font-size:12px; color:var(--gray-dim); line-height:1.7; margin-bottom:20px; font-style:italic;}
-  .offer-status{font-size:12.5px; color:var(--white); margin-bottom:18px;}
-
-  .tiers-quiet{margin-top:36px;}
-  .tiers-label{font-size:10px; letter-spacing:0.09em; text-transform:uppercase; color:var(--gray-dim); margin-bottom:12px;}
-  .tiers-row{display:flex; gap:10px;}
-  .tier{
-    flex:1; border:1px solid var(--line-soft); padding:12px 10px; text-align:center;
-    font-size:11px; color:var(--gray-dim);
-  }
-
-  .final-cta{padding:56px 0; text-align:center;}
-  .final-cta p{font-size:16px; font-weight:500; line-height:1.55; max-width:38ch; margin:0 auto 28px;}
-  .final-cta p .quiet{color:var(--gray-dim); font-weight:400;}
-
-  footer{padding:32px 0 40px; border-top:1px solid var(--line);}
-  .footer-mark{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; margin-bottom:14px;}
-  .footer-mark .dot{width:7px; height:7px; border-radius:50%; background:var(--cyan);}
-  .footer-tag{color:var(--gray-dim); font-size:12px; line-height:1.7; margin-bottom:20px; max-width:44ch;}
-  .footer-links{display:flex; flex-wrap:wrap; gap:16px; font-size:11px; color:var(--gray); border-top:1px solid var(--line); padding-top:16px; margin-bottom:14px;}
-  .footer-legal{font-size:10px; color:var(--gray-dim);}
-
-  @media (min-width:600px){
-    .hero h1{font-size:36px;}
-    .metrics-grid{grid-template-columns:repeat(4, 1fr);}
-    .metric{border-right:1px solid var(--line-soft);}
-    .metric:last-child{border-right:none;}
-    .founder-stats{flex-wrap:nowrap;}
-  }
+:root{--bg:#090909;--bg-deep:#050505;--bg-raised:#111213;--line:#202224;--line-soft:#17191b;--white:#f4f4f1;--gray:#a0a3a5;--gray-dim:#65696d;--cyan:#00d4ff;--max:620px}
+*{margin:0;padding:0;box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;line-height:1.5}a{color:inherit;text-decoration:none}.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--gray-dim);font-weight:600}.section{padding:52px 0;border-bottom:1px solid var(--line)}.section--deep{background:var(--bg-deep)}.section-head{margin-bottom:24px}.section-title{font-size:28px;line-height:1.08;letter-spacing:-.035em;font-weight:800;max-width:19ch}.section-subhead{margin-top:12px;color:var(--gray);font-size:15px;line-height:1.65;max-width:48ch}
+header.nav{position:sticky;top:0;z-index:50;background:rgba(9,9,9,.94);border-bottom:1px solid var(--line)}.nav-inner{max-width:var(--max);margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}.nav-mark{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.03em}.nav-mark .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan)}.nav-links{display:flex;align-items:center;gap:14px}.nav-link,.nav-cta{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase}.nav-link{color:var(--gray)}.nav-cta{background:var(--white);color:var(--bg);padding:8px 11px;font-weight:700}
+.hero{padding:76px 0 54px;border-bottom:1px solid var(--line)}.hero .eyebrow{margin-bottom:24px}.hero h1{font-size:40px;line-height:.98;font-weight:900;letter-spacing:-.055em;text-transform:uppercase;max-width:10ch}.hero p{color:var(--gray);font-size:16px;line-height:1.65;max-width:42ch;margin-top:24px}.why-now p{color:var(--gray);font-size:15px;line-height:1.72;max-width:47ch}
+.proof-teaser{padding:28px 0;border-bottom:1px solid var(--line);background:var(--bg-deep)}.teaser-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line)}.teaser-stat{padding:22px 16px}.teaser-stat+.teaser-stat{border-left:1px solid var(--line)}.teaser-number{font-family:'IBM Plex Mono',monospace;font-size:23px;font-weight:700;line-height:1.2}.teaser-label{margin-top:7px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--gray-dim)}.snapshot{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:9px;line-height:1.5;color:var(--gray-dim)}
+.card-grid{display:grid;grid-template-columns:1fr;gap:10px}.card{border:1px solid var(--line);background:transparent;padding:20px 18px;transition:border-color .25s ease}.card:hover{border-color:#3a3d40}.card-title{font-size:17px;line-height:1.25;font-weight:800;letter-spacing:-.015em}.card-body{margin-top:8px;color:var(--gray);font-size:13px;line-height:1.58}
+.compare-head,.compare-row{display:grid;grid-template-columns:1fr 1fr}.compare-head{padding-bottom:10px;border-bottom:1px solid var(--line)}.compare-row{padding:14px 0;border-bottom:1px solid var(--line-soft)}.compare-col{font-size:13px;line-height:1.45}.compare-head .compare-col{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-dim)}.compare-col--them{padding-right:12px;color:var(--gray-dim)}.compare-col--us{padding-left:12px;border-left:1px solid var(--line-soft);font-weight:700}.compare-head .compare-col--us{color:var(--cyan)}
+.steps{border-top:1px solid var(--line)}.step{display:grid;grid-template-columns:30px 1fr;gap:12px;padding:18px 0;border-bottom:1px solid var(--line-soft)}.step .num{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--cyan);padding-top:3px}.step .label{font-size:16px;line-height:1.25;font-weight:800}.step .detail{font-size:13px;color:var(--gray);line-height:1.58;margin-top:5px}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line)}.metric{padding:22px 16px}.metric+.metric{border-left:1px solid var(--line)}.metric .n{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:700;min-height:31px}.metric .l{margin-top:7px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--gray-dim)}
+.founder-box{border:1px solid var(--line);background:var(--bg-raised);padding:24px 20px}.founder-label{display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--gray-dim);border:1px solid var(--line);padding:5px 9px;margin-bottom:18px}.founder-label .dot{width:6px;height:6px;border-radius:50%;background:var(--gray-dim)}.founder-box h3{font-size:24px;line-height:1.1;font-weight:900;letter-spacing:-.035em}.founder-box .copy{color:var(--gray);font-size:14px;line-height:1.68;margin:14px 0 22px}.founder-stats{display:flex;border-top:1px solid var(--line-soft);padding-top:16px;margin-bottom:20px}.fstat{flex:1;padding-right:10px}.fstat+.fstat{padding-left:10px;border-left:1px solid var(--line-soft)}.fstat .n{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700}.fstat .l{margin-top:3px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-dim)}.founder-link{display:block;text-align:center;border:1px solid var(--line);color:var(--gray);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:13px}.founder-link:hover{border-color:var(--gray-dim);color:var(--white)}
+.future{padding:58px 0;border-bottom:1px solid var(--line);background:var(--bg-deep)}.future h2{font-size:32px;line-height:1;font-weight:900;letter-spacing:-.045em}.future-copy{margin-top:24px;display:grid;gap:14px}.future-copy p{font-size:17px;line-height:1.48;max-width:40ch}.future-copy .muted{color:var(--gray)}.future-copy .payoff{font-weight:800}
+.offer-card{border:1px solid var(--cyan);background:var(--bg-raised);padding:26px 20px}.offer-kicker{display:flex;align-items:center;gap:8px;color:var(--cyan);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}.offer-kicker .seal{width:7px;height:7px;border:1px solid var(--cyan);border-radius:50%}.offer-card h3{font-size:24px;line-height:1.15;font-weight:900;letter-spacing:-.035em}.offer-list{list-style:none;margin:18px 0}.offer-list li{font-size:14px;color:var(--gray);padding:10px 0;border-bottom:1px solid var(--line-soft)}.offer-terms{font-size:12px;color:var(--gray-dim);line-height:1.65;margin-bottom:18px}.offer-status{font-size:14px;font-weight:800;margin-bottom:18px}.btn-primary{display:block;text-align:center;background:var(--white);color:var(--bg);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;text-transform:uppercase;font-weight:700;padding:15px 16px;border:1px solid var(--white)}.tiers-quiet{margin-top:28px}.tiers-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--gray-dim);margin-bottom:10px}.tiers-row{display:flex;gap:8px}.tier{flex:1;border:1px solid var(--line-soft);padding:11px 8px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gray-dim)}
+.final-cta{padding:52px 0;text-align:center}.final-cta p{font-size:20px;font-weight:800;line-height:1.35;letter-spacing:-.02em;max-width:34ch;margin:0 auto 24px}.final-cta .quiet{color:var(--gray);font-weight:500}footer{padding:32px 0 40px;border-top:1px solid var(--line)}.footer-mark{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;margin-bottom:14px}.footer-mark .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan)}.footer-tag{color:var(--gray-dim);font-size:12px;line-height:1.65;margin-bottom:18px;max-width:44ch}.footer-links{display:flex;gap:16px;border-top:1px solid var(--line);padding-top:15px;margin-bottom:14px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gray)}.footer-legal{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gray-dim)}
+@media(min-width:600px){.hero h1{font-size:54px}.section-title{font-size:34px}.card-grid{grid-template-columns:1fr 1fr;gap:12px}.future h2{font-size:40px}}
 </style>
 </head>
 <body>
-
-<header class="nav">
-  <div class="nav-inner">
-    <a href="/index.html" class="nav-mark"><span class="dot"></span>VAULT VERIFIED</a>
-    <nav class="nav-links">
-      <a href="/records.html" class="nav-link">Records</a>
-      <a href="/apply.html" class="nav-cta">Apply</a>
-    </nav>
-  </div>
-</header>
-
-<section class="hero fade-in">
-  <div class="wrap">
-    <div class="eyebrow">A category shift in sports intelligence</div>
-    <h1>The era of<br>"trust me" is ending.</h1>
-    <p>Vault Verified independently preserves sports consultant records before events begin, creating a public history that cannot be rewritten afterward.</p>
-    <a href="/apply.html" class="btn-primary">Apply for a Founding Position</a>
-    <a href="/records.html" class="hero-support">See how public records work →</a>
-  </div>
-</section>
-
-<section class="section why-now fade-in">
-  <div class="wrap">
-    <div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">Why Now</div><div class="section-title">The trust problem got worse before it got better.</div></div>
-    <p>Screenshots can be staged. Losses can be quietly deleted. AI makes fabricated proof cheap to produce.</p>
-    <p class="closing">The harder it gets to fake evidence convincingly, the more a genuinely unfakeable record is worth.</p>
-  </div>
-</section>
-
-<section class="section fade-in">
-  <div class="wrap">
-    <div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">Two Systems</div><div class="section-title">Two systems for building a reputation.</div></div>
-    <div class="compare-head"><div class="compare-col compare-col--them">Self-Reported</div><div class="compare-col compare-col--us">Vault Verified</div></div>
-    <div class="compare-row"><div class="compare-col compare-col--them">Screenshots</div><div class="compare-col compare-col--us">Independent verification</div></div>
-    <div class="compare-row"><div class="compare-col compare-col--them">Selective posting</div><div class="compare-col compare-col--us">Complete history</div></div>
-    <div class="compare-row"><div class="compare-col compare-col--them">Editable after the fact</div><div class="compare-col compare-col--us">Preserved before the result</div></div>
-    <div class="compare-row"><div class="compare-col compare-col--them">Claims</div><div class="compare-col compare-col--us">Verifiable public evidence</div></div>
-  </div>
-</section>
-
-<section class="section fade-in">
-  <div class="wrap">
-    <div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">Proof</div><div class="section-title">Not testimonials. Evidence.</div></div>
-    <div class="metrics-grid">
-      <div class="metric"><div class="n" id="metric-records">&middot;&middot;&middot;</div><div class="l">Records Preserved</div></div>
-      <div class="metric"><div class="n" id="metric-since">&middot;&middot;&middot;</div><div class="l">Preserving Since</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="section fade-in">
-  <div class="wrap">
-    <div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">How It Works</div><div class="section-title">Three steps. No exceptions.</div></div>
-    <div class="steps">
-      <div class="step"><div class="num">01</div><div><div class="label">File before the event.</div><div class="detail">The selection and timestamp are locked before the outcome is known.</div></div></div>
-      <div class="step"><div class="num">02</div><div><div class="label">Vault Verified preserves it.</div><div class="detail">No edits. No resets. No rewritten history.</div></div></div>
-      <div class="step"><div class="num">03</div><div><div class="label">Results become permanent.</div><div class="detail">Wins and losses stay attached to the same public record.</div></div></div>
-    </div>
-  </div>
-</section>
-
-<section class="section fade-in">
-  <div class="wrap">
-    <div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">Founder Proof</div><div class="section-title">The founder files under the same rules.</div></div>
-    <div class="founder-box">
-      <div class="founder-label"><span class="dot"></span>Founder-Operated Account</div>
-      <h3 id="founder-name">GamedayGuru402</h3>
-      <p class="copy">GamedayGuru402 is the founder-operated account used to demonstrate Vault Verified in public. Its wins, losses, timestamps, and filing history remain visible under the same preservation standard offered to every future consultant.</p>
-      <div class="founder-stats" id="founder-stats">
-        <div class="fstat"><div class="n">&middot;&middot;&middot;</div><div class="l">Wins</div></div>
-        <div class="fstat"><div class="n">&middot;&middot;&middot;</div><div class="l">Losses</div></div>
-        <div class="fstat"><div class="n">&middot;&middot;&middot;</div><div class="l">Records</div></div>
-      </div>
-      <a href="/consultants/GG402-0001" class="founder-link">View the Public Record</a>
-    </div>
-  </div>
-</section>
-
-<section class="section fade-in">
-  <div class="wrap">
-    <div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">The Founding Offer</div><div class="section-title">One offer. Not three purchase buttons.</div></div>
-    <div class="offer-card">
-      <div class="offer-kicker"><span class="seal"></span>Founding Consultant</div>
-      <h3>Become one of the first independent consultants to build a publicly preserved record on Vault Verified.</h3>
-      <ul class="offer-list">
-        <li>Professional-tier platform access</li>
-        <li>Public profile and permanent record history</li>
-        <li>Priority onboarding</li>
-      </ul>
-      <p class="offer-terms">Founding members will receive preferential terms when paid plans launch.</p>
-      <div class="offer-status">Applications are open for the Founding 25.</div>
-      <a href="/apply.html" class="btn-primary">Apply for a Founding Position</a>
-    </div>
-    <div class="tiers-quiet">
-      <div class="tiers-label">Planned Platform Tiers</div>
-      <div class="tiers-row">
-        <div class="tier">Starter</div>
-        <div class="tier">Professional</div>
-        <div class="tier">Enterprise</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="final-cta fade-in">
-  <div class="wrap">
-    <p>Your reputation is being built every day. <span class="quiet">The only question is whether it's being preserved.</span></p>
-    <a href="/apply.html" class="btn-primary" style="max-width:320px; margin:0 auto;">Apply for a Founding Position</a>
-  </div>
-</section>
-
-<footer><div class="wrap"><div class="footer-mark"><span class="dot"></span>VAULT VERIFIED</div><div class="footer-tag">Independent third-party verification for sports consultants. Preserve the truth before it can be rewritten.</div><div class="footer-links"><a href="/records.html">Records</a><a href="/apply.html">Apply</a></div><div class="footer-legal">&copy; 2026 Vault Verified. All records preserved as filed.</div></div></footer>
-
+<header class="nav"><div class="nav-inner"><a href="/index.html" class="nav-mark"><span class="dot"></span>VAULT VERIFIED</a><nav class="nav-links"><a href="/records.html" class="nav-link" data-event="homepage_records_click">Records</a><a href="/apply.html" class="nav-cta" data-event="nav_apply_click">Apply</a></nav></div></header>
+<!-- PULL: strengthens "I want to be on the evidence side of this shift." -->
+<section class="hero"><div class="wrap"><div class="eyebrow">A category shift in sports intelligence</div><h1>The era of "trust me" is ending.</h1><p>Vault Verified independently preserves sports consultant records before events begin, creating a public history that cannot be rewritten afterward.</p></div></section>
+<!-- PUSH: removes "screenshots are enough." -->
+<section class="section why-now"><div class="wrap"><div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">Why Now</div><h2 class="section-title">A screenshot can show a win. It cannot prove a history.</h2></div><p>Screenshots can be staged. Losses can be quietly deleted. AI makes fabricated proof cheap to produce. A record becomes credible when it is preserved before the result and remains available after it.</p></div></section>
+<!-- PUSH: removes "this may be vaporware." -->
+<section class="proof-teaser"><div class="wrap"><div class="teaser-grid"><div class="teaser-stat"><div class="teaser-number" id="metric-weeks">...</div><div class="teaser-label">Weeks Preserved</div></div><div class="teaser-stat"><div class="teaser-number">0</div><div class="teaser-label">Original Submissions Overwritten</div></div></div><div class="snapshot" id="snapshot-date">Live platform snapshot loading.</div></div></section>
+<!-- PULL: strengthens "this can help my business." -->
+<section class="section"><div class="wrap"><div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">Why Serious Consultants Preserve Their Record</div><h2 class="section-title">Build your sports intelligence business on a record people can inspect.</h2></div><div class="card-grid"><article class="card"><h3 class="card-title">Acquire customers with evidence instead of promises.</h3></article><article class="card"><h3 class="card-title">Retain customers with a history they can verify.</h3></article><article class="card"><h3 class="card-title">Build a reputation competitors cannot fabricate.</h3></article><article class="card"><h3 class="card-title">Turn every result into proof for the next customer.</h3></article><article class="card"><h3 class="card-title">Spend less time defending your past. Spend more time building your future.</h3></article><article class="card"><h3 class="card-title">Own a professional record that grows in value over time.</h3></article></div></div></section>
+<!-- PUSH: removes "this is the same as normal self-reporting." -->
+<section class="section section--deep"><div class="wrap"><div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">Two Systems</div><h2 class="section-title">Claims ask for trust. Records permit inspection.</h2></div><div class="compare-head"><div class="compare-col compare-col--them">Traditional Promotion</div><div class="compare-col compare-col--us">Vault Verified Record</div></div><div class="compare-row"><div class="compare-col compare-col--them">Screenshots</div><div class="compare-col compare-col--us">Independent verification</div></div><div class="compare-row"><div class="compare-col compare-col--them">Selective posting</div><div class="compare-col compare-col--us">Complete history</div></div><div class="compare-row"><div class="compare-col compare-col--them">Editable after the fact</div><div class="compare-col compare-col--us">Preserved before the result</div></div><div class="compare-row"><div class="compare-col compare-col--them">Claims</div><div class="compare-col compare-col--us">Verifiable public evidence</div></div></div></section>
+<!-- PUSH: removes "it could be changed later." -->
+<section class="section"><div class="wrap"><div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">How It Works</div><h2 class="section-title">Filed before the event. Judged after the result.</h2></div><div class="steps"><div class="step"><div class="num">01</div><div><div class="label">File before the event.</div><div class="detail">The selection and timestamp are preserved before the outcome is known.</div></div></div><div class="step"><div class="num">02</div><div><div class="label">Vault Verified preserves it.</div><div class="detail">No edits. No resets. No rewritten history.</div></div></div><div class="step"><div class="num">03</div><div><div class="label">The result stays attached.</div><div class="detail">Wins and losses remain part of the same public record.</div></div></div></div></div></section>
+<!-- PULL: strengthens "one filing creates real value." -->
+<section class="section section--deep"><div class="wrap"><div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">One Filing. More Than One Outcome.</div><h2 class="section-title">Every preserved record becomes more than a database entry.</h2></div><div class="card-grid"><article class="card"><h3 class="card-title">A public page</h3><p class="card-body">A permanent link your audience can inspect anytime.</p></article><article class="card"><h3 class="card-title">A shareable asset</h3><p class="card-body">Content, not just a claim.</p></article><article class="card"><h3 class="card-title">A profile update</h3><p class="card-body">Your public history grows with every filing.</p></article><article class="card"><h3 class="card-title">A credibility asset</h3><p class="card-body">Every result adds evidence to your track record.</p></article><article class="card"><h3 class="card-title">A referral surface</h3><p class="card-body">Every share can bring a new visitor to your profile.</p></article><article class="card"><h3 class="card-title">Part of a permanent history</h3><p class="card-body">The value compounds the longer you preserve.</p></article></div></div></section>
+<!-- PUSH: removes "the evidence may be too thin." -->
+<section class="section"><div class="wrap"><div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">Live Evidence</div><h2 class="section-title">Not testimonials. Evidence.</h2></div><div class="metrics-grid"><div class="metric"><div class="n" id="metric-records">...</div><div class="l">Records Preserved</div></div><div class="metric"><div class="n" id="metric-since">...</div><div class="l">Preserving Since</div></div></div></div></section>
+<!-- PUSH: removes "does anyone actually use it?" -->
+<section class="section section--deep"><div class="wrap"><div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">Founder Proof</div><h2 class="section-title">The founder files under the same rules.</h2></div><div class="founder-box"><div class="founder-label"><span class="dot"></span>Founder-Operated Account</div><h3>GamedayGuru402</h3><p class="copy">The founder-operated account demonstrates Vault Verified in public. Its wins, losses, timestamps, and filing history remain visible under the same preservation standard offered to every future consultant.</p><div class="founder-stats" id="founder-stats"><div class="fstat"><div class="n">...</div><div class="l">Wins</div></div><div class="fstat"><div class="n">...</div><div class="l">Losses</div></div><div class="fstat"><div class="n">...</div><div class="l">Records</div></div></div><a href="/consultants/GG402-0001" class="founder-link">View the Public Record</a></div></div></section>
+<!-- PULL: strengthens "I want the asset this can become." -->
+<section class="future"><div class="wrap"><h2>Six months from now.</h2><div class="future-copy"><p class="muted">Your competitors are still posting screenshots and hoping no one asks for more.</p><p>You have a permanent public history that answers the question before it is asked.</p><p class="payoff">You built an asset that compounds: professional equity that can outlast any single customer, season, or platform.</p></div></div></section>
+<!-- PUSH: removes "there is no reason to act now." -->
+<section class="section"><div class="wrap"><div class="section-head"><div class="eyebrow" style="margin-bottom:12px;">The Founding Offer</div><h2 class="section-title">Become one of the first independent consultants to build a publicly preserved record.</h2></div><div class="offer-card"><div class="offer-kicker"><span class="seal"></span>Founding Consultant</div><h3>Start building the record your future customers can inspect.</h3><ul class="offer-list"><li>Professional-tier platform access</li><li>Public profile and permanent record history</li><li>Priority onboarding</li></ul><p class="offer-terms">Founding members will receive preferential terms when paid plans launch.</p><div class="offer-status">Applications are open for the Founding 25.</div><a href="/apply.html" class="btn-primary" data-event="homepage_apply_click">Apply for a Founding Position</a></div><div class="tiers-quiet"><div class="tiers-label">Planned Platform Tiers</div><div class="tiers-row"><div class="tier">Starter</div><div class="tier">Professional</div><div class="tier">Enterprise</div></div></div></div></section>
+<section class="final-cta"><div class="wrap"><p>Your reputation is being built every day. <span class="quiet">The only question is whether it is being preserved.</span></p><a href="/apply.html" class="btn-primary" style="max-width:340px;margin:0 auto;" data-event="homepage_apply_click">Apply for a Founding Position</a></div></section>
+<footer><div class="wrap"><div class="footer-mark"><span class="dot"></span>VAULT VERIFIED</div><div class="footer-tag">Independent third-party verification for sports consultants. Preserve the truth before it can be rewritten.</div><div class="footer-links"><a href="/records.html" data-event="homepage_records_click">Records</a><a href="/apply.html" data-event="footer_apply_click">Apply</a></div><div class="footer-legal">&copy; 2026 Vault Verified. All records preserved as filed.</div></div></footer>
 <script>
-(function () {
-  "use strict";
-  var SUPABASE_URL = "https://apmrgvpegtfsqqjcokfv.supabase.co";
-  var SUPABASE_KEY = "sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";
-  function headers() { return { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }; }
-  function formatDate(raw) { if (!raw) return null; try { return new Date(raw).toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "America/Chicago" }); } catch (e) { return null; } }
-
-  try {
-    var sections = document.querySelectorAll(".fade-in");
-    if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add("visible"); io.unobserve(entry.target); } });
-      }, { rootMargin: "0px 0px -8% 0px" });
-      sections.forEach(function (s) { io.observe(s); });
-    } else sections.forEach(function (s) { s.classList.add("visible"); });
-  } catch (e) { document.querySelectorAll(".fade-in").forEach(function (s) { s.classList.add("visible"); }); }
-
-  fetch(SUPABASE_URL + "/rest/v1/v_public_platform_stats?select=total_records_preserved,earliest_public_record_at", { headers: headers() })
-    .then(function (res) { if (!res.ok) throw new Error("stats failed"); return res.json(); })
-    .then(function (rows) {
-      var stats = rows && rows[0];
-      if (!stats) throw new Error("empty");
-      document.getElementById("metric-records").textContent = stats.total_records_preserved != null ? String(stats.total_records_preserved) : "Live";
-      document.getElementById("metric-since").textContent = formatDate(stats.earliest_public_record_at) || "2026";
-    })
-    .catch(function () {
-      document.getElementById("metric-records").textContent = "Live";
-      document.getElementById("metric-since").textContent = "2026";
-    });
-
-  fetch(SUPABASE_URL + "/rest/v1/v_public_consultants?select=wins,losses,total_records&profile_id=eq.GG402-0001&limit=1", { headers: headers() })
-    .then(function (res) { if (!res.ok) throw new Error("founder stats failed"); return res.json(); })
-    .then(function (rows) {
-      var p = rows && rows[0];
-      if (!p) throw new Error("empty");
-      var box = document.getElementById("founder-stats");
-      var wins = p.wins == null ? 0 : p.wins;
-      var losses = p.losses == null ? 0 : p.losses;
-      var total = p.total_records == null ? (wins + losses) : p.total_records;
-      box.innerHTML =
-        '<div class="fstat"><div class="n">' + wins + '</div><div class="l">Wins</div></div>' +
-        '<div class="fstat"><div class="n">' + losses + '</div><div class="l">Losses</div></div>' +
-        '<div class="fstat"><div class="n">' + total + '</div><div class="l">Records</div></div>';
-    })
-    .catch(function () {});
-})();
+(function(){"use strict";var U="https://apmrgvpegtfsqqjcokfv.supabase.co",K="sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";function H(){return{apikey:K,Authorization:"Bearer "+K,"Content-Type":"application/json"}}function M(r){if(!r)return null;try{return new Date(r).toLocaleDateString("en-US",{month:"short",year:"numeric",timeZone:"America/Chicago"})}catch(e){return null}}function S(){try{return"Platform snapshot: "+new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"America/Chicago"})+". Live totals may change as new records are preserved."}catch(e){return"Live platform snapshot. Totals may change as new records are preserved."}}function W(r){if(!r)return null;var s=new Date(r).getTime();if(!isFinite(s))return null;return Math.max(0,(Date.now()-s)/(7*24*60*60*1000)).toFixed(1)}function I(){var k="vv_funnel_session_id";try{var e=localStorage.getItem(k);if(e)return e;var v=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():("vv-"+Date.now()+"-"+Math.random().toString(16).slice(2));localStorage.setItem(k,v);return v}catch(e){return"vv-"+Date.now()+"-"+Math.random().toString(16).slice(2)}}function D(){var w=window.innerWidth||0;return w<600?"mobile":w<1024?"tablet":"desktop"}function E(t){var q=new URLSearchParams(location.search),p={session_id:I(),event_type:t,device_type:D(),viewport_width:window.innerWidth||null,viewport_height:window.innerHeight||null,referrer:document.referrer?document.referrer.slice(0,500):null,utm_source:q.get("utm_source"),utm_medium:q.get("utm_medium"),utm_campaign:q.get("utm_campaign")};fetch(U+"/rest/v1/application_funnel_events",{method:"POST",headers:Object.assign({},H(),{Prefer:"return=minimal"}),body:JSON.stringify(p),keepalive:true}).catch(function(){})}document.querySelectorAll("[data-event]").forEach(function(el){el.addEventListener("click",function(){E(el.getAttribute("data-event"))})});document.getElementById("snapshot-date").textContent=S();fetch(U+"/rest/v1/v_public_platform_stats?select=total_records_preserved,earliest_public_record_at",{headers:H()}).then(function(r){if(!r.ok)throw new Error("stats");return r.json()}).then(function(rows){var s=rows&&rows[0];if(!s)throw new Error("empty");document.getElementById("metric-weeks").textContent=W(s.earliest_public_record_at)||"Live";document.getElementById("metric-records").textContent=s.total_records_preserved!=null?String(s.total_records_preserved):"Live";document.getElementById("metric-since").textContent=M(s.earliest_public_record_at)||"2026"}).catch(function(){document.getElementById("metric-weeks").textContent="Live";document.getElementById("metric-records").textContent="Live";document.getElementById("metric-since").textContent="2026"});fetch(U+"/rest/v1/v_public_consultants?select=wins,losses,total_records&profile_id=eq.GG402-0001&limit=1",{headers:H()}).then(function(r){if(!r.ok)throw new Error("founder");return r.json()}).then(function(rows){var p=rows&&rows[0];if(!p)throw new Error("empty");var w=p.wins==null?0:p.wins,l=p.losses==null?0:p.losses,t=p.total_records==null?w+l:p.total_records;document.getElementById("founder-stats").innerHTML='<div class="fstat"><div class="n">'+w+'</div><div class="l">Wins</div></div><div class="fstat"><div class="n">'+l+'</div><div class="l">Losses</div></div><div class="fstat"><div class="n">'+t+'</div><div class="l">Records</div></div>'}).catch(function(){})})();
 </script>
 </body>
 </html>
