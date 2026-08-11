@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Opening Consultant Record | Vault Verified</title>
+<style>
+  html,body{margin:0;min-height:100%;background:#090909;color:#8a8f93;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace}
+  body{display:grid;place-items:center}
+  .state{padding:24px;text-align:center;font-size:13px;line-height:1.7}
+  a{color:#00d4ff}
+</style>
+</head>
+<body>
+<div class="state" id="state">Opening consultant record…</div>
+<script>
+(function(){
+  var SUPABASE_URL="https://apmrgvpegtfsqqjcokfv.supabase.co";
+  var SUPABASE_KEY="sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";
+
+  function recordId(){
+    var parts=window.location.pathname.split("/").filter(Boolean);
+    var i=parts.indexOf("record");
+    if(i!==-1&&parts[i+1]) return decodeURIComponent(parts[i+1]);
+    var q=new URLSearchParams(window.location.search).get("id");
+    return q?decodeURIComponent(q):"";
+  }
+
+  var id=recordId();
+  if(!id){
+    window.location.replace("/records.html");
+    return;
+  }
+
+  fetch(SUPABASE_URL+"/rest/v1/v_public_records?record_id=eq."+encodeURIComponent(id)+"&select=profile_id&limit=1",{
+    headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY}
+  })
+  .then(function(r){if(!r.ok) throw new Error("lookup failed");return r.json();})
+  .then(function(rows){
+    if(rows&&rows[0]&&rows[0].profile_id){
+      window.location.replace("/consultants/"+encodeURIComponent(rows[0].profile_id));
+      return;
+    }
+    document.getElementById("state").innerHTML='Record not publicly available.<br><a href="/records.html">Browse public records</a>';
+  })
+  .catch(function(){
+    document.getElementById("state").innerHTML='Unable to open record.<br><a href="/records.html">Browse public records</a>';
+  });
+})();
+</script>
+</body>
+</html>
