@@ -5,6 +5,10 @@
       "destination": "/consultant.html"
     },
     {
+      "source": "/record/:id",
+      "destination": "/record.html"
+    },
+    {
       "source": "/archive/:handle",
       "destination": "/archive.html"
     }
