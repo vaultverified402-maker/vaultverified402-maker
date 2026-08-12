@@ -1,312 +1,55 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Apply as Founding Consultant — Vault Verified</title>
-<meta name="description" content="Apply to the Vault Verified Founding Consultant program in 60 seconds. Pre-event filings. Permanent records.">
+<title>Founding Verified Operator — Vault Verified</title>
+<meta name="description" content="Apply for a Founding Verified Operator account at Vault Verified. Independent record preservation, a public operator profile, and verifiable performance history for $49 per month after approval.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#090909;
-    --text:#F2F2F2;
-    --dim:#8A8A8A;
-    --line:#2A2A2A;
-    --field:#111111;
-    --cyan:#00D4FF;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{-webkit-text-size-adjust:100%;}
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:15px;
-    line-height:1.6;
-    min-height:100vh;
-  }
-  .wrap{max-width:640px;margin:0 auto;padding:48px 24px 96px;}
-
-  .brand{display:flex;align-items:center;gap:10px;margin-bottom:56px;}
-  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--cyan);flex-shrink:0;}
-  .brand span{font-weight:700;letter-spacing:.14em;font-size:16px;}
-
-  .eyebrow{font-size:12px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;margin-bottom:20px;}
-  h1{
-    font-size:clamp(26px,6vw,38px);
-    font-weight:700;
-    line-height:1.2;
-    text-transform:uppercase;
-    margin-bottom:20px;
-  }
-  .lede{color:var(--dim);max-width:56ch;}
-  .lede b{color:var(--text);font-weight:600;}
-
-  form{margin-top:48px;}
-  .field{margin-top:26px;}
-  label{display:block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--text);margin-bottom:10px;}
-  label .req{color:var(--cyan);}
-  label .opt{color:var(--dim);letter-spacing:.1em;text-transform:none;}
-  input[type=text],input[type=email],input[type=url],select{
-    width:100%;
-    background:var(--field);
-    border:1px solid var(--line);
-    color:var(--text);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:15px;
-    padding:14px 16px;
-    border-radius:0;
-    appearance:none;
-    -webkit-appearance:none;
-  }
-  select{
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8A8A' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;
-    background-position:right 16px center;
-    padding-right:44px;
-  }
-  input::placeholder{color:#555;}
-  input:focus,select:focus{outline:2px solid var(--cyan);outline-offset:0;border-color:var(--cyan);}
-
-  .ack{
-    display:flex;gap:14px;align-items:flex-start;
-    border:1px solid var(--line);
-    padding:16px;
-    margin-top:16px;
-    cursor:pointer;
-  }
-  .ack:first-of-type{margin-top:36px;}
-  .ack input[type=checkbox]{
-    appearance:none;-webkit-appearance:none;
-    width:20px;height:20px;flex-shrink:0;margin-top:2px;
-    background:var(--field);
-    border:1px solid var(--dim);
-    cursor:pointer;
-    position:relative;
-  }
-  .ack input[type=checkbox]:checked{border-color:var(--cyan);}
-  .ack input[type=checkbox]:checked::after{content:"";position:absolute;inset:4px;background:var(--cyan);}
-  .ack input[type=checkbox]:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
-  .ack .ack-text{font-size:13.5px;line-height:1.55;color:var(--text);}
-  .ack .ack-text b{font-weight:600;}
-
-  .submit-row{margin-top:40px;}
-  button[type=submit]{
-    width:100%;
-    background:var(--cyan);
-    color:var(--bg);
-    border:none;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:15px;
-    font-weight:700;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    padding:18px 24px;
-    cursor:pointer;
-  }
-  button[type=submit]:hover{background:#33DDFF;}
-  button[type=submit]:focus-visible{outline:2px solid var(--text);outline-offset:3px;}
-  button[type=submit]:disabled{background:var(--line);color:var(--dim);cursor:not-allowed;}
-  .below-submit{font-size:12.5px;color:var(--dim);margin-top:14px;text-align:center;}
-
-  .form-error{
-    display:none;
-    border:1px solid var(--line);
-    border-left:2px solid var(--cyan);
-    padding:14px 16px;
-    margin-top:20px;
-    font-size:13.5px;
-  }
-  .form-error.show{display:block;}
-
-  #success{display:none;margin-top:56px;}
-  #success.show{display:block;}
-  .filed-status{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
-  .filed-status .dot{width:10px;height:10px;border-radius:50%;background:var(--cyan);}
-  .filed-status span{color:var(--cyan);font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;}
-  #success h2{font-size:clamp(22px,5vw,32px);text-transform:uppercase;line-height:1.25;margin-bottom:20px;}
-  .app-ref{border:1px solid var(--line);padding:20px;margin:28px 0;}
-  .app-ref .k{font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-bottom:6px;}
-  .app-ref .v{font-size:18px;font-weight:600;word-break:break-all;}
-  #success p{color:var(--dim);font-size:14px;max-width:56ch;}
-  #success p + p{margin-top:12px;}
-
-  .foot{margin-top:80px;border-top:1px solid var(--line);padding-top:24px;font-size:12.5px;color:var(--dim);}
-  .foot a{color:var(--dim);}
-  .foot a:hover{color:var(--text);}
-
-  @media (prefers-reduced-motion:no-preference){
-    #success.show{animation:appear .3s ease-out;}
-    @keyframes appear{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
-  }
+:root{--bg:#090909;--text:#f2f2f2;--dim:#8a8a8a;--line:#2a2a2a;--field:#111;--cyan:#00d4ff;--raised:#111213}
+*{margin:0;padding:0;box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:15px;line-height:1.6;min-height:100vh}.wrap{max-width:640px;margin:0 auto;padding:42px 22px 88px}.brand{display:flex;align-items:center;gap:10px;margin-bottom:44px}.brand .dot,.filed-status .dot{width:9px;height:9px;border-radius:50%;background:var(--cyan);flex-shrink:0}.brand span{font-weight:700;letter-spacing:.14em;font-size:15px}.eyebrow{font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-bottom:16px}h1{font-size:clamp(27px,7vw,39px);font-weight:700;line-height:1.16;text-transform:uppercase;margin-bottom:17px}.lede{color:var(--dim);max-width:56ch}.lede b{color:var(--text);font-weight:600}.offer{margin-top:30px;border:1px solid rgba(0,212,255,.35);background:var(--raised);padding:19px}.offer-kicker{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--cyan);margin-bottom:9px}.price{display:flex;align-items:baseline;gap:5px;margin-bottom:8px}.price .n{font-size:32px;font-weight:700;line-height:1}.price .term{font-size:11px;color:var(--dim)}.offer p{font-size:12px;color:var(--dim);line-height:1.7}.offer-list{display:grid;gap:7px;margin-top:14px}.offer-item{font-size:11.5px;color:var(--text);display:flex;gap:8px}.offer-item:before{content:'+';color:var(--cyan)}.offer-note{border-top:1px solid var(--line);padding-top:13px;margin-top:15px!important;font-size:10.5px!important}form{margin-top:42px}.field{margin-top:24px}label{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text);margin-bottom:9px}label .req{color:var(--cyan)}label .opt{color:var(--dim);letter-spacing:.08em;text-transform:none}input[type=text],input[type=email],input[type=url],select{width:100%;background:var(--field);border:1px solid var(--line);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;padding:13px 14px;border-radius:0;appearance:none;-webkit-appearance:none}select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8A8A' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:44px}input::placeholder{color:#555}input:focus,select:focus{outline:2px solid var(--cyan);outline-offset:0;border-color:var(--cyan)}.ack{display:flex;gap:13px;align-items:flex-start;border:1px solid var(--line);padding:15px;margin-top:14px;cursor:pointer;letter-spacing:0;text-transform:none}.ack:first-of-type{margin-top:32px}.ack input[type=checkbox]{appearance:none;-webkit-appearance:none;width:19px;height:19px;flex-shrink:0;margin-top:2px;background:var(--field);border:1px solid var(--dim);cursor:pointer;position:relative}.ack input[type=checkbox]:checked{border-color:var(--cyan)}.ack input[type=checkbox]:checked::after{content:"";position:absolute;inset:4px;background:var(--cyan)}.ack-text{font-size:12.5px;line-height:1.55;color:var(--text)}.ack-text b{font-weight:600}.submit-row{margin-top:36px}button[type=submit]{width:100%;background:var(--cyan);color:var(--bg);border:none;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;padding:17px 22px;cursor:pointer}button[type=submit]:disabled{background:var(--line);color:var(--dim);cursor:not-allowed}.below-submit{font-size:10.5px;color:var(--dim);margin-top:12px;text-align:center;line-height:1.65}.form-error{display:none;border:1px solid var(--line);border-left:2px solid var(--cyan);padding:13px 14px;margin-top:18px;font-size:12.5px}.form-error.show{display:block}#success{display:none;margin-top:52px}#success.show{display:block}.filed-status{display:flex;align-items:center;gap:9px;margin-bottom:22px}.filed-status span{color:var(--cyan);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600}#success h2{font-size:clamp(22px,5vw,31px);text-transform:uppercase;line-height:1.25;margin-bottom:18px}.app-ref{border:1px solid var(--line);padding:18px;margin:24px 0}.app-ref .k{font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;margin-bottom:5px}.app-ref .v{font-size:17px;font-weight:600;word-break:break-all}#success p{color:var(--dim);font-size:13px;max-width:56ch}#success p+p{margin-top:11px}.next-step{border:1px solid rgba(0,212,255,.3);padding:16px;margin-top:22px;color:var(--text)!important}.next-step b{color:var(--cyan)}.foot{margin-top:70px;border-top:1px solid var(--line);padding-top:22px;font-size:11.5px;color:var(--dim)}.foot a{color:var(--dim)}
 </style>
 </head>
-<body>
-<div class="wrap">
-
-  <div class="brand"><div class="dot"></div><span>VAULT VERIFIED</span></div>
-
-  <div id="intake">
-    <div class="eyebrow">Founding Consultant Intake</div>
-    <h1>Your record is the application.</h1>
-    <p class="lede">Founding consultants file selections <b>before events begin</b> and keep a <b>permanent public record</b> — wins and losses alike. Takes 60 seconds.</p>
-
-    <form id="applyForm" novalidate>
-      <div class="field">
-        <label for="full_name">Full Name <span class="req">*</span></label>
-        <input type="text" id="full_name" name="full_name" required autocomplete="name" placeholder="Your name">
-      </div>
-
-      <div class="field">
-        <label for="contact_email">Email <span class="req">*</span></label>
-        <input type="email" id="contact_email" name="contact_email" required autocomplete="email" placeholder="you@example.com">
-      </div>
-
-      <div class="field">
-        <label for="primary_handle">Primary Handle <span class="req">*</span></label>
-        <input type="text" id="primary_handle" name="primary_handle" required placeholder="@yourhandle">
-      </div>
-
-      <div class="field">
-        <label for="platform">Primary Platform <span class="req">*</span></label>
-        <select id="platform" name="platform" required>
-          <option value="" disabled selected>Select platform</option>
-          <option value="x_twitter">X / Twitter</option>
-          <option value="instagram">Instagram</option>
-          <option value="tiktok">TikTok</option>
-          <option value="youtube">YouTube</option>
-          <option value="discord">Discord</option>
-          <option value="telegram">Telegram</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="sports_covered">Sports Covered <span class="req">*</span></label>
-        <input type="text" id="sports_covered" name="sports_covered" required placeholder="e.g. MLB, NBA, NFL">
-      </div>
-
-      <div class="field">
-        <label for="profile_url">Public Profile URL <span class="opt">(optional)</span></label>
-        <input type="url" id="profile_url" name="profile_url" placeholder="https://">
-      </div>
-
-      <label class="ack" for="ack_preevent">
-        <input type="checkbox" id="ack_preevent" name="ack_preevent" required>
-        <span class="ack-text"><b>Pre-event filing.</b> Every selection is filed before the event begins. Timestamped. No exceptions.</span>
-      </label>
-
-      <label class="ack" for="ack_permanent">
-        <input type="checkbox" id="ack_permanent" name="ack_permanent" required>
-        <span class="ack-text"><b>Permanence.</b> Records are never edited or deleted. Losses stay as visible as wins.</span>
-      </label>
-
-      <div class="form-error" id="formError" role="alert"></div>
-
-      <div class="submit-row">
-        <button type="submit" id="submitBtn">Apply in 60 Seconds</button>
-        <div class="below-submit">Founding Consultant program. Your application is filed on the permanent intake record.</div>
-      </div>
-    </form>
-  </div>
-
-  <div id="success" aria-live="polite">
-    <div class="filed-status"><div class="dot"></div><span>Application Filed</span></div>
-    <h2>Your application is on the record.</h2>
-    <div class="app-ref">
-      <div class="k">Application Reference</div>
-      <div class="v" id="appIdOut">—</div>
-    </div>
-    <p>Filed <span id="filedAt">—</span>. Keep this reference. Review correspondence will arrive at the email you provided.</p>
-    <p>Nothing about your application is published unless you are accepted.</p>
-  </div>
-
-  <div class="foot">
-    Not ready to apply? <a href="/create-archive.html">Create a free public archive</a> of your existing record instead.<br><br>
-    History should forgive. Records should not forget.
-  </div>
-
+<body><div class="wrap">
+<div class="brand"><div class="dot"></div><span>VAULT VERIFIED</span></div>
+<div id="intake">
+<div class="eyebrow">Founding Verified Operator</div>
+<h1>Run your business on a record customers can inspect.</h1>
+<p class="lede">You keep selling your intelligence. <b>Vault independently preserves the history.</b> Apply for one of the founding operator positions and build a public record that is separate from your sales claims.</p>
+<div class="offer">
+<div class="offer-kicker">Founding operator offer</div>
+<div class="price"><div class="n">$49</div><div class="term">/ month after approval</div></div>
+<p>Founding pricing is reserved for the first 25 approved operators while the account remains active.</p>
+<div class="offer-list"><div class="offer-item">Independent pre-event record preservation</div><div class="offer-item">Public Verified Operator profile</div><div class="offer-item">Verifiable performance history</div><div class="offer-item">Published methodology attached to your profile</div><div class="offer-item">Shareable proof URL for customers and social channels</div></div>
+<p class="offer-note">Application is free. No charge is taken today. Approved operators activate the $49 monthly subscription before their public profile goes live.</p>
 </div>
-
+<form id="applyForm" novalidate>
+<div class="field"><label for="full_name">Full Name <span class="req">*</span></label><input type="text" id="full_name" name="full_name" required autocomplete="name" placeholder="Your name"></div>
+<div class="field"><label for="contact_email">Email <span class="req">*</span></label><input type="email" id="contact_email" name="contact_email" required autocomplete="email" placeholder="you@example.com"></div>
+<div class="field"><label for="primary_handle">Primary Handle <span class="req">*</span></label><input type="text" id="primary_handle" name="primary_handle" required placeholder="@yourhandle"></div>
+<div class="field"><label for="platform">Primary Platform <span class="req">*</span></label><select id="platform" name="platform" required><option value="" disabled selected>Select platform</option><option value="x_twitter">X / Twitter</option><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="youtube">YouTube</option><option value="discord">Discord</option><option value="telegram">Telegram</option><option value="other">Other</option></select></div>
+<div class="field"><label for="sports_covered">Sports Covered <span class="req">*</span></label><input type="text" id="sports_covered" name="sports_covered" required placeholder="e.g. MLB, NBA, NFL"></div>
+<div class="field"><label for="profile_url">Public Profile URL <span class="opt">(optional)</span></label><input type="url" id="profile_url" name="profile_url" placeholder="https://"></div>
+<label class="ack" for="ack_preevent"><input type="checkbox" id="ack_preevent" name="ack_preevent" required><span class="ack-text"><b>Pre-event filing.</b> Every selection submitted for verification must be filed before the event begins.</span></label>
+<label class="ack" for="ack_permanent"><input type="checkbox" id="ack_permanent" name="ack_permanent" required><span class="ack-text"><b>Complete history.</b> Losses remain part of the public record alongside wins. No retroactive record resets.</span></label>
+<div class="form-error" id="formError" role="alert"></div>
+<div class="submit-row"><button type="submit" id="submitBtn">Apply for Founding Operator</button><div class="below-submit">Free application. $49/month only after approval and activation. Founding positions are limited to 25.</div></div>
+</form></div>
+<div id="success" aria-live="polite"><div class="filed-status"><div class="dot"></div><span>Application Filed</span></div><h2>Your operator application is on the record.</h2><div class="app-ref"><div class="k">Application Reference</div><div class="v" id="appIdOut">—</div></div><p>Filed <span id="filedAt">—</span>. Keep this reference. Review correspondence will arrive at the email you provided.</p><p class="next-step"><b>If approved:</b> you will receive an activation link for the $49/month Founding Verified Operator subscription. Your public profile goes live after activation and your first qualifying record is preserved.</p><p>Nothing about your application is published unless you are accepted and activated.</p></div>
+<div class="foot">Want to inspect the model first? <a href="/consultants/GG402-0001">View GG402's Verified Operator profile</a>.<br><br>History should forgive. Records should not forget.</div>
+</div>
 <script>
 (function(){
-  var SUPABASE_URL = "https://apmrgvpegtfsqqjcokfv.supabase.co";
-  var SUPABASE_KEY = "sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";
-
-  function genAppId(){
-    var t = Date.now().toString(36).toUpperCase();
-    var r = Math.random().toString(36).slice(2,6).toUpperCase();
-    return "CON-APP-" + t + r;
-  }
-
-  var form = document.getElementById("applyForm");
-  var btn = document.getElementById("submitBtn");
-  var errBox = document.getElementById("formError");
-
-  function showError(msg){ errBox.textContent = msg; errBox.classList.add("show"); }
-  function clearError(){ errBox.textContent = ""; errBox.classList.remove("show"); }
-
-  form.addEventListener("submit", function(e){
-    e.preventDefault();
-    clearError();
-
-    if(!form.reportValidity()) return;
-
-    if(!document.getElementById("ack_preevent").checked || !document.getElementById("ack_permanent").checked){
-      showError("Both acknowledgments are required. Applying means accepting the standard.");
-      return;
-    }
-
-    var appId = genAppId();
-    var handle = document.getElementById("primary_handle").value.trim();
-    var payload = {
-      application_id: appId,
-      full_name: document.getElementById("full_name").value.trim(),
-      primary_handle: handle,
-      platform_handle: handle,
-      platform: document.getElementById("platform").value,
-      contact_email: document.getElementById("contact_email").value.trim(),
-      sports_covered: document.getElementById("sports_covered").value.trim(),
-      current_proof: document.getElementById("profile_url").value.trim() || null,
-      ack_preevent: true,
-      ack_permanent: true,
-      status: "pending",
-      program: "founding_consultant",
-      application_version: "v1_fast",
-      source: "apply_page"
-    };
-
-    btn.disabled = true;
-    btn.textContent = "Filing…";
-
-    fetch(SUPABASE_URL + "/rest/v1/consultant_applications", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_KEY,
-        "Authorization": "Bearer " + SUPABASE_KEY,
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify(payload)
-    })
-    .then(function(res){
-      if(!res.ok){ return res.text().then(function(t){ throw new Error("HTTP " + res.status); }); }
-      document.getElementById("appIdOut").textContent = appId;
-      document.getElementById("filedAt").textContent = new Date().toUTCString();
-      document.getElementById("intake").style.display = "none";
-      document.getElementById("success").classList.add("show");
-      window.scrollTo({top:0});
-    })
-    .catch(function(err){
-      btn.disabled = false;
-      btn.textContent = "Apply in 60 Seconds";
-      showError("Filing failed. Check your connection and try again — nothing was recorded.");
-    });
-  });
+var SUPABASE_URL="https://apmrgvpegtfsqqjcokfv.supabase.co",SUPABASE_KEY="sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";
+function genAppId(){return"CON-APP-"+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,6).toUpperCase()}
+var form=document.getElementById("applyForm"),btn=document.getElementById("submitBtn"),errBox=document.getElementById("formError");
+function showError(msg){errBox.textContent=msg;errBox.classList.add("show")}function clearError(){errBox.textContent="";errBox.classList.remove("show")}
+form.addEventListener("submit",function(e){e.preventDefault();clearError();if(!form.reportValidity())return;if(!document.getElementById("ack_preevent").checked||!document.getElementById("ack_permanent").checked){showError("Both acknowledgments are required. Applying means accepting the verification standard.");return}
+var appId=genAppId(),handle=document.getElementById("primary_handle").value.trim(),payload={application_id:appId,full_name:document.getElementById("full_name").value.trim(),primary_handle:handle,platform_handle:handle,platform:document.getElementById("platform").value,contact_email:document.getElementById("contact_email").value.trim(),sports_covered:document.getElementById("sports_covered").value.trim(),current_proof:document.getElementById("profile_url").value.trim()||null,ack_preevent:true,ack_permanent:true,status:"pending",program:"founding_verified_operator",application_version:"v2_operator_49",source:"apply_page"};
+btn.disabled=true;btn.textContent="Filing…";fetch(SUPABASE_URL+"/rest/v1/consultant_applications",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Prefer":"return=minimal"},body:JSON.stringify(payload)}).then(function(res){if(!res.ok)return res.text().then(function(){throw new Error("HTTP "+res.status)});document.getElementById("appIdOut").textContent=appId;document.getElementById("filedAt").textContent=new Date().toUTCString();document.getElementById("intake").style.display="none";document.getElementById("success").classList.add("show");window.scrollTo({top:0})}).catch(function(){btn.disabled=false;btn.textContent="Apply for Founding Operator";showError("Filing failed. Check your connection and try again — nothing was recorded.")})});
 })();
 </script>
-</body>
-</html>
+</body></html>
