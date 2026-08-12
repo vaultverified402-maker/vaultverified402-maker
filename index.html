@@ -3,451 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vault Verified | Independent Third-Party Verification</title>
-<meta name="description" content="Independent third-party verification for sports consultants. Vault Verified preserves decisions before outcomes are known and grades the complete public record after results are final.">
+<title>Vault Verified | Independent Verification Infrastructure</title>
+<meta name="description" content="Independent verification infrastructure for sports consultants. Preserve selections before outcomes, publish inspectable history, and operate on a record customers can verify themselves.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#090909;
-    --bg-raised:#111213;
-    --line:#1e2022;
-    --line-soft:#161718;
-    --white:#f2f3f3;
-    --gray:#8a8f93;
-    --gray-dim:#5a5f63;
-    --cyan:#00d4ff;
-    --green:#3ddc84;
-    --max:560px;
-  }
-
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{background:var(--bg); scroll-behavior:smooth;}
-  body{
-    background:var(--bg);
-    color:var(--white);
-    font-family:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-    -webkit-font-smoothing:antialiased;
-    line-height:1.5;
-  }
-  a{color:inherit; text-decoration:none;}
-  button, input{font-family:inherit;}
-
-  .wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
-
-  .eyebrow{
-    font-size:11px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--gray-dim);
-    font-weight:500;
-  }
-
-  .fade-in{opacity:0; transform:translateY(6px); transition:opacity 0.5s ease, transform 0.5s ease;}
-  .fade-in.visible{opacity:1; transform:none;}
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    .fade-in{opacity:1; transform:none; transition:none;}
-  }
-
-  header.nav{
-    position:sticky; top:0; z-index:50;
-    background:rgba(9,9,9,0.88);
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);
-  }
-  .nav-inner{
-    max-width:var(--max); margin:0 auto; padding:16px 20px;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .nav-mark{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; letter-spacing:0.02em;}
-  .nav-mark .dot{width:7px; height:7px; border-radius:50%; background:var(--cyan); flex-shrink:0;}
-  .nav-links{display:flex; align-items:center; gap:16px;}
-  .nav-link{
-    font-size:11px; letter-spacing:0.06em; text-transform:uppercase;
-    color:var(--gray);
-  }
-  .nav-cta{
-    font-size:11px; letter-spacing:0.06em; text-transform:uppercase;
-    color:var(--gray); border:1px solid var(--line); padding:8px 12px;
-  }
-
-  .hero{padding:72px 0 52px; border-bottom:1px solid var(--line);}
-  .hero .eyebrow{margin-bottom:22px;}
-  .hero h1{
-    font-size:28px;
-    line-height:1.32;
-    font-weight:700;
-    letter-spacing:0.01em;
-    text-transform:uppercase;
-    margin-bottom:24px;
-  }
-  .hero h1 .quiet{color:var(--gray-dim);}
-  .hero p{
-    color:var(--gray);
-    font-size:14px;
-    line-height:1.75;
-    max-width:47ch;
-    margin-bottom:34px;
-  }
-  .hero-actions{display:flex; flex-direction:column; gap:10px;}
-  .btn-primary{
-    display:block; text-align:center;
-    background:var(--white); color:#090909;
-    font-size:13px; font-weight:600; letter-spacing:0.02em;
-    padding:15px 18px; border:1px solid var(--white);
-  }
-  .btn-secondary{
-    display:block; text-align:center;
-    border:1px solid var(--line); color:var(--gray);
-    font-size:13px; padding:15px 18px;
-  }
-
-  .metrics{border-bottom:1px solid var(--line);}
-  .metrics-grid{
-    max-width:var(--max); margin:0 auto;
-    display:grid; grid-template-columns:1fr 1fr;
-  }
-  .metric{
-    padding:24px 20px;
-    border-bottom:1px solid var(--line-soft);
-  }
-  .metric:nth-child(odd){border-right:1px solid var(--line-soft);}
-  .metric:nth-child(3), .metric:nth-child(4){border-bottom:none;}
-  .metric .n{font-size:22px; font-weight:600; color:var(--white); min-height:33px;}
-  .metric .l{
-    font-size:10px; letter-spacing:0.1em; text-transform:uppercase;
-    color:var(--gray-dim); margin-top:6px;
-  }
-
-  .section{padding:48px 0; border-bottom:1px solid var(--line);}
-  .section-head{margin-bottom:24px;}
-  .section-title{font-size:16px; font-weight:600; letter-spacing:-0.01em;}
-  .section-sub{color:var(--gray); font-size:13px; line-height:1.65; margin-top:8px; max-width:48ch;}
-
-  .verification{padding:52px 0; border-bottom:1px solid var(--line);}
-  .verification-card{border:1px solid var(--line); background:var(--bg-raised); padding:24px 20px;}
-  .verification-kicker{display:flex; align-items:center; gap:9px; color:var(--cyan); font-size:10px; letter-spacing:0.11em; text-transform:uppercase; margin-bottom:18px;}
-  .verification-kicker .seal{width:8px; height:8px; border:1px solid var(--cyan); border-radius:50%; box-shadow:inset 0 0 0 2px var(--bg-raised); background:var(--cyan);}
-  .verification h2{font-size:21px; line-height:1.45; letter-spacing:-0.02em; margin-bottom:14px;}
-  .verification-copy{font-size:13px; line-height:1.75; color:var(--gray); max-width:48ch;}
-  .verification-copy strong{color:var(--white); font-weight:500;}
-  .verification-steps{display:grid; grid-template-columns:1fr; margin-top:24px; border-top:1px solid var(--line);}
-  .verification-step{padding:16px 0; border-bottom:1px solid var(--line-soft);}
-  .verification-step:last-child{border-bottom:none; padding-bottom:0;}
-  .verification-step .num{font-size:10px; color:var(--cyan); letter-spacing:0.08em; margin-bottom:6px;}
-  .verification-step .label{font-size:12px; font-weight:600; margin-bottom:4px;}
-  .verification-step .detail{font-size:11px; color:var(--gray-dim); line-height:1.55;}
-
-  .compare{margin-top:28px; border-top:1px solid var(--line);}
-  .compare-head{display:grid; grid-template-columns:1fr 1fr; padding:16px 0 10px;}
-  .compare-head .compare-col{font-size:10px; letter-spacing:0.09em; text-transform:uppercase; color:var(--gray-dim);}
-  .compare-head .compare-col--them{padding-right:12px;}
-  .compare-head .compare-col--us{padding-left:12px; border-left:1px solid var(--line-soft); color:var(--cyan);}
-  .compare-row{display:grid; grid-template-columns:1fr 1fr; padding:12px 0; border-top:1px solid var(--line-soft);}
-  .compare-row .compare-col{font-size:12px; line-height:1.5;}
-  .compare-row .compare-col--them{padding-right:12px; color:var(--gray-dim);}
-  .compare-row .compare-col--us{padding-left:12px; border-left:1px solid var(--line-soft); color:var(--white); font-weight:500;}
-  .verification-closing{
-    margin-top:24px; padding-top:20px; border-top:1px solid var(--line);
-    font-size:13px; color:var(--white); font-weight:500; line-height:1.6;
-  }
-
-  .search-row{display:flex; border:1px solid var(--line); background:var(--bg-raised);}
-  .search-row input{
-    flex:1; min-width:0;
-    background:transparent; border:none; outline:none;
-    color:var(--white); font-size:13px;
-    padding:15px 14px;
-  }
-  .search-row input::placeholder{color:var(--gray-dim);}
-  .search-row button{
-    background:var(--white); color:#090909;
-    border:none; cursor:pointer;
-    font-size:12px; font-weight:600; letter-spacing:0.04em;
-    padding:0 18px;
-  }
-  .search-row input:focus{outline:1px solid var(--cyan); outline-offset:-1px;}
-  .search-hint{
-    font-size:11px; color:var(--gray-dim);
-    margin-top:12px; line-height:1.6;
-  }
-  .search-hint a{color:var(--gray); text-decoration:underline; text-underline-offset:2px;}
-
-  .live-dot{
-    display:inline-flex; align-items:center; gap:6px;
-    font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
-    color:var(--green);
-  }
-  .live-dot .pulse{width:6px; height:6px; border-radius:50%; background:var(--green);}
-
-  .feed{border-top:1px solid var(--line);}
-  .feed-row{
-    display:flex; justify-content:space-between; align-items:flex-start;
-    gap:14px;
-    padding:16px 0;
-    border-bottom:1px solid var(--line-soft);
-  }
-  .feed-main{min-width:0;}
-  .feed-main .rid{font-size:10px; color:var(--gray-dim); letter-spacing:0.04em; margin-bottom:5px;}
-  .feed-main .sel{font-size:14px; font-weight:600; margin-bottom:4px; overflow-wrap:anywhere;}
-  .feed-main .meta{font-size:11px; color:var(--gray-dim);}
-  .feed-main .meta a{color:var(--gray-dim); text-decoration:underline; text-underline-offset:2px;}
-  .feed-main .meta a:hover{color:var(--cyan);}
-  .feed-side{text-align:right; flex-shrink:0; max-width:46%;}
-  .feed-side .state{font-size:11px; letter-spacing:0.06em; text-transform:uppercase; overflow-wrap:anywhere; line-height:1.45;}
-  .state--preserved{color:var(--cyan);}
-  .state--win{color:var(--green);}
-  .state--loss{color:var(--gray);}
-  .state--other{color:var(--gray);}
-  .state--pending{color:var(--gray-dim); font-style:italic;}
-  .feed-side .ts{font-size:10px; color:var(--gray-dim); margin-top:4px;}
-
-  .feed-note, .feed-empty{
-    padding:20px 0;
-    font-size:12px; color:var(--gray-dim);
-    text-align:center; line-height:1.6;
-    border-bottom:1px solid var(--line-soft);
-  }
-
-  .view-all{
-    display:block; margin-top:18px; text-align:center;
-    font-size:12px; color:var(--gray);
-    border:1px solid var(--line); padding:13px;
-  }
-
-  .featured-box{
-    border:1px solid var(--line);
-    background:var(--bg-raised);
-    padding:22px 18px;
-  }
-  .featured-top{margin-bottom:16px;}
-  .featured-name{font-size:17px; font-weight:600; letter-spacing:-0.01em;}
-  .featured-handle{font-size:11px; color:var(--gray-dim); margin-top:4px;}
-  .featured-doctrine{
-    font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
-    color:var(--cyan); margin-bottom:16px;
-  }
-  .featured-stats{
-    display:flex;
-    border-top:1px solid var(--line-soft);
-    padding-top:14px;
-    margin-bottom:18px;
-  }
-  .fstat{flex:1; border-right:1px solid var(--line-soft); padding-right:10px;}
-  .fstat:last-child{border-right:none; padding-right:0; padding-left:10px;}
-  .fstat + .fstat{padding-left:10px;}
-  .fstat .n{font-size:16px; font-weight:600;}
-  .fstat .l{font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-dim); margin-top:3px;}
-  .featured-link{
-    display:block; text-align:center;
-    border:1px solid var(--line); color:var(--gray);
-    font-size:12px; padding:12px;
-  }
-  .featured-fallback{
-    border:1px solid var(--line); background:var(--bg-raised);
-    padding:22px 18px; font-size:12px; color:var(--gray-dim);
-    text-align:center; line-height:1.7;
-  }
-
-  .doctrine-strip{padding:64px 0; border-bottom:1px solid var(--line);}
-  .doctrine-strip .eyebrow{margin-bottom:20px;}
-  .doctrine-strip blockquote{
-    font-size:20px; font-weight:600; line-height:1.5;
-    letter-spacing:-0.01em; max-width:26ch;
-  }
-  .doctrine-strip blockquote .quiet{color:var(--gray-dim);}
-
-  .founding{padding:48px 0; border-bottom:1px solid var(--line);}
-  .consultant-list{border-top:1px solid var(--line); margin-top:24px;}
-  .consultant-row{
-    display:flex; justify-content:space-between; align-items:center;
-    gap:14px; padding:15px 0;
-    border-bottom:1px solid var(--line-soft);
-  }
-  .consultant-row .who .name{font-size:13px; font-weight:600;}
-  .consultant-row .who .sub{font-size:10px; color:var(--gray-dim); margin-top:3px;}
-  .consultant-row .arrow{font-size:12px; color:var(--gray-dim); flex-shrink:0;}
-  .consultant-row:hover .arrow{color:var(--cyan);}
-  .consultant-note{
-    padding:20px 0; font-size:12px; color:var(--gray-dim);
-    text-align:center; border-bottom:1px solid var(--line-soft);
-  }
-  .founding-cta{
-    display:block; text-align:center;
-    background:var(--white); color:#090909;
-    font-size:13px; font-weight:600; letter-spacing:0.02em;
-    padding:15px 18px; margin-top:22px;
-  }
-  .founding-fineprint{
-    font-size:11px; color:var(--gray-dim); line-height:1.7;
-    margin-top:14px; text-align:center;
-  }
-
-  footer{padding:36px 0 44px;}
-  .footer-mark{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; margin-bottom:14px;}
-  .footer-mark .dot{width:7px; height:7px; border-radius:50%; background:var(--cyan);}
-  .footer-tag{color:var(--gray-dim); font-size:12px; line-height:1.7; margin-bottom:24px; max-width:44ch;}
-  .footer-links{
-    display:flex; flex-wrap:wrap; gap:16px;
-    font-size:11px; color:var(--gray);
-    border-top:1px solid var(--line); padding-top:18px; margin-bottom:16px;
-  }
-  .footer-legal{font-size:10px; color:var(--gray-dim); letter-spacing:0.02em;}
-
-  @media (min-width:600px){
-    .hero h1{font-size:34px;}
-    .hero-actions{flex-direction:row;}
-    .hero-actions a{flex:1;}
-    .metrics-grid{grid-template-columns:repeat(4, 1fr);}
-    .metric{border-bottom:none; border-right:1px solid var(--line-soft);}
-    .metric:last-child{border-right:none;}
-    .doctrine-strip blockquote{font-size:24px;}
-    .verification-steps{grid-template-columns:repeat(3,1fr);}
-    .verification-step{padding:16px 16px 0; border-bottom:none; border-right:1px solid var(--line-soft);}
-    .verification-step:first-child{padding-left:0;}
-    .verification-step:last-child{border-right:none; padding-right:0;}
-  }
+:root{--bg:#090909;--raised:#111213;--line:#1e2022;--soft:#161718;--white:#f2f3f3;--gray:#8a8f93;--dim:#5a5f63;--cyan:#00d4ff;--green:#3ddc84;--max:620px}
+*{box-sizing:border-box;margin:0;padding:0}html{background:var(--bg);scroll-behavior:smooth}body{background:var(--bg);color:var(--white);font-family:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;-webkit-font-smoothing:antialiased;line-height:1.5}a{color:inherit;text-decoration:none}button,input{font-family:inherit}.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}.eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:600}.quiet{color:var(--dim)}
+header.nav{position:sticky;top:0;z-index:50;background:rgba(9,9,9,.91);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}.nav-inner{max-width:var(--max);margin:0 auto;padding:15px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-mark{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.03em}.dot{width:7px;height:7px;border-radius:50%;background:var(--cyan)}.nav-links{display:flex;align-items:center;gap:14px}.nav-link{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--gray)}.nav-cta{font-size:10px;letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--line);padding:8px 10px;color:var(--gray)}
+.hero{padding:58px 0 42px;border-bottom:1px solid var(--line)}.hero .eyebrow{margin-bottom:18px}.hero h1{font-size:30px;line-height:1.18;letter-spacing:-.03em;font-weight:700;margin-bottom:19px}.hero p{font-size:13px;line-height:1.75;color:var(--gray);max-width:52ch;margin-bottom:26px}.hero-actions{display:grid;grid-template-columns:1fr;gap:9px;margin-top:18px}.btn-primary,.btn-secondary{display:block;text-align:center;padding:13px 14px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}.btn-primary{background:var(--white);color:#090909}.btn-secondary{border:1px solid var(--line);color:var(--gray)}
+.search-row{display:flex;border:1px solid var(--line);background:var(--raised)}.search-row input{min-width:0;flex:1;background:transparent;border:0;outline:0;color:var(--white);padding:13px 12px;font-size:11px}.search-row input::placeholder{color:var(--dim)}.search-row button{border:0;background:var(--white);color:#090909;font-size:10px;font-weight:700;padding:0 15px;cursor:pointer}.search-hint{font-size:10px;color:var(--dim);line-height:1.6;margin-top:9px}.search-hint a{text-decoration:underline;color:var(--gray)}
+.metrics{border-bottom:1px solid var(--line)}.metrics-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr}.metric{padding:20px;border-bottom:1px solid var(--soft)}.metric:nth-child(odd){border-right:1px solid var(--soft)}.metric:nth-child(3),.metric:nth-child(4){border-bottom:0}.metric .n{font-size:20px;font-weight:700;min-height:30px}.metric .l{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin-top:5px}
+.section,.verification,.operator-proof,.founding{padding:42px 0;border-bottom:1px solid var(--line)}.section-head{margin-bottom:20px}.section-title{font-size:17px;font-weight:700;letter-spacing:-.01em}.section-sub{font-size:11px;color:var(--gray);line-height:1.7;margin-top:7px;max-width:52ch}
+.verification-card{border:1px solid var(--line);background:var(--raised);padding:21px 18px}.verification-kicker,.operator-seal{display:flex;align-items:center;gap:8px;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--cyan)}.verification-kicker{margin-bottom:16px}.seal{width:7px;height:7px;border-radius:50%;background:var(--cyan)}.verification h2{font-size:20px;line-height:1.42;letter-spacing:-.02em;margin-bottom:13px}.verification-copy{font-size:12px;color:var(--gray);line-height:1.75}.verification-copy strong{color:var(--white);font-weight:600}.compare{margin-top:22px;border-top:1px solid var(--line)}.compare-head,.compare-row{display:grid;grid-template-columns:1fr 1fr}.compare-head{padding:13px 0 8px}.compare-row{border-top:1px solid var(--soft);padding:10px 0}.compare-col{font-size:10.5px;line-height:1.5}.compare-head .compare-col{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}.compare-col--them{padding-right:10px;color:var(--dim)}.compare-col--us{padding-left:10px;border-left:1px solid var(--soft);color:var(--white)}.compare-head .compare-col--us{color:var(--cyan)}.verification-steps{display:grid;gap:8px;margin-top:20px}.verification-step{border:1px solid var(--soft);padding:11px}.verification-step .num{font-size:9px;color:var(--cyan);letter-spacing:.08em;margin-bottom:4px}.verification-step .label{font-size:11px;font-weight:700;margin-bottom:3px}.verification-step .detail{font-size:10px;color:var(--dim);line-height:1.55}.verification-closing{font-size:11px;line-height:1.65;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.feed{border-top:1px solid var(--line)}.feed-row{display:flex;justify-content:space-between;gap:13px;padding:14px 0;border-bottom:1px solid var(--soft)}.feed-main{min-width:0}.feed-main .rid{font-size:9px;color:var(--dim);margin-bottom:4px}.feed-main .sel{font-size:12px;font-weight:700;overflow-wrap:anywhere}.feed-main .meta{font-size:9px;color:var(--dim);margin-top:4px}.feed-main .meta a{text-decoration:underline}.feed-side{text-align:right;flex:0 0 auto;max-width:46%}.feed-side .state{font-size:9px;text-transform:uppercase;letter-spacing:.05em}.state--win{color:var(--green)}.state--loss,.state--other{color:var(--gray)}.state--preserved{color:var(--cyan)}.state--pending{color:var(--dim);font-style:italic}.feed-side .ts{font-size:9px;color:var(--dim);margin-top:4px}.feed-note,.feed-empty{padding:18px 0;text-align:center;color:var(--dim);font-size:10px;line-height:1.6;border-bottom:1px solid var(--soft)}.live-dot{display:inline-flex;align-items:center;gap:6px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:12px}.live-dot .pulse{width:6px;height:6px;border-radius:50%;background:var(--green)}.view-all{display:block;text-align:center;border:1px solid var(--line);padding:11px;margin-top:13px;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--gray)}
+.operator-proof{padding-top:48px}.operator-intro{margin-bottom:18px}.operator-intro h2{font-size:22px;line-height:1.35;letter-spacing:-.02em;margin:8px 0 10px}.operator-intro p{font-size:12px;color:var(--gray);line-height:1.75}.operator-card{border:1px solid rgba(0,212,255,.28);background:var(--raised);padding:19px}.operator-seal{margin-bottom:15px}.operator-top{margin-bottom:14px}.operator-name{font-size:19px;font-weight:700}.operator-handle{font-size:10px;color:var(--dim);margin-top:3px}.operator-doctrine{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-top:12px}.operator-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--soft);margin-top:15px;padding-top:14px}.opstat{padding:0 10px;border-right:1px solid var(--soft)}.opstat:first-child{padding-left:0}.opstat:last-child{border-right:0}.opstat .n{font-size:16px;font-weight:700}.opstat .l{font-size:8px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-top:3px}.operator-copy{font-size:10.5px;color:var(--gray);line-height:1.65;margin:16px 0}.operator-link{display:block;text-align:center;background:var(--white);color:#090909;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:12px}.featured-fallback{border:1px solid var(--line);background:var(--raised);padding:18px;text-align:center;font-size:10px;line-height:1.7;color:var(--dim)}
+.doctrine-strip{padding:50px 0;border-bottom:1px solid var(--line)}.doctrine-strip blockquote{font-size:19px;font-weight:700;line-height:1.5;letter-spacing:-.01em;margin-top:15px;max-width:28ch}
+.consultant-list{border-top:1px solid var(--line);margin-top:20px}.consultant-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--soft)}.consultant-row .name{font-size:11px;font-weight:700}.consultant-row .sub{font-size:9px;color:var(--dim);margin-top:3px}.consultant-row .arrow{color:var(--dim);font-size:11px}.consultant-note{padding:18px 0;text-align:center;color:var(--dim);font-size:10px;border-bottom:1px solid var(--soft)}.founding-cta{display:block;text-align:center;background:var(--white);color:#090909;padding:13px;margin-top:18px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}.founding-fineprint{text-align:center;color:var(--dim);font-size:9.5px;line-height:1.65;margin-top:11px}
+footer{padding:30px 0 38px}.footer-mark{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;margin-bottom:12px}.footer-tag{font-size:10px;color:var(--dim);line-height:1.7}.footer-links{display:flex;flex-wrap:wrap;gap:14px;border-top:1px solid var(--line);padding-top:15px;margin-top:18px;font-size:9.5px;color:var(--gray)}.footer-legal{font-size:9px;color:var(--dim);margin-top:12px}
+@media(min-width:600px){.hero{padding-top:68px}.hero h1{font-size:36px}.hero-actions{grid-template-columns:1fr 1fr}.metrics-grid{grid-template-columns:repeat(4,1fr)}.metric{border-bottom:0;border-right:1px solid var(--soft)}.metric:nth-child(odd){border-right:1px solid var(--soft)}.metric:last-child{border-right:0}.verification-steps{grid-template-columns:repeat(3,1fr)}.doctrine-strip blockquote{font-size:23px}}
 </style>
 </head>
 <body>
+<header class="nav"><div class="nav-inner"><a href="/" class="nav-mark"><span class="dot"></span>VAULT VERIFIED</a><nav class="nav-links"><a href="/records.html" class="nav-link">Records</a><a href="#operator" class="nav-link">Operator</a><a href="/apply.html" class="nav-cta">Become Verified</a></nav></div></header>
 
-<header class="nav">
-  <div class="nav-inner">
-    <a href="/index.html" class="nav-mark"><span class="dot"></span>VAULT VERIFIED</a>
-    <nav class="nav-links">
-      <a href="/records.html" class="nav-link">Records</a>
-      <a href="#founding" class="nav-cta">Consultants</a>
-    </nav>
-  </div>
-</header>
+<section class="hero"><div class="wrap"><div class="eyebrow">Independent verification infrastructure</div><h1>The record is the proof.<br><span class="quiet">Now see it working.</span></h1><p>Vault Verified preserves sports consultant selections before outcomes are known, grades the public history after results are final, and gives customers an independent record they can inspect themselves.</p><div class="search-row"><input id="archive-search" type="text" placeholder="Search consultant, selection, event, or record ID" aria-label="Search public records" autocomplete="off"><button id="archive-search-btn" type="button">Search</button></div><div class="search-hint">Every preserved filing remains part of the public record. <a href="/records.html">Inspect the archive.</a></div><div class="hero-actions"><a href="/consultants/GG402-0001" class="btn-primary">Inspect GG402</a><a href="/apply.html" class="btn-secondary">Become Verified</a></div></div></section>
 
-<section class="hero">
-  <div class="wrap">
-    <div class="eyebrow">Independent Third-Party Verification</div>
-    <h1>The record is the proof.<br><span class="quiet">Not the pick.</span></h1>
-    <p>Vault Verified independently preserves sports consultant decisions before outcomes are known, then grades the complete public record after results are final.</p>
-    <div class="search-row">
-      <input type="text" id="archive-search" placeholder="Search consultant, selection, event, or record ID" aria-label="Search the record archive" autocomplete="off">
-      <button type="button" id="archive-search-btn" aria-label="Search records">Search</button>
-    </div>
-    <div class="search-hint">Every preserved entry remains part of the public record. Browse the <a href="/records.html">full record history</a>.</div>
-    <div class="hero-actions">
-      <a href="/records.html" class="btn-secondary">View Public Records</a>
-      <a href="/apply.html" class="btn-primary">Become a Consultant</a>
-    </div>
-  </div>
-</section>
+<section class="metrics"><div class="metrics-grid"><div class="metric"><div class="n" id="metric-records">···</div><div class="l">Records Preserved</div></div><div class="metric"><div class="n" id="metric-consultants">···</div><div class="l">Public Operators</div></div><div class="metric"><div class="n" id="metric-since">···</div><div class="l">Preserving Since</div></div><div class="metric"><div class="n">Public</div><div class="l">Inspectable History</div></div></div></section>
 
-<section class="metrics" aria-label="Archive metrics">
-  <div class="metrics-grid">
-    <div class="metric"><div class="n" id="metric-records">&middot;&middot;&middot;</div><div class="l">Records Preserved</div></div>
-    <div class="metric"><div class="n" id="metric-consultants">&middot;&middot;&middot;</div><div class="l">Public Consultants</div></div>
-    <div class="metric"><div class="n" id="metric-since">&middot;&middot;&middot;</div><div class="l">Preserving Since</div></div>
-    <div class="metric"><div class="n">Public</div><div class="l">Transparency System</div></div>
-  </div>
-</section>
+<section class="verification" id="verification"><div class="wrap"><div class="verification-card"><div class="verification-kicker"><span class="seal"></span>Independent Verification Standard</div><h2>Anyone can claim a record.<br>Very few can separate the claim from the evidence.</h2><div class="verification-copy">Most consultant records are published by the same person selling the selections. <strong>Vault Verified separates the operator making the selection from the system preserving and grading the history.</strong> No resets. No rewritten losses. No post-result filing presented as foresight.</div><div class="compare"><div class="compare-head"><div class="compare-col compare-col--them">Self Reported</div><div class="compare-col compare-col--us">Vault Verified</div></div><div class="compare-row"><div class="compare-col compare-col--them">Screenshots</div><div class="compare-col compare-col--us">Independent preservation</div></div><div class="compare-row"><div class="compare-col compare-col--them">Selective history</div><div class="compare-col compare-col--us">Inspectable history</div></div><div class="compare-row"><div class="compare-col compare-col--them">Editable narrative</div><div class="compare-col compare-col--us">Preserved filing</div></div><div class="compare-row"><div class="compare-col compare-col--them">Trust the seller</div><div class="compare-col compare-col--us">Inspect the evidence</div></div></div><div class="verification-steps"><div class="verification-step"><div class="num">01 / PRESERVE</div><div class="label">Filed before start</div><div class="detail">Selection and timestamp enter the record before the outcome is known.</div></div><div class="verification-step"><div class="num">02 / GRADE</div><div class="label">Checked after final</div><div class="detail">The outcome is graded against the original preserved filing.</div></div><div class="verification-step"><div class="num">03 / HISTORY</div><div class="label">The record remains</div><div class="detail">Wins, losses and unresolved states remain attached to the same public history.</div></div></div><div class="verification-closing">Vault Verified is not selling the pick. It is the infrastructure preserving what the operator actually submitted.</div></div></div></section>
 
-<section class="verification" id="verification">
-  <div class="wrap">
-    <div class="verification-card">
-      <div class="verification-kicker"><span class="seal"></span>Independent Verification Standard</div>
-      <h2>Anyone can claim a record.<br>Very few can have it independently verified.</h2>
-      <div class="verification-copy">Most consultant records are published by the same person selling the selections. <strong>Vault Verified separates the consultant making the claim from the system preserving and grading the record.</strong> Every record is preserved before the event begins, graded after the final result, and advanced through a standardized verification process. No edits. No resets. No rewritten history.</div>
-      <div class="compare" aria-label="Self-reported claims compared with Vault Verified records">
-        <div class="compare-head"><div class="compare-col compare-col--them">Self-Reported</div><div class="compare-col compare-col--us">Vault Verified</div></div>
-        <div class="compare-row"><div class="compare-col compare-col--them">Screenshots</div><div class="compare-col compare-col--us">Independent verification</div></div>
-        <div class="compare-row"><div class="compare-col compare-col--them">Selective history</div><div class="compare-col compare-col--us">Complete history</div></div>
-        <div class="compare-row"><div class="compare-col compare-col--them">Editable</div><div class="compare-col compare-col--us">Preserved</div></div>
-        <div class="compare-row"><div class="compare-col compare-col--them">Claims</div><div class="compare-col compare-col--us">Verifiable evidence</div></div>
-      </div>
-      <div class="verification-steps" aria-label="Verification process">
-        <div class="verification-step"><div class="num">01 / PRESERVE</div><div class="label">Filed before start</div><div class="detail">The selection and timestamp are locked before the outcome is known.</div></div>
-        <div class="verification-step"><div class="num">02 / GRADE</div><div class="label">Checked after final</div><div class="detail">The outcome is graded against documented event results and advanced through the verification standard.</div></div>
-        <div class="verification-step"><div class="num">03 / PUBLISH</div><div class="label">History stays visible</div><div class="detail">Wins and losses remain attached to the same public record. No resets.</div></div>
-      </div>
-      <div class="verification-closing">Vault Verified is the independent third-party verification layer for sports consultants.</div>
-    </div>
-  </div>
-</section>
+<section class="section" id="records"><div class="wrap"><div class="section-head"><div class="section-title">Latest Preserved Entries</div><div class="section-sub">Live evidence from the public record.</div></div><span class="live-dot"><span class="pulse"></span>Live</span><div class="feed" id="feed-list"><div class="feed-note">Loading preserved entries…</div></div><a href="/records.html" class="view-all">Inspect Full Record Archive</a></div></section>
 
-<section class="section" id="records">
-  <div class="wrap">
-    <div class="section-head"><div class="section-title">Latest Preserved Entries</div><div class="section-sub">Preserved as filed. Graded against the result.</div></div>
-    <span class="live-dot" style="margin-bottom:14px; display:inline-flex;"><span class="pulse"></span>Live</span>
-    <div class="feed" id="feed-list"><div class="feed-note" data-skeleton>Loading preserved entries&hellip;</div></div>
-    <a href="/records.html" class="view-all">View Full Record History</a>
-  </div>
-</section>
+<section class="operator-proof" id="operator"><div class="wrap"><div class="operator-intro"><div class="eyebrow">Verified Operator in production</div><h2>GG402 is the demonstration.</h2><p>This is what a consultant business looks like when the sales operation and the proof system are structurally separated. GG402 makes the selections. Vault keeps the record.</p></div><div id="featured-slot"><div class="featured-fallback">Loading GG402 verified operator profile…</div></div></div></section>
 
-<section class="section" id="featured">
-  <div class="wrap">
-    <div class="section-head"><div class="section-title">Featured Consultant</div><div class="section-sub">Public record holders, each operating under a stated doctrine.</div></div>
-    <div id="featured-slot"><div class="featured-fallback" data-skeleton>Loading consultant profile&hellip;</div></div>
-  </div>
-</section>
+<section class="doctrine-strip"><div class="wrap"><div class="eyebrow">The operating principle</div><blockquote>You keep selling your intelligence.<br><span class="quiet">Vault keeps the record.</span></blockquote></div></section>
 
-<section class="doctrine-strip"><div class="wrap"><div class="eyebrow">Doctrine</div><blockquote>Trust is not created by claims.<br><span class="quiet">Trust is created by preserved history.</span></blockquote></div></section>
+<section class="founding" id="founding"><div class="wrap"><div class="section-head"><div class="eyebrow" style="margin-bottom:12px">Limited founding enrollment</div><div class="section-title">Founding Verified Operators</div><div class="section-sub">Build a public performance history your customers do not have to take on faith. Each operator gets an inspectable profile tied to preserved filings and methodology.</div></div><div class="consultant-list" id="consultant-list"><div class="consultant-note">Loading public operators…</div></div><a href="/apply.html" class="founding-cta">Become a Verified Operator</a><div class="founding-fineprint">Independent record preservation. Public operator profile. Verifiable performance history.</div></div></section>
 
-<section class="founding" id="founding">
-  <div class="wrap">
-    <div class="section-head"><div class="eyebrow" style="margin-bottom:14px;">Limited Enrollment</div><div class="section-title">Founding Consultants</div><div class="section-sub">Founding consultants file the first entries in a public record system built to outlast any single claim. History compounds from day one.</div></div>
-    <div class="consultant-list" id="consultant-list"><div class="consultant-note" data-skeleton>Loading consultants&hellip;</div></div>
-    <a href="/apply.html" class="founding-cta">Become a Founding Consultant</a>
-    <div class="founding-fineprint">Permanent public profile. Doctrine attached to every entry. No retroactive edits, ever.</div>
-  </div>
-</section>
-
-<footer><div class="wrap"><div class="footer-mark"><span class="dot"></span>VAULT VERIFIED</div><div class="footer-tag">Independent third-party verification for sports consultants. Preserve the truth before it can be rewritten.</div><div class="footer-links"><a href="/records.html">Records</a><a href="#records">Latest Entries</a><a href="#founding">Consultants</a></div><div class="footer-legal">&copy; 2026 Vault Verified. All records preserved as filed.</div></div></footer>
+<footer><div class="wrap"><div class="footer-mark"><span class="dot"></span>VAULT VERIFIED</div><div class="footer-tag">Independent verification infrastructure for sports consultants. Preserve the truth before it can be rewritten.</div><div class="footer-links"><a href="/records.html">Records</a><a href="/consultants/GG402-0001">Inspect GG402</a><a href="/apply.html">Become Verified</a></div><div class="footer-legal">© 2026 Vault Verified. All public records preserved as filed.</div></div></footer>
 
 <script>
-(function () {
-  "use strict";
-  var SUPABASE_URL = "https://apmrgvpegtfsqqjcokfv.supabase.co";
-  var SUPABASE_KEY = "sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY";
-  var FEED_LIMIT = 5;
-  var FOUNDING_LIMIT = 6;
-  var FEATURED_ID = "GG402-0001";
-  function headers(extra) { var h = { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }; if (extra) Object.keys(extra).forEach(function (k) { h[k] = extra[k]; }); return h; }
-  function escapeHtml(str) { return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) { return ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[c]; }); }
-  function titleCase(str) { if (!str) return ""; return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase(); }
-  function formatDate(raw, opts) { if (!raw) return null; try { return new Date(raw).toLocaleDateString("en-US", Object.assign({ month:"short", day:"numeric", timeZone:"America/Chicago" }, opts || {})); } catch (e) { return null; } }
-  try { var sections = document.querySelectorAll("section"); sections.forEach(function (s) { s.classList.add("fade-in"); }); if ("IntersectionObserver" in window) { var io = new IntersectionObserver(function (entries) { entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add("visible"); io.unobserve(entry.target); } }); }, { rootMargin:"0px 0px -8% 0px" }); sections.forEach(function (s) { io.observe(s); }); } else sections.forEach(function (s) { s.classList.add("visible"); }); } catch (e) { document.querySelectorAll("section").forEach(function (s) { s.classList.add("visible"); }); }
-  function loadMetrics() {
-  var recordsEl = document.getElementById("metric-records");
-  var consultantsEl = document.getElementById("metric-consultants");
-  var sinceEl = document.getElementById("metric-since");
-  fetch(SUPABASE_URL + "/rest/v1/v_public_platform_stats?select=total_records_preserved,total_public_consultants,earliest_public_record_at", { headers:headers() })
-    .then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); })
-    .then(function (rows) {
-      var stats = rows && rows[0];
-      if (!stats) throw new Error("empty");
-      recordsEl.textContent = stats.total_records_preserved != null ? String(stats.total_records_preserved) : "Live";
-      consultantsEl.textContent = stats.total_public_consultants != null ? String(stats.total_public_consultants) : "Live";
-      var label = formatDate(stats.earliest_public_record_at, { day:undefined, year:"numeric" });
-      sinceEl.textContent = label || "2026";
-    })
-    .catch(function () { recordsEl.textContent = "Live"; consultantsEl.textContent = "Live"; sinceEl.textContent = "2026"; });
-}
-loadMetrics();
-  var searchInput = document.getElementById("archive-search"), searchBtn = document.getElementById("archive-search-btn");
-  function goSearch() { var term = (searchInput.value || "").trim(); window.location.href = term ? "/records.html?search=" + encodeURIComponent(term) : "/records.html"; }
-  searchBtn.addEventListener("click", goSearch); searchInput.addEventListener("keydown", function (e) { if (e.key === "Enter") goSearch(); });
-  var FINAL_GRADING_STATES = { VERIFIED:true };
-  var GRADING_QUALIFIER = { GRADED:"Graded", GRADED_PENDING_SOURCE_VALIDATION:"Pending Source Validation", GRADED_PENDING_CONFIRMATION:"Pending Confirmation", SOURCE_CONFLICT:"Source Conflict", MANUAL_REVIEW:"Manual Review" };
-  function stateFor(record) { var isWinLoss = record.result_status === "win" || record.result_status === "loss"; if (isWinLoss) { var resultLabel = record.result_status === "win" ? "Win" : "Loss"; var qualifier = GRADING_QUALIFIER[record.grading_state]; if (record.grading_state && !FINAL_GRADING_STATES[record.grading_state]) return { cls:"state--pending", label:resultLabel + (qualifier ? " · " + qualifier : " · Grading In Progress") }; return record.result_status === "win" ? { cls:"state--win", label:"Result: Win" } : { cls:"state--loss", label:"Result: Loss" }; } if (record.result_status) return { cls:"state--other", label:"Result: " + titleCase(record.result_status) }; return { cls:"state--preserved", label:titleCase(record.status || "Preserved") }; }
-  function renderFeedRow(record) { var state = stateFor(record); var ts = formatDate(record.preserved_at || record.created_at); var leagueLabel = record.league || record.sport || ""; var consultantLink = record.profile_id ? '<a href="/consultants/' + encodeURIComponent(record.profile_id) + '">' + escapeHtml(record.profile_id) + '</a>' : ""; var meta = [consultantLink, escapeHtml(leagueLabel)].filter(Boolean).join(" &middot; "); return '<div class="feed-row"><div class="feed-main"><div class="rid">' + escapeHtml(record.record_id) + '</div><div class="sel">' + escapeHtml(record.selection || record.event || "Entry") + '</div><div class="meta">' + meta + '</div></div><div class="feed-side"><div class="state ' + state.cls + '">' + escapeHtml(state.label) + '</div>' + (ts ? '<div class="ts">' + escapeHtml(ts) + '</div>' : '') + '</div></div>'; }
-  function loadFeed() { var listEl = document.getElementById("feed-list"); var url = SUPABASE_URL + "/rest/v1/v_public_records?select=record_id,profile_id,sport,league,selection,event,status,result_status,grading_state,preserved_at,created_at&source_type=eq.pre_event_filing&order=preserved_at.desc.nullslast,created_at.desc&limit=" + FEED_LIMIT; fetch(url, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { listEl.innerHTML = !rows || rows.length === 0 ? '<div class="feed-empty">No preserved entries yet. The archive begins with the first filing.</div>' : rows.map(renderFeedRow).join(""); }).catch(function () { listEl.innerHTML = '<div class="feed-note">Live entries are temporarily unavailable. The full archive remains at <a href="/records.html" style="color:var(--gray); text-decoration:underline;">records.html</a>.</div>'; }); }
-  loadFeed();
-  var PROFILE_SELECT = "select=profile_id,name,handle,doctrine_name,wins,losses,win_pct";
-  function renderFeatured(profile) { var slot = document.getElementById("featured-slot"); var wins = profile.wins == null ? 0 : profile.wins, losses = profile.losses == null ? 0 : profile.losses, parsedWinPct = parseFloat(profile.win_pct), winPct = Number.isFinite(parsedWinPct) ? parsedWinPct.toFixed(1) + "%" : "Pending", handle = profile.handle ? "@" + profile.handle : profile.profile_id; slot.innerHTML = '<div class="featured-box"><div class="featured-top"><div class="featured-name">' + escapeHtml(profile.name || profile.profile_id) + '</div><div class="featured-handle">' + escapeHtml(handle) + '</div></div>' + (profile.doctrine_name ? '<div class="featured-doctrine">' + escapeHtml(profile.doctrine_name) + '</div>' : '') + '<div class="featured-stats"><div class="fstat"><div class="n">' + escapeHtml(wins) + '</div><div class="l">Wins</div></div><div class="fstat"><div class="n">' + escapeHtml(losses) + '</div><div class="l">Losses</div></div><div class="fstat"><div class="n">' + escapeHtml(winPct) + '</div><div class="l">Win Rate</div></div></div><a href="/consultants/' + encodeURIComponent(profile.profile_id) + '" class="featured-link">View Full Record History</a></div>'; }
-  function featuredFallback() { document.getElementById("featured-slot").innerHTML = '<div class="featured-fallback">Consultant profiles are temporarily unavailable.<br><a href="/records.html" style="color:var(--gray); text-decoration:underline;">Browse the public record archive</a></div>'; }
-  function loadFeatured() { var preferred = SUPABASE_URL + "/rest/v1/v_public_consultants?" + PROFILE_SELECT + "&profile_id=eq." + encodeURIComponent(FEATURED_ID) + "&limit=1"; fetch(preferred, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { if (rows && rows.length) { renderFeatured(rows[0]); return null; } return fetch(SUPABASE_URL + "/rest/v1/v_public_consultants?" + PROFILE_SELECT + "&consultant_type=neq.archive&order=profile_id.asc&limit=1", { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (fallbackRows) { if (fallbackRows && fallbackRows.length) renderFeatured(fallbackRows[0]); else featuredFallback(); }); }).catch(featuredFallback); }
-  loadFeatured();
-  function renderConsultantRow(profile) { var sub = [profile.profile_id, profile.doctrine_name].filter(Boolean).join(" &middot; "); return '<a class="consultant-row" href="/consultants/' + encodeURIComponent(profile.profile_id) + '"><div class="who"><div class="name">' + escapeHtml(profile.name || profile.profile_id) + '</div><div class="sub">' + sub + '</div></div><div class="arrow">&rarr;</div></a>'; }
-  function loadConsultants() { var listEl = document.getElementById("consultant-list"); var url = SUPABASE_URL + "/rest/v1/v_public_consultants?select=profile_id,name,handle,doctrine_name&consultant_type=neq.archive&order=profile_id.asc&limit=" + FOUNDING_LIMIT; fetch(url, { headers:headers() }).then(function (res) { if (!res.ok) throw new Error("Request failed: " + res.status); return res.json(); }).then(function (rows) { listEl.innerHTML = !rows || rows.length === 0 ? '<div class="consultant-note">Founding seats are open. The first public profiles will appear here.</div>' : rows.map(function (p) { return renderConsultantRow({ profile_id:p.profile_id, name:p.name, doctrine_name:p.doctrine_name }); }).join(""); }).catch(function () { listEl.innerHTML = '<div class="consultant-note">Consultant profiles are temporarily unavailable.</div>'; }); }
-  loadConsultants();
+(function(){
+'use strict';
+var SUPABASE_URL='https://apmrgvpegtfsqqjcokfv.supabase.co';
+var SUPABASE_KEY='sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY';
+var FEATURED_ID='GG402-0001',FEED_LIMIT=5,OPERATOR_LIMIT=6;
+function headers(){return{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function title(v){if(!v)return'';return String(v).toLowerCase().replace(/(^|[_\s-])([a-z])/g,function(_,a,b){return(a?' ':'')+b.toUpperCase()})}
+function date(v,year){if(!v)return'';try{return new Date(v).toLocaleDateString('en-US',{month:'short',day:year?undefined:'numeric',year:year?'numeric':undefined,timeZone:'America/Chicago'})}catch(e){return''}}
+function stateFor(r){var rs=String(r.result_status||'').toLowerCase();if(rs==='win')return{cls:'state--win',label:'Result: Win'};if(rs==='loss')return{cls:'state--loss',label:'Result: Loss'};if(r.result_status)return{cls:'state--other',label:'Result: '+title(r.result_status)};return{cls:'state--preserved',label:title(r.status||'Preserved')}}
+var input=document.getElementById('archive-search'),button=document.getElementById('archive-search-btn');function goSearch(){var q=(input.value||'').trim();location.href=q?'/records.html?search='+encodeURIComponent(q):'/records.html'}button.addEventListener('click',goSearch);input.addEventListener('keydown',function(e){if(e.key==='Enter')goSearch()});
+fetch(SUPABASE_URL+'/rest/v1/v_public_platform_stats?select=total_records_preserved,total_public_consultants,earliest_public_record_at',{headers:headers()}).then(function(r){if(!r.ok)throw new Error(String(r.status));return r.json()}).then(function(rows){var s=rows&&rows[0];if(!s)throw new Error('empty');document.getElementById('metric-records').textContent=s.total_records_preserved!=null?String(s.total_records_preserved):'Live';document.getElementById('metric-consultants').textContent=s.total_public_consultants!=null?String(s.total_public_consultants):'Live';document.getElementById('metric-since').textContent=date(s.earliest_public_record_at,true)||'2026'}).catch(function(){document.getElementById('metric-records').textContent='Live';document.getElementById('metric-consultants').textContent='Live';document.getElementById('metric-since').textContent='2026'});
+function renderFeed(r){var s=stateFor(r),meta=[r.profile_id?'<a href="/consultants/'+encodeURIComponent(r.profile_id)+'">'+esc(r.profile_id)+'</a>':'',esc(r.league||r.sport||'')].filter(Boolean).join(' · ');return'<div class="feed-row"><div class="feed-main"><div class="rid">'+esc(r.record_id)+'</div><div class="sel">'+esc(r.selection||r.event||'Entry')+'</div><div class="meta">'+meta+'</div></div><div class="feed-side"><div class="state '+s.cls+'">'+esc(s.label)+'</div><div class="ts">'+esc(date(r.preserved_at||r.created_at,false))+'</div></div></div>'}
+fetch(SUPABASE_URL+'/rest/v1/v_public_records?select=record_id,profile_id,sport,league,selection,event,status,result_status,preserved_at,created_at&source_type=eq.pre_event_filing&order=preserved_at.desc.nullslast,created_at.desc&limit='+FEED_LIMIT,{headers:headers()}).then(function(r){if(!r.ok)throw new Error(String(r.status));return r.json()}).then(function(rows){document.getElementById('feed-list').innerHTML=rows&&rows.length?rows.map(renderFeed).join(''):'<div class="feed-empty">No preserved entries yet.</div>'}).catch(function(){document.getElementById('feed-list').innerHTML='<div class="feed-note">Live entries are temporarily unavailable. The public archive remains available.</div>'});
+function renderOperator(p){var wins=Number(p.wins||0),losses=Number(p.losses||0),pct=p.win_pct!=null?Number(p.win_pct).toFixed(1)+'%':'—',handle=p.handle?'@'+p.handle:p.profile_id;document.getElementById('featured-slot').innerHTML='<div class="operator-card"><div class="operator-seal"><span class="seal"></span>Vault Verified Operator</div><div class="operator-top"><div class="operator-name">'+esc(p.name||p.profile_id)+'</div><div class="operator-handle">'+esc(handle)+' · '+esc(p.profile_id)+'</div><div class="operator-doctrine">'+esc(p.doctrine_name||'Published Methodology')+'</div></div><div class="operator-stats"><div class="opstat"><div class="n">'+esc(wins+'–'+losses)+'</div><div class="l">Verified Record</div></div><div class="opstat"><div class="n">'+esc(pct)+'</div><div class="l">Win Rate</div></div><div class="opstat"><div class="n">Live</div><div class="l">Public History</div></div></div><div class="operator-copy">Every visible performance figure comes from the governed public record. Inspect the preserved selections, timestamps, methodology and current grading states yourself.</div><a href="/consultants/'+encodeURIComponent(p.profile_id)+'" class="operator-link">Inspect GG402 Verified History</a></div>'}
+var profileSelect='select=profile_id,name,handle,doctrine_name,wins,losses,win_pct';fetch(SUPABASE_URL+'/rest/v1/v_public_consultants?'+profileSelect+'&profile_id=eq.'+encodeURIComponent(FEATURED_ID)+'&limit=1',{headers:headers()}).then(function(r){if(!r.ok)throw new Error(String(r.status));return r.json()}).then(function(rows){if(rows&&rows.length)renderOperator(rows[0]);else throw new Error('missing')}).catch(function(){document.getElementById('featured-slot').innerHTML='<div class="featured-fallback">GG402 profile data is temporarily unavailable.<br><a href="/consultants/GG402-0001" style="text-decoration:underline;color:var(--gray)">Open the operator profile</a></div>'});
+function renderRow(p){var sub=[p.profile_id,p.doctrine_name].filter(Boolean).join(' · ');return'<a class="consultant-row" href="/consultants/'+encodeURIComponent(p.profile_id)+'"><div><div class="name">'+esc(p.name||p.profile_id)+'</div><div class="sub">'+esc(sub)+'</div></div><div class="arrow">→</div></a>'}
+fetch(SUPABASE_URL+'/rest/v1/v_public_consultants?select=profile_id,name,doctrine_name&consultant_type=neq.archive&order=profile_id.asc&limit='+OPERATOR_LIMIT,{headers:headers()}).then(function(r){if(!r.ok)throw new Error(String(r.status));return r.json()}).then(function(rows){document.getElementById('consultant-list').innerHTML=rows&&rows.length?rows.map(renderRow).join(''):'<div class="consultant-note">Founding operator enrollment is open.</div>'}).catch(function(){document.getElementById('consultant-list').innerHTML='<div class="consultant-note">Public operator list is temporarily unavailable.</div>'});
 })();
 </script>
 </body>
