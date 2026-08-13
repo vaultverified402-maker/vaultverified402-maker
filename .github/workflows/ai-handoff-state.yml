@@ -1,0 +1,88 @@
+name: AI Handoff State
+
+on:
+  issues:
+    types: [opened, reopened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  route:
+    if: startsWith(github.event.issue.title, '[AI HANDOFF]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Route handoff state
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = context.issue.number;
+
+            const defs = {
+              'ai-handoff': '8250df',
+              'needs-openai': '1d76db',
+              'needs-claude': '5319e7',
+              'ai-review': 'fbca04',
+              'ai-resolved': '0e8a16',
+              'ai-blocked': 'b60205'
+            };
+
+            for (const [name, color] of Object.entries(defs)) {
+              try {
+                await github.rest.issues.getLabel({owner, repo, name});
+              } catch (e) {
+                if (e.status === 404) {
+                  await github.rest.issues.createLabel({owner, repo, name, color});
+                } else throw e;
+              }
+            }
+
+            async function add(name) {
+              await github.rest.issues.addLabels({owner, repo, issue_number, labels:[name]});
+            }
+            async function remove(name) {
+              try { await github.rest.issues.removeLabel({owner, repo, issue_number, name}); }
+              catch (e) { if (e.status !== 404) throw e; }
+            }
+
+            await add('ai-handoff');
+
+            if (context.eventName === 'issues') return;
+
+            const body = (context.payload.comment.body || '').trim();
+            const first = (body.split(/\r?\n/, 1)[0] || '').trim().toUpperCase();
+
+            if (first === '[NEEDS_OPENAI]') {
+              await add('needs-openai');
+              await remove('needs-claude');
+              await remove('ai-resolved');
+              await remove('ai-blocked');
+            } else if (first === '[NEEDS_CLAUDE]') {
+              await add('needs-claude');
+              await remove('needs-openai');
+              await remove('ai-resolved');
+              await remove('ai-blocked');
+            } else if (first === '[OPENAI_RESULT]') {
+              await add('needs-claude');
+              await remove('needs-openai');
+              await remove('ai-resolved');
+            } else if (first === '[CLAUDE_RESULT]') {
+              await add('needs-openai');
+              await remove('needs-claude');
+              await remove('ai-resolved');
+            } else if (first === '[OPENAI_REVIEW]' || first === '[CLAUDE_REVIEW]') {
+              await add('ai-review');
+            } else if (first === '[RESOLVED]') {
+              await add('ai-resolved');
+              await remove('needs-openai');
+              await remove('needs-claude');
+              await remove('ai-blocked');
+            } else if (first === '[BLOCKED]') {
+              await add('ai-blocked');
+              await remove('ai-resolved');
+            }

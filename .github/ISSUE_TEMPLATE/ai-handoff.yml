@@ -1,0 +1,73 @@
+name: AI Handoff
+description: Shared task between OpenAI/ChatGPT and Claude via GitHub
+title: "[AI HANDOFF] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this issue as the shared task contract. Do not include secrets, tokens, private customer data, or webhook URLs.
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What exact result should this handoff produce?
+      placeholder: Define one concrete task.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: producer
+    attributes:
+      label: Producer
+      options:
+        - OpenAI / ChatGPT
+        - Claude
+    validations:
+      required: true
+
+  - type: dropdown
+    id: reviewer
+    attributes:
+      label: Reviewer
+      options:
+        - Claude
+        - OpenAI / ChatGPT
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Production, governance, cost, timing, immutability, or safety constraints.
+      placeholder: List the constraints the models must not violate.
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Source references
+      description: Files, PRs, commits, Supabase functions/tables, logs, screenshots, or public sources to inspect.
+      placeholder: Provide references, not credentials.
+    validations:
+      required: false
+
+  - type: textarea
+    id: deliverable
+    attributes:
+      label: Required deliverable
+      description: What format should the producer return?
+      placeholder: Conclusion, evidence, risks, next action, confidence tier.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: risk
+    attributes:
+      label: Live-system risk
+      options:
+        - label: This task can affect production state, payments, outbound distribution, or irreversible data.
+        - label: This task is analysis/review only and should not mutate production.
