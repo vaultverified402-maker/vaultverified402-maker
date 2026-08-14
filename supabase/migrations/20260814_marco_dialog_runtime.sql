@@ -160,3 +160,11 @@ $$;
 revoke all on function marco_dialog.acquire_turn_lease(text,text,uuid,integer) from public;
 revoke all on function marco_dialog.complete_turn_lease(text,text,uuid,text,text,text) from public;
 revoke all on function marco_dialog.reserve_budget(text,bigint) from public;
+
+grant usage on schema marco_dialog to service_role;
+grant execute on function marco_dialog.acquire_turn_lease(text,text,uuid,integer) to service_role;
+grant execute on function marco_dialog.complete_turn_lease(text,text,uuid,text,text,text) to service_role;
+grant execute on function marco_dialog.reserve_budget(text,bigint) to service_role;
+
+-- Runtime setup must expose only the `marco_dialog` schema through PostgREST for this dedicated project.
+-- anon/authenticated retain no schema usage, table privileges, or function execution rights.
