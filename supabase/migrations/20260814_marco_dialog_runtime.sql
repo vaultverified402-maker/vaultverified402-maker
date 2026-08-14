@@ -16,7 +16,14 @@ create table if not exists marco_dialog.turn_leases (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists marco_dialog.usage_counters (
+  bucket text primary key,
+  count bigint not null default 0 check (count >= 0),
+  updated_at timestamptz not null default now()
+);
+
 alter table marco_dialog.turn_leases enable row level security;
+alter table marco_dialog.usage_counters enable row level security;
 
 -- No public/client policies by design. Only the dedicated dialog runtime service identity may access this schema.
 revoke all on schema marco_dialog from anon, authenticated;
@@ -109,5 +116,47 @@ begin
 end;
 $$;
 
+-- Atomically reserves one unit of dispatcher/provider budget.
+-- Returns false without incrementing once the configured hard ceiling is reached.
+create or replace function marco_dialog.reserve_budget(
+  p_bucket text,
+  p_limit bigint
+)
+returns table(allowed boolean, current_count bigint, hard_limit bigint)
+language plpgsql
+security definer
+set search_path = marco_dialog, pg_temp
+as $$
+declare
+  v_count bigint;
+begin
+  if p_bucket is null or btrim(p_bucket) = '' then
+    raise exception 'bucket required';
+  end if;
+  if p_limit < 1 then
+    raise exception 'limit must be positive';
+  end if;
+
+  insert into marco_dialog.usage_counters as c (bucket, count, updated_at)
+  values (p_bucket, 1, clock_timestamp())
+  on conflict (bucket) do update
+    set count = c.count + 1,
+        updated_at = clock_timestamp()
+    where c.count < p_limit
+  returning count into v_count;
+
+  if v_count is null then
+    select c.count into v_count
+      from marco_dialog.usage_counters c
+     where c.bucket = p_bucket;
+    return query select false, coalesce(v_count, 0), p_limit;
+    return;
+  end if;
+
+  return query select true, v_count, p_limit;
+end;
+$$;
+
 revoke all on function marco_dialog.acquire_turn_lease(text,text,uuid,integer) from public;
 revoke all on function marco_dialog.complete_turn_lease(text,text,uuid,text,text,text) from public;
+revoke all on function marco_dialog.reserve_budget(text,bigint) from public;
