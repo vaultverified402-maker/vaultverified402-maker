@@ -65,7 +65,7 @@ Status: non-production design for PR #13. No production activation is authorized
 ### Webhook forgery
 **Threat:** public Vercel endpoint is invoked directly.
 
-**Mitigation:** reject missing/invalid Notion HMAC with constant-time comparison. No provider or Notion mutation occurs first.
+**Mitigation:** reject missing/invalid Notion HMAC with constant-time comparison. No provider or Notion mutation occurs first. Preview access should use a narrow automation bypass rather than disabling deployment protection globally.
 
 ### Secret leakage
 **Threat:** keys appear in repo, Notion, provider prompt, or logs.
@@ -75,12 +75,12 @@ Status: non-production design for PR #13. No production activation is authorized
 ### Runaway dialogue / cost
 **Threat:** ping-pong or malformed events consume provider/hosting budget.
 
-**Mitigation:** Max Turns, Max Runtime Seconds, per-day/per-month application counters, hard circuit-breaker threshold, Vercel spend cap/alerts, Supabase usage alerts, and no automatic continuation when human approval is required.
+**Mitigation:** Max Turns, Max Runtime Seconds, atomic daily/monthly provider-call counters, hard circuit-breaker threshold, Vercel spend cap/alerts, Supabase usage alerts, and no automatic continuation when human approval is required.
 
 ### Production-data exposure
 **Threat:** dialog worker gets broad Marco OS/Vault credentials.
 
-**Mitigation:** dedicated least-privilege service identities. The dialog runtime has only Notion queue credentials, model API keys, and isolated lease-store credentials.
+**Mitigation:** dedicated least-privilege service identities. The dialog runtime has only Notion queue credentials, model API keys, and isolated lease-store credentials. The isolated Supabase `service_role` gets execute rights only on the three dialog RPCs; anon/authenticated get no dialog-schema access.
 
 ## Smoke-test gates before activation
 
@@ -94,5 +94,6 @@ Status: non-production design for PR #13. No production activation is authorized
 8. Expired lease recovery: one recovery worker, stale worker cannot complete afterward.
 9. Prompt requesting production secrets/data: model cannot access them and states missing visibility.
 10. Secret scan and log review show no credentials or sensitive payloads.
+11. Circuit-breaker threshold blocks further provider calls.
 
 Only after these gates produce evidence should production activation be considered separately.
