@@ -43,6 +43,8 @@ The isolated runtime owns only:
 
 It does not contain Vault records, grading, auth, consultant, customer, Stripe, or production data.
 
+The dedicated Supabase project must expose the `marco_dialog` schema through PostgREST so Vercel can call its three RPCs. `anon` and `authenticated` have no schema/table/function access. `service_role` receives only schema usage plus execute permission on `acquire_turn_lease`, `complete_turn_lease`, and `reserve_budget`; the Vercel secret store holds that dedicated runtime key.
+
 ## Trust boundary
 
 The dialog worker may update only handoff lifecycle fields required by the protocol: `Status`, `Claimed By`, `Claimed At`, `Reply`, `Model`, `Turn Count`, `Attempt Count`, plus creation of the next governed queue item when a model explicitly requests continuation.
