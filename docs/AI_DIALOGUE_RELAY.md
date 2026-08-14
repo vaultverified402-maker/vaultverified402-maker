@@ -4,123 +4,140 @@
 
 Remove Marco from the manual `check` loop while keeping the Notion AI Handoff Queue as the authoritative communication and audit ledger.
 
-The target boundary is:
+Target boundary:
 
 - **Marco OS** — orchestration and governance
 - **Notion AI Handoff Queue** — communication and durable audit trail
+- **Vercel** — primary event-driven executor
+- **Dedicated Marco OS Supabase runtime** — lease/idempotency/recovery/cost-counter state only
 - **OpenAI / Claude** — reasoning workers
-- **Vault Verified** — downstream governed system, never touched unless a separate handoff explicitly authorizes it
+- **Vault Verified production** — outside the dialog trust boundary
 
-This draft does **not** merge or deploy production infrastructure.
+This draft remains non-production. It does not authorize merge, production activation, or use of Vault production credentials.
 
-## Event-driven runtime
+## Primary runtime
 
-The hosted draft lives at:
+The Vercel function lives at:
 
-`supabase/functions/marco-ai-dialogue-dispatcher/index.ts`
+`api/marco-ai-dialogue-dispatcher.js`
 
-The preferred trigger is a Notion connection webhook rather than short-interval polling. Subscribe the connection to `page.created` and `page.properties_updated`. Notion sends a secure POST to the Edge Function, which retrieves the changed page and ignores anything outside the AI Handoff Queue.
+Notion `page.created` / `page.properties_updated` webhooks wake the function. The function verifies the webhook HMAC, fetches the changed page, proves it belongs to the AI Handoff Queue, validates governance fields, acquires an atomic Supabase lease, then invokes exactly one model provider.
 
-This removes the Termux/local-process dependency and avoids a permanent polling loop.
+No Termux process or short-interval primary poll loop is required.
+
+## Isolated execution state
+
+The lease/circuit-breaker migration lives at:
+
+`supabase/migrations/20260814_marco_dialog_runtime.sql`
+
+It is **design-only** until a dedicated Marco OS Supabase runtime is selected. It must never be applied to the live Vault Verified Supabase project merely to enable dialogue.
+
+The isolated runtime owns only:
+
+- handoff lease token / owner / expiry
+- attempt count
+- terminal execution state
+- provider request metadata
+- daily/monthly provider-call counters
+
+It does not contain Vault records, grading, auth, consultant, customer, Stripe, or production data.
 
 ## Trust boundary
 
-The dispatcher may write only these queue lifecycle fields:
+The dialog worker may update only handoff lifecycle fields required by the protocol: `Status`, `Claimed By`, `Claimed At`, `Reply`, `Model`, `Turn Count`, `Attempt Count`, plus creation of the next governed queue item when a model explicitly requests continuation.
 
-- `Status`
-- `Claimed By`
-- `Claimed At`
-- `Reply`
-- `Model`
-- `Turn Count`
-
-The initial autonomous MVP intentionally supports only `Scope = Notion only`. It does not give provider API calls GitHub, Supabase, Vercel, Gmail, filesystem, or other connected tools. If a queue turn requires external system visibility, the worker must state that the visibility is missing rather than pretend it inspected that system.
+MVP autonomous execution supports only `Scope = Notion only`. Provider API calls receive no GitHub, Vercel, Supabase-production, Gmail, filesystem, Stripe, or Vault tools/credentials.
 
 The dispatcher fails closed when:
 
+- webhook signature is invalid
+- page is outside the configured queue
 - `Requires Human Approval = true`
-- `Authorization` is not explicitly supported
-- `Scope` contains anything beyond `Notion only` in the MVP
+- `Authorization` is unsupported
+- scope contains anything beyond `Notion only`
 - `Turn Count >= Max Turns`
-- `Claimed By` is already populated
-- the target provider is not configured
-- the provider times out, errors, or returns malformed/empty output
+- a claim/reply already exists
+- atomic lease cannot be acquired
+- circuit breaker is reached
+- provider credentials are missing
+- provider times out/errors/returns empty output
+- final ownership check fails
 
-Provider failure is written as `INTERRUPTED`, not `REPLIED`.
+Provider failure produces `INTERRUPTED`, never a fabricated `REPLIED`.
 
-## Provider invocation
+## Exactly-one-turn discipline
 
-The hosted dispatcher calls provider APIs directly. It does not invoke Claude Code, Codex, Termux, or a local shell.
+Both the Vercel primary and future Supabase recovery worker must use the same `acquire_turn_lease()` RPC. A second worker cannot acquire an unexpired or terminal handoff lease.
 
-Required runtime secrets/configuration:
+After the Notion claim, the Vercel worker re-reads the page and proceeds only when `Status = IN_PROGRESS`, `Claimed By` exactly matches its unique claim label, and `Reply` is still empty. It repeats that ownership check immediately before the final write.
+
+A stale worker cannot complete a newer worker's lease because terminal completion requires the exact lease token.
+
+## Conversation continuation
+
+Each provider response must begin with either:
+
+- `CONTINUE:` when another model turn is genuinely needed
+- `DONE:` when the task is complete
+
+The marker is stripped before writing `Reply`. `CONTINUE:` creates a new governed queue item addressed to the other model, preserving Task, Authorization, Scope, Requires Human Approval, Max Turns, and Max Runtime Seconds. Max Turns remains a hard stop.
+
+## Required Vercel configuration
+
+Secrets/configuration are environment variables only:
 
 ```text
 NOTION_API_KEY
 NOTION_HANDOFF_DATA_SOURCE_ID
 NOTION_WEBHOOK_VERIFICATION_TOKEN
+SUPABASE_DIALOG_URL
+SUPABASE_DIALOG_SERVICE_KEY
+SUPABASE_DIALOG_SCHEMA=marco_dialog
 OPENAI_API_KEY
 OPENAI_MODEL
 ANTHROPIC_API_KEY
 ANTHROPIC_MODEL
+DIALOG_DAILY_PROVIDER_CALL_LIMIT
+DIALOG_MONTHLY_PROVIDER_CALL_LIMIT
 ```
 
-No live key or token belongs in GitHub.
+No live key belongs in GitHub, Notion messages, provider prompts, or logs.
 
-The provider calls are deliberately text-only for the first pilot. They receive the governed Task and Message plus authorization/scope metadata and return only Reply text.
+The Notion integration should be shared only to the AI Handoff Queue where feasible.
 
-## Notion webhook setup
+## Cost protection
 
-1. Deploy the Marco OS Edge Function to a **dedicated Marco OS runtime**, not the live Vault Verified project.
-2. In the Notion connection used for the AI Handoff Queue, create a webhook subscription pointing to the function URL.
-3. Subscribe to `page.created` and `page.properties_updated`.
-4. Complete Notion's one-time verification flow and store the verification token as `NOTION_WEBHOOK_VERIFICATION_TOKEN` in the runtime secret store.
-5. Keep signature verification enabled. The function rejects unsigned/invalid webhook events.
+Cost protection is layered:
 
-## Claim discipline
+1. Atomic daily/monthly call counters in the isolated Supabase runtime.
+2. Conservative application hard limits; the worker pauses before provider invocation once reached.
+3. Vercel Pro spend cap/alerts configured before activation.
+4. Supabase usage/billing alerts configured where available.
+5. Five-minute passive recovery cadence rather than high-frequency polling.
+6. `Max Turns` and `Max Runtime Seconds` constrain each dialogue.
 
-Notion page updates are not a database compare-and-swap primitive, so the pilot uses a single dispatcher instance and re-reads the page after claiming it. A turn proceeds only if:
+## Preview state
 
-- it was `QUEUED`
-- `Claimed By` was empty
-- the re-read shows `Status = IN_PROGRESS`
-- `Claimed By = Marco OS Hosted Dispatcher`
+PR #13 builds automatically as a Vercel preview and must remain `target = null` / non-production until separately approved.
 
-A single dispatcher plus re-read verification minimizes duplicate execution. Before scaling beyond one worker, add a stronger idempotency/lease layer.
+Current preview protection uses Vercel authentication. That is good for review, but Notion cannot deliver a normal webhook through an SSO wall. Before a synthetic webhook smoke test, configure a **narrow webhook-access mechanism** for the preview (for example a deployment protection bypass intended for automation) rather than making the whole preview broadly public. Signature verification remains mandatory at the function itself.
 
-## Conversation behavior
+## Smoke-test gates
 
-A provider reply is written back to the current queue item. For continued model-to-model dialogue, the orchestration layer should create a new governed queue turn addressed to the other model only when another response is required.
+Before any production approval:
 
-Every new turn must preserve:
+1. Valid synthetic turn => exactly one provider call and one reply.
+2. Duplicate webhook => no duplicate provider call.
+3. Vercel primary + recovery race => exactly one lease winner.
+4. Invalid signature => zero downstream calls.
+5. Unsupported scope / human approval / Max Turns => zero provider calls.
+6. Existing Reply => no overwrite.
+7. Forced timeout => `INTERRUPTED`.
+8. Expired lease => one recovery worker; stale worker cannot complete.
+9. Prompt requesting production data/secrets => no access and explicit missing-visibility response.
+10. Secret scan/log review => no credentials or sensitive payloads.
+11. Cost breaker test => provider call blocked at configured threshold.
+12. Vault production systems remain untouched throughout.
 
-- explicit `To`
-- `Authorization`
-- `Scope`
-- `Requires Human Approval`
-- `Max Turns`
-- `Max Runtime Seconds`
-
-No uncontrolled ping-pong is allowed.
-
-## Infrastructure state as of this draft
-
-There is currently no dedicated Marco OS GitHub repository and no dedicated Marco OS Supabase project. The connected Supabase account contains the live `vaultverified` project plus inactive Vault seed-scout projects. None should be repurposed silently.
-
-Therefore the implementation can be reviewed and tested as code in draft PR #13, but hosted deployment should wait for an explicit choice of a dedicated Marco OS runtime.
-
-## Pilot acceptance criteria
-
-Before any merge/deployment approval:
-
-1. Claude reviews the hosted Edge Function diff.
-2. No secrets are committed.
-3. A dedicated non-production Marco OS runtime is selected.
-4. Provider API credentials are configured only in that runtime's secret store.
-5. A Notion-only smoke-test turn moves deterministically through `QUEUED → IN_PROGRESS → REPLIED`.
-6. Timeout/malformed response proves `INTERRUPTED` behavior.
-7. Duplicate webhook delivery does not produce a second provider call after the turn leaves `QUEUED`.
-8. Vault Verified production tables, functions, billing, grading, records, and distribution remain untouched.
-
-## Legacy local prototype
-
-`tools/ai_dialogue_relay.py` remains in the draft branch only as an earlier prototype for comparison. It is **not** the target deployment architecture and should be removed or archived before merge once the hosted design is accepted.
+The detailed security analysis is in `docs/MARCO_DIALOG_THREAT_MODEL.md`.
