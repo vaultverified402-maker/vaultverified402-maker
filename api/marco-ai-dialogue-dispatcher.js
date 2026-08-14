@@ -1,5 +1,9 @@
 const crypto = require('crypto');
 
+// Vercel must not pre-parse Notion webhook bodies. Signature verification is
+// computed over the exact raw request bytes.
+module.exports.config = { api: { bodyParser: false } };
+
 const NOTION_VERSION = process.env.NOTION_VERSION || '2026-03-11';
 const NOTION_API = 'https://api.notion.com/v1';
 const QUEUE_DATA_SOURCE_ID = process.env.NOTION_HANDOFF_DATA_SOURCE_ID || '';
@@ -7,7 +11,9 @@ const ACTOR = 'Marco OS Vercel Primary';
 const LEASE_OWNER = 'vercel-primary';
 const SUPABASE_SCHEMA = process.env.SUPABASE_DIALOG_SCHEMA || 'marco_dialog';
 const SUPPORTED_AUTH = new Set(['READ_ONLY', 'WRITE_REPLY']);
-const SUPPORTED_SCOPE = new Set(['Notion only']);
+// Scope labels describe the subject of the dialogue, not runtime capability.
+// The hosted model receives text only and has no tool/function calling.
+const SUPPORTED_SCOPE = new Set(['Notion only', 'GitHub', 'Vercel', 'Supabase']);
 
 function env(name) {
   const value = process.env[name];
@@ -181,7 +187,9 @@ function makePrompt(page) {
   return [
     'You are processing one governed Marco OS AI Handoff Queue turn.',
     'You have NO external tools or credentials in this execution. Use only the Task, Message, and metadata below plus general reasoning.',
+    'Scope labels describe the dialogue topic only. They do NOT grant runtime access to those systems.',
     'Never claim you inspected GitHub, Supabase, Vercel, email, files, Vault Verified production, or other systems.',
+    'If the requested answer requires unavailable external inspection or execution, state that limitation instead of inventing access.',
     'If another response from the other model is genuinely useful to complete the task, begin your output with CONTINUE:.',
     'If the task is complete or further dialogue is unnecessary, begin your output with DONE:.',
     'After that marker, provide only the substantive reply. Do not output lifecycle JSON.',
@@ -278,7 +286,7 @@ async function interrupt(pageId, claimLabel, message) {
   return true;
 }
 
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { ok: false });
 
   let raw;
@@ -373,4 +381,7 @@ module.exports = async function handler(req, res) {
     console.error('marco-dialog-dispatcher', { page_id: pageId || null, error: error?.name || 'Error' });
     return send(res, 500, { ok: false });
   }
-};
+}
+
+module.exports = handler;
+module.exports.config = { api: { bodyParser: false } };
