@@ -139,7 +139,13 @@ security definer
 set search_path = private, public
 as $$
 begin
-  if new.consultant_type <> 'Verified' then return new; end if;
+  if new.consultant_type is distinct from 'Verified' then return new; end if;
+  if not exists (
+    select 1
+    from public.consultant_applications a
+    where a.application_id = new.application_id
+      and a.program in ('vault_verified_free','founding_verified_operator')
+  ) then return new; end if;
 
   if tg_op = 'INSERT' then
     insert into private.operator_journey_events(application_id,profile_id,auth_user_id,event_type,detail)
@@ -162,8 +168,12 @@ begin
   insert into private.operator_journey_events(application_id,profile_id,event_type,detail)
   select new.application_id,new.profile_id,'selection_filed',jsonb_build_object('record_id',new.record_id,'event',new.event,'selection',new.selection)
   where exists (
-    select 1 from public.profiles p
-    where p.profile_id = new.profile_id and p.consultant_type = 'Verified'
+    select 1
+    from public.profiles p
+    join public.consultant_applications a on a.application_id = p.application_id
+    where p.profile_id = new.profile_id
+      and p.consultant_type = 'Verified'
+      and a.program in ('vault_verified_free','founding_verified_operator')
   );
   return new;
 end;
