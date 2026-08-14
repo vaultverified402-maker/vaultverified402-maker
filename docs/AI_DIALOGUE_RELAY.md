@@ -15,6 +15,15 @@ Target boundary:
 
 This draft remains non-production. It does not authorize merge, production activation, or use of Vault production credentials.
 
+## Build status
+
+Steps A-B are implemented on draft PR #13 for review:
+
+- Step A: threat model, atomic lease/idempotency schema, stale-lease recovery semantics, atomic daily/monthly provider-call circuit breaker.
+- Step B: Vercel primary webhook function with signature verification, queue-parent verification, authorization/scope/human-approval/turn gates, atomic lease acquisition, claim re-read, final ownership check, no reply overwrite, direct OpenAI/Anthropic calls, safe interruption, and governed continuation turns.
+
+The code builds as a Vercel preview. No dedicated Supabase dialog runtime, model/Notion secrets, webhook subscription, or production activation has been applied yet.
+
 ## Primary runtime
 
 The Vercel function lives at:
