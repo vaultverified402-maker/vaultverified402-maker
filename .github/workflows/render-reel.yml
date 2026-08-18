@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'gg402-reel/.run-trigger'
 
 permissions:
   contents: read
