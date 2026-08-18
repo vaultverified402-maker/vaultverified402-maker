@@ -1,88 +1,73 @@
 name: Render GG402 Reel
 
-# Manual dispatch only — deliberately no push trigger. A push trigger
-# was tried and caused a real problem tonight: multiple runs existed
-# with no obvious way to tell which commit produced which artifact,
-# leading to an old run's stale video being mistaken for a fix that
-# hadn't actually been tested yet. For a proof-of-concept stage where
-# every run needs to be individually inspected, explicit dispatch with
-# no ambiguity beats automatic triggering.
 on:
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
-    inputs:
-      record_id:
-        description: 'Record ID to render (e.g. REC-2026-0161)'
-        required: true
-        default: 'REC-2026-0161'
-      consultant_id:
-        description: 'Consultant ID'
-        required: true
-        default: 'GG402-0001'
-      handle:
-        description: 'Consultant handle'
-        required: true
-        default: 'gamedayguru402'
-      event:
-        description: 'Event text'
-        required: true
-        default: 'Texas Rangers @ Tampa Bay Rays'
-      selection:
-        description: 'Selection text'
-        required: true
-        default: 'Tampa Bay Rays'
-      odds:
-        description: 'Odds (optional)'
-        required: false
-        default: '-136'
-      status:
-        description: 'Record status'
-        required: false
-        default: 'preserved'
 
 permissions:
   contents: read
+  id-token: write
+
+concurrency:
+  group: gg402-reel-renderer
+  cancel-in-progress: false
 
 jobs:
   render:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    env:
+      HANDOFF_URL: https://apmrgvpegtfsqqjcokfv.supabase.co/functions/v1/gg402-render-handoff
+      OIDC_AUDIENCE: vaultverified-gg402-renderer
+      CLAIMED_BY: github-actions:${{ github.run_id }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Print run identity (which commit produced this artifact)
+      - name: Claim next approved GG402 reel job
+        shell: bash
         run: |
-          echo "Commit SHA: ${{ github.sha }}"
-          echo "Triggered by: ${{ github.actor }}"
-          echo "Run ID: ${{ github.run_id }}"
+          set -euo pipefail
+          OIDC_TOKEN=$(curl -sSf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${OIDC_AUDIENCE}" | jq -r '.value')
+          RESPONSE=$(curl -sSf -X POST "$HANDOFF_URL" \
+            -H "Authorization: Bearer ${OIDC_TOKEN}" \
+            -H 'Content-Type: application/json' \
+            --data "$(jq -cn --arg by "$CLAIMED_BY" '{op:"claim",claimed_by:$by}')")
+          echo "$RESPONSE" > gg402-reel/handoff-response.json
+          if [ "$(echo "$RESPONSE" | jq -r '.job == null')" = "true" ]; then
+            echo "HAS_JOB=false" >> "$GITHUB_ENV"
+            echo "No approved GG402 reel jobs are waiting."
+            exit 0
+          fi
+          echo "HAS_JOB=true" >> "$GITHUB_ENV"
+          echo "$RESPONSE" | jq '.job' > gg402-reel/job.json
+          echo "JOB_ID=$(jq -r '.job.job_id' <<<"$RESPONSE")" >> "$GITHUB_ENV"
+          echo "RECORD_ID=$(jq -r '.job.record_id' <<<"$RESPONSE")" >> "$GITHUB_ENV"
+          jq '{record_id:.record_id,consultant_id:.profile_id,handle:.handle,event:.event_text,selection:.selection_text,odds:(.odds_text // ""),status:.record_status}' \
+            gg402-reel/job.json > gg402-reel/record-data.json
+          echo "Claimed $(jq -r '.job.record_id' <<<"$RESPONSE") as $CLAIMED_BY"
 
       - uses: actions/setup-node@v4
+        if: env.HAS_JOB == 'true'
         with:
           node-version: '22'
 
       - name: Install dependencies
+        if: env.HAS_JOB == 'true'
         working-directory: gg402-reel
         run: npm install
 
       - name: Install Chromium, FFmpeg, and IBM Plex Mono
+        if: env.HAS_JOB == 'true'
         working-directory: gg402-reel
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-ibm-plex
           npx playwright install --with-deps chromium
 
-      - name: Build record data file (safe — env vars, never shell-interpolated)
-        working-directory: gg402-reel
-        env:
-          RECORD_ID: ${{ inputs.record_id }}
-          CONSULTANT_ID: ${{ inputs.consultant_id }}
-          HANDLE: ${{ inputs.handle }}
-          EVENT_TEXT: ${{ inputs.event }}
-          SELECTION_TEXT: ${{ inputs.selection }}
-          ODDS_TEXT: ${{ inputs.odds }}
-          STATUS_TEXT: ${{ inputs.status }}
-        run: node render/build-record-data.mjs > record-data.json
-
-      - name: Negative test — validator must reject tampered content
+      - name: Negative test
+        if: env.HAS_JOB == 'true'
         working-directory: gg402-reel
         run: |
           set +e
@@ -91,50 +76,48 @@ jobs:
           set -e
           cat negative-test.log
           if [ $NEGATIVE_EXIT -eq 0 ]; then
-            echo "FATAL: negative test should have failed but exited 0 — validator is not working"
+            echo "FATAL: validator accepted tampered content"
             exit 1
           fi
-          if ! grep -q "Rendered data mismatch" negative-test.log; then
-            echo "FATAL: negative test failed for the wrong reason — expected 'Rendered data mismatch'"
-            exit 1
-          fi
-          if ! grep -q "INTENTIONAL VALIDATION MISMATCH" negative-test.log; then
-            echo "FATAL: tampered value never appeared in the comparison output"
-            exit 1
-          fi
-          echo "Negative test passed: validator correctly rejected tampered content"
+          grep -q "Rendered data mismatch" negative-test.log
+          grep -q "INTENTIONAL VALIDATION MISMATCH" negative-test.log
 
-      - name: Render (browser capture — real record data)
+      - name: Render real record
+        if: env.HAS_JOB == 'true'
         working-directory: gg402-reel
         run: node render/render.mjs record-data.json output/
 
       - name: Postprocess to H.264 MP4
+        if: env.HAS_JOB == 'true'
         working-directory: gg402-reel
         run: |
           chmod +x render/postprocess.sh
           ./render/postprocess.sh output/reel.raw.webm output/reel.mp4
 
-      - name: Compute content hash and generate manifest/captions
+      - name: Generate and validate artifact package
+        if: env.HAS_JOB == 'true'
         working-directory: gg402-reel
         run: |
+          set -euo pipefail
           HASH=$(sha256sum output/reel.mp4 | cut -d' ' -f1)
+          DURATION=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 output/reel.mp4)
           node render/generate-manifest.mjs record-data.json "$HASH" output/
-
-      - name: Validate output spec
-        working-directory: gg402-reel
-        run: |
-          ffprobe -v error -show_entries stream=codec_name,codec_type,width,height \
-            -show_entries format=duration -of json output/reel.mp4
+          ffprobe -v error -show_entries stream=codec_name,codec_type,width,height -show_entries format=duration -of json output/reel.mp4
           test "$(file -b --mime-type output/reel.mp4)" = "video/mp4"
           test -s output/cover.png
           test -s output/manifest.json
           test -s output/caption.json
           test -s output/validation.json
+          echo "CONTENT_HASH=$HASH" >> "$GITHUB_ENV"
+          echo "DURATION_SECONDS=$DURATION" >> "$GITHUB_ENV"
+          echo "ARTIFACT_NAME=gg402-reel-${RECORD_ID}-${GITHUB_RUN_ID}" >> "$GITHUB_ENV"
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload rendered reel package
+        if: env.HAS_JOB == 'true'
+        uses: actions/upload-artifact@v4
         with:
-          name: gg402-reel-${{ inputs.record_id }}-${{ github.run_id }}
-          retention-days: 1
+          name: ${{ env.ARTIFACT_NAME }}
+          retention-days: 7
           if-no-files-found: error
           path: |
             gg402-reel/output/reel.mp4
@@ -142,3 +125,38 @@ jobs:
             gg402-reel/output/manifest.json
             gg402-reel/output/caption.json
             gg402-reel/output/validation.json
+
+      - name: Finalize content job
+        if: env.HAS_JOB == 'true' && success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          OIDC_TOKEN=$(curl -sSf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${OIDC_AUDIENCE}" | jq -r '.value')
+          STORAGE_PATH="github-actions://${GITHUB_REPOSITORY}/${GITHUB_RUN_ID}/${ARTIFACT_NAME}"
+          MANIFEST=$(jq -c --arg run "$GITHUB_RUN_ID" --arg repo "$GITHUB_REPOSITORY" --arg artifact "$ARTIFACT_NAME" \
+            '. + {renderer:"github-actions",github_run_id:$run,github_repository:$repo,artifact_name:$artifact}' \
+            gg402-reel/output/manifest.json)
+          PAYLOAD=$(jq -cn \
+            --arg job "$JOB_ID" --arg by "$CLAIMED_BY" --arg path "$STORAGE_PATH" \
+            --arg hash "$CONTENT_HASH" --argjson manifest "$MANIFEST" --arg duration "$DURATION_SECONDS" \
+            '{op:"finalize",job_id:$job,claimed_by:$by,storage_path:$path,content_hash:$hash,manifest:$manifest,duration_seconds:($duration|tonumber),width:1080,height:1920}')
+          curl -sSf -X POST "$HANDOFF_URL" \
+            -H "Authorization: Bearer ${OIDC_TOKEN}" \
+            -H 'Content-Type: application/json' \
+            --data "$PAYLOAD" | tee gg402-reel/finalize-response.json
+
+      - name: Mark claimed job failed if renderer fails
+        if: env.HAS_JOB == 'true' && failure()
+        shell: bash
+        run: |
+          set +e
+          OIDC_TOKEN=$(curl -sSf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${OIDC_AUDIENCE}" | jq -r '.value')
+          PAYLOAD=$(jq -cn --arg job "$JOB_ID" --arg by "$CLAIMED_BY" \
+            --arg err "GitHub Actions renderer failed in run ${GITHUB_RUN_ID}" \
+            '{op:"fail",job_id:$job,claimed_by:$by,error:$err}')
+          curl -sS -X POST "$HANDOFF_URL" \
+            -H "Authorization: Bearer ${OIDC_TOKEN}" \
+            -H 'Content-Type: application/json' \
+            --data "$PAYLOAD"
