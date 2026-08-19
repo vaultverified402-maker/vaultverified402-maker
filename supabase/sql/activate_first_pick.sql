@@ -1,3 +1,64 @@
+create table if not exists private.first_pick_rate_limits(
+  scope text not null,
+  key_hash text not null,
+  window_started_at timestamptz not null default now(),
+  request_count integer not null default 0,
+  updated_at timestamptz not null default now(),
+  primary key(scope,key_hash),
+  check (scope in ('ip','email')),
+  check (request_count >= 0)
+);
+
+alter table private.first_pick_rate_limits enable row level security;
+revoke all on private.first_pick_rate_limits from public, anon, authenticated;
+
+create or replace function public.claim_first_pick_attempt(
+  p_ip_hash text,
+  p_email_hash text,
+  p_ip_limit integer default 5,
+  p_email_limit integer default 3,
+  p_window_seconds integer default 600
+)
+returns boolean
+language plpgsql
+security definer
+set search_path = 'public','private','pg_temp'
+as $function$
+declare
+  v_now timestamptz := now();
+  v_ip_count integer;
+  v_email_count integer;
+begin
+  if p_ip_hash is null or length(p_ip_hash) < 32 or p_email_hash is null or length(p_email_hash) < 32 then
+    return false;
+  end if;
+  if p_ip_limit < 1 or p_email_limit < 1 or p_window_seconds < 60 then
+    return false;
+  end if;
+
+  insert into private.first_pick_rate_limits(scope,key_hash,window_started_at,request_count,updated_at)
+  values ('ip',p_ip_hash,v_now,1,v_now)
+  on conflict(scope,key_hash) do update set
+    window_started_at = case when private.first_pick_rate_limits.window_started_at <= v_now - make_interval(secs => p_window_seconds) then v_now else private.first_pick_rate_limits.window_started_at end,
+    request_count = case when private.first_pick_rate_limits.window_started_at <= v_now - make_interval(secs => p_window_seconds) then 1 else private.first_pick_rate_limits.request_count + 1 end,
+    updated_at = v_now
+  returning request_count into v_ip_count;
+
+  insert into private.first_pick_rate_limits(scope,key_hash,window_started_at,request_count,updated_at)
+  values ('email',p_email_hash,v_now,1,v_now)
+  on conflict(scope,key_hash) do update set
+    window_started_at = case when private.first_pick_rate_limits.window_started_at <= v_now - make_interval(secs => p_window_seconds) then v_now else private.first_pick_rate_limits.window_started_at end,
+    request_count = case when private.first_pick_rate_limits.window_started_at <= v_now - make_interval(secs => p_window_seconds) then 1 else private.first_pick_rate_limits.request_count + 1 end,
+    updated_at = v_now
+  returning request_count into v_email_count;
+
+  return v_ip_count <= p_ip_limit and v_email_count <= p_email_limit;
+end;
+$function$;
+
+revoke all on function public.claim_first_pick_attempt(text,text,integer,integer,integer) from public, anon, authenticated;
+grant execute on function public.claim_first_pick_attempt(text,text,integer,integer,integer) to service_role;
+
 create or replace function public.activate_first_pick(
   p_request_id uuid,
   p_full_name text,
@@ -133,5 +194,5 @@ begin
 end;
 $function$;
 
-revoke all on function public.activate_first_pick(uuid,text,text,text,text,text,text,numeric,text,text,text,text,integer) from public;
+revoke all on function public.activate_first_pick(uuid,text,text,text,text,text,text,numeric,text,text,text,text,integer) from public, anon, authenticated;
 grant execute on function public.activate_first_pick(uuid,text,text,text,text,text,text,numeric,text,text,text,text,integer) to service_role;
