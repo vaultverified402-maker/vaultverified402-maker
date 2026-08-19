@@ -34,8 +34,10 @@ async function sha256(value: string) {
 }
 
 function clientIp(req: Request) {
+  const cloudflare = req.headers.get("cf-connecting-ip")?.trim();
+  if (cloudflare) return cloudflare;
   const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  return forwarded || req.headers.get("cf-connecting-ip")?.trim() || "unknown";
+  return forwarded || "unknown";
 }
 
 Deno.serve(async (req: Request) => {
