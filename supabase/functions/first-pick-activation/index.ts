@@ -27,6 +27,17 @@ function validEmail(email: string) {
   return email.length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+async function sha256(value: string) {
+  const bytes = new TextEncoder().encode(value);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function clientIp(req: Request) {
+  const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  return forwarded || req.headers.get("cf-connecting-ip")?.trim() || "unknown";
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
 
@@ -84,6 +95,23 @@ Deno.serve(async (req: Request) => {
   if (!Number.isInteger(confidence) || confidence < 1 || confidence > 10) return json({ error: "invalid_confidence" }, 400);
   if (thesis.length < 10) return json({ error: "thesis_too_short" }, 400);
   if (line !== null && !Number.isFinite(line)) return json({ error: "invalid_line" }, 400);
+
+  const [ipHash, emailHash] = await Promise.all([
+    sha256(`first-pick:ip:${clientIp(req)}`),
+    sha256(`first-pick:email:${email}`),
+  ]);
+  const { data: allowed, error: throttleError } = await admin.rpc("claim_first_pick_attempt", {
+    p_ip_hash: ipHash,
+    p_email_hash: emailHash,
+    p_ip_limit: 5,
+    p_email_limit: 3,
+    p_window_seconds: 600,
+  });
+  if (throttleError) {
+    console.error("first-pick throttle failed closed", throttleError);
+    return json({ error: "temporarily_unavailable" }, 503);
+  }
+  if (allowed !== true) return json({ error: "too_many_attempts" }, 429);
 
   const { data, error } = await admin.rpc("activate_first_pick", {
     p_request_id: requestId,
