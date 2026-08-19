@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Preserve Your First Pick Now | vaultverified.app</title>
+<meta name="description" content="Preserve your first sports pick before the event starts and begin an independent record.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#090909;--raised:#111213;--line:#242628;--text:#f2f3f3;--dim:#8a8f93;--cyan:#00d4ff;--red:#e05555}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;line-height:1.55}.wrap{max-width:620px;margin:auto;padding:34px 20px 70px}.brand{display:flex;gap:9px;align-items:center;font-weight:700;letter-spacing:.12em;font-size:13px;margin-bottom:56px}.dot{width:8px;height:8px;border-radius:50%;background:var(--cyan)}.eyebrow{font-size:10px;color:var(--cyan);letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}h1{font-size:clamp(30px,8vw,46px);line-height:1.08;text-transform:uppercase;margin:0 0 18px}.lede{color:var(--dim);font-size:14px;max-width:50ch;margin-bottom:38px}.rule{border-left:2px solid var(--cyan);padding:12px 15px;background:var(--raised);font-size:12px;margin-bottom:34px}.field{margin:0 0 18px}label{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px}input,select,textarea{width:100%;background:var(--raised);border:1px solid var(--line);color:var(--text);font:inherit;font-size:13px;padding:13px;border-radius:0}textarea{min-height:80px;resize:vertical}input:focus,select:focus,textarea:focus{outline:1px solid var(--cyan);border-color:var(--cyan)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.ack{display:flex;gap:11px;align-items:flex-start;font-size:11px;color:var(--dim);margin:24px 0}.ack input{width:auto;margin-top:4px}.submit{width:100%;border:0;background:var(--cyan);color:#071014;padding:17px;font:700 13px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;cursor:pointer}.submit:disabled{opacity:.45}.fine{font-size:10px;color:var(--dim);text-align:center;margin-top:10px}.err{display:none;color:var(--red);font-size:12px;margin:14px 0}.success{display:none}.receipt{border:1px solid var(--line);background:var(--raised);padding:20px;margin:24px 0}.receipt .k{font-size:9px;color:var(--dim);letter-spacing:.14em;text-transform:uppercase}.receipt .v{font-size:16px;margin:3px 0 15px;overflow-wrap:anywhere}.success a{color:var(--cyan)}@media(max-width:520px){.grid{grid-template-columns:1fr}.brand{margin-bottom:42px}}
+</style>
+</head>
+<body><main class="wrap">
+<div class="brand"><span class="dot"></span>VAULT VERIFIED</div>
+<section id="entry">
+<div class="eyebrow">Independent pre-event record</div>
+<h1>Preserve your first pick now.</h1>
+<p class="lede">File the selection before the event begins. Your first preserved pick starts your vaultverified.app operator record at the same time.</p>
+<div class="rule">Anybody can claim a record. Vault preserves one.</div>
+<form id="firstPickForm" novalidate>
+<div class="grid"><div class="field"><label for="handle">Operator handle</label><input id="handle" required maxlength="40" placeholder="@yourhandle"></div><div class="field"><label for="email">Email</label><input id="email" type="email" required maxlength="200" autocomplete="email" placeholder="you@example.com"></div></div>
+<div class="grid"><div class="field"><label for="sport">Sport / league</label><input id="sport" required maxlength="60" placeholder="NBA"></div><div class="field"><label for="event">Event</label><input id="event" required maxlength="200" placeholder="Team A at Team B"></div></div>
+<div class="field"><label for="selection">Your pick</label><input id="selection" required maxlength="200" placeholder="Your selection"></div>
+<div class="grid"><div class="field"><label for="eventTime">Event start</label><input id="eventTime" type="datetime-local" required></div><div class="field"><label for="timezone">Time zone</label><select id="timezone" required><option value="America/Chicago">Central</option><option value="America/New_York">Eastern</option><option value="America/Denver">Mountain</option><option value="America/Los_Angeles">Pacific</option><option value="UTC">UTC</option></select></div></div>
+<div class="field"><label for="note">Note <span style="color:var(--dim);text-transform:none;letter-spacing:0">(optional)</span></label><textarea id="note" maxlength="500" placeholder="Why you like it, source, or context"></textarea></div>
+<label class="ack"><input id="ack" type="checkbox" required><span>I understand this filing must occur before the event begins and that preserved results remain part of my record.</span></label>
+<div class="err" id="err" role="alert"></div>
+<button class="submit" id="submit" type="submit">Preserve My First Pick</button>
+<div class="fine">Free. One submission starts your operator record. No payment required.</div>
+</form></section>
+<section class="success" id="success" aria-live="polite">
+<div class="eyebrow">Preserved</div><h1>Your record starts here.</h1>
+<p class="lede">Your first pick was accepted before the event start and your operator enrollment was created with it.</p>
+<div class="receipt"><div class="k">Record</div><div class="v" id="recordId">—</div><div class="k">Filed</div><div class="v" id="filedAt">—</div><div class="k">Operator</div><div class="v" id="operatorHandle">—</div></div>
+<p class="lede">Keep building the record. What happens next stays attached to what you filed now.</p>
+</section>
+</main>
+<script>
+(function(){
+var SUPABASE_URL='https://apmrgvpegtfsqqjcokfv.supabase.co';
+var SUPABASE_KEY='sb_publishable_8K6RZjl132H3O2US8zZX9g_F2sZ3OaY';
+var FN=SUPABASE_URL+'/functions/v1/first-pick-activation';
+var form=document.getElementById('firstPickForm'),btn=document.getElementById('submit'),err=document.getElementById('err');
+function fail(m){err.textContent=m;err.style.display='block';btn.disabled=false;btn.textContent='Preserve My First Pick'}
+form.addEventListener('submit',async function(e){e.preventDefault();err.style.display='none';if(!form.reportValidity())return;if(!document.getElementById('ack').checked)return fail('Confirm the pre-event record standard to continue.');
+var local=document.getElementById('eventTime').value;if(!local)return fail('Event start is required.');
+var payload={handle:document.getElementById('handle').value.trim(),email:document.getElementById('email').value.trim(),sport:document.getElementById('sport').value.trim(),event:document.getElementById('event').value.trim(),selection:document.getElementById('selection').value.trim(),event_start_local:local,event_timezone:document.getElementById('timezone').value,note:document.getElementById('note').value.trim()||null,ack_preevent:true,source:'first_pick_page'};
+btn.disabled=true;btn.textContent='Preserving…';
+try{var r=await fetch(FN,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},body:JSON.stringify(payload)});var data=await r.json().catch(function(){return{}});if(!r.ok)throw new Error(data.error||'Unable to preserve this pick.');if(!data.record_id)throw new Error('No record receipt was returned.');document.getElementById('recordId').textContent=data.record_id;document.getElementById('filedAt').textContent=data.filed_at||new Date().toISOString();document.getElementById('operatorHandle').textContent=data.operator_handle||payload.handle;document.getElementById('entry').style.display='none';document.getElementById('success').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}catch(x){fail(x.message||'Unable to preserve this pick. Nothing was recorded.')}});
+})();
+</script></body></html>
