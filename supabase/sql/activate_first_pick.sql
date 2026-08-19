@@ -1,3 +1,7 @@
+-- First-pick activation backend.
+-- Public browser traffic reaches the Edge Function; privileged mutations remain service-role-only.
+-- Abuse defaults: max 5 attempts/IP and 3 attempts/email per 10-minute window.
+
 create table if not exists private.first_pick_rate_limits(
   scope text not null,
   key_hash text not null,
