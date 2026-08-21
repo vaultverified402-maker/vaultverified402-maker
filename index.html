@@ -48,13 +48,18 @@ function title(v){if(!v)return'';return String(v).toLowerCase().replace(/(^|[_\s
 function date(v,year){if(!v)return'';try{return new Date(v).toLocaleDateString('en-US',{month:'short',day:year?undefined:'numeric',year:year?'numeric':undefined,timeZone:'America/Chicago'})}catch(e){return''}}
 function stateFor(r){var rs=String(r.result_status||'').toLowerCase();if(rs==='win')return{cls:'state--win',label:'Result: Win'};if(rs==='loss')return{cls:'state--loss',label:'Result: Loss'};if(r.result_status)return{cls:'state--other',label:'Result: '+title(r.result_status)};return{cls:'state--preserved',label:title(r.status||'Preserved')}}
 var input=document.getElementById('archive-search'),button=document.getElementById('archive-search-btn');function goSearch(){var q=(input.value||'').trim();location.href=q?'/records.html?search='+encodeURIComponent(q):'/records.html'}button.addEventListener('click',goSearch);input.addEventListener('keydown',function(e){if(e.key==='Enter')goSearch()});
-var metricsBusy=false;
+var metricsBusy=false,metricsRetryTimer=null,metricsRetryCount=0;
+function setMetricFallback(){
+ if(document.getElementById('metric-records').textContent==='···')document.getElementById('metric-records').textContent='—';
+ if(document.getElementById('metric-consultants').textContent==='···')document.getElementById('metric-consultants').textContent='—';
+ if(document.getElementById('metric-since').textContent==='···')document.getElementById('metric-since').textContent='2026';
+}
 function refreshMetrics(){
  if(metricsBusy)return;metricsBusy=true;
  fetch(SUPABASE_URL+'/rest/v1/v_public_platform_stats?select=total_records_preserved,total_public_consultants,earliest_public_record_at',{headers:headers(),cache:'no-store'})
  .then(function(r){if(!r.ok)throw new Error(String(r.status));return r.json()})
- .then(function(rows){var s=rows&&rows[0];if(!s)throw new Error('empty');document.getElementById('metric-records').textContent=s.total_records_preserved!=null?String(s.total_records_preserved):'Live';document.getElementById('metric-consultants').textContent=s.total_public_consultants!=null?String(s.total_public_consultants):'Live';document.getElementById('metric-since').textContent=date(s.earliest_public_record_at,true)||'2026'})
- .catch(function(){if(document.getElementById('metric-records').textContent==='···')document.getElementById('metric-records').textContent='Live';if(document.getElementById('metric-consultants').textContent==='···')document.getElementById('metric-consultants').textContent='Live';if(document.getElementById('metric-since').textContent==='···')document.getElementById('metric-since').textContent='2026'})
+ .then(function(rows){var s=rows&&rows[0];if(!s)throw new Error('empty');document.getElementById('metric-records').textContent=s.total_records_preserved!=null?String(s.total_records_preserved):'—';document.getElementById('metric-consultants').textContent=s.total_public_consultants!=null?String(s.total_public_consultants):'—';document.getElementById('metric-since').textContent=date(s.earliest_public_record_at,true)||'2026';metricsRetryCount=0;if(metricsRetryTimer){clearTimeout(metricsRetryTimer);metricsRetryTimer=null}})
+ .catch(function(){setMetricFallback();if(metricsRetryCount<3&&!metricsRetryTimer){metricsRetryCount+=1;metricsRetryTimer=setTimeout(function(){metricsRetryTimer=null;refreshMetrics()},1500*metricsRetryCount)}})
  .finally(function(){metricsBusy=false});
 }
 refreshMetrics();
