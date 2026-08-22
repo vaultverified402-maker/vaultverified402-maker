@@ -34,7 +34,7 @@ jobs:
           set -euo pipefail
           OIDC_TOKEN=$(curl -sSf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${OIDC_AUDIENCE}" | jq -r '.value')
-          RESPONSE=$(curl -sSf -X POST "$HANDOFF_URL" \
+          RESPONSE=$(curl -sSf --retry 3 --retry-delay 2 --retry-all-errors -X POST "$HANDOFF_URL" \
             -H "Authorization: Bearer ${OIDC_TOKEN}" \
             -H 'Content-Type: application/json' \
             --data "$(jq -cn --arg by "$CLAIMED_BY" '{op:"claim",claimed_by:$by}')")
